@@ -35,56 +35,187 @@ class Camera;
 
 //***************** VECTOR *****************//
 class Vector {
-    public:
-        float x, y, z;
-        Vector();
-        Vector(float, float, float);
-        Vector(point, point);
-        Vector add(Vector);
-        Vector sub(Vector);
-        Vector mul(Vector);
-        Vector div(Vector);
-        void normalize();
+public:
+	float x, y, z;
+	Vector();
+	Vector(float, float, float);
+	Vector(point, point);
+	Vector add(Vector);
+	Vector sub(Vector);
+	Vector mult(float);
+	Vector div(float);
+	float dot(Vector);
+	Vector cross(Vector);
+	void normalize();
 
 };
 
-//TODO: Actually Implement the things above
+Vector::Vector() {
+	x = 0.0f;
+	y = 0.0f;
+	z = 0.0f;
+}
+
+Vector::Vector(float a, float b, float c) {
+	x = a;
+	y = b;
+	z = c;
+}
+
+Vector::Vector(point a, point b) {
+	x = a.x - b.x;
+	y = a.y - b.y;
+	z = a.z - b.z;
+}
+
+Vector Vector::add(Vector v) {
+	float a = x + v.x;
+	float b = y + v.y;
+	float c = z + v.z;
+
+	return Vector(a,b,c);
+}
+
+Vector Vector::sub(Vector v) {
+	float a = x - v.x;
+	float b = y - v.y;
+	float c = z - v.z;
+
+	return Vector(a,b,c);
+}
+
+Vector Vector::mult(float k) {
+	float a = k*x;
+	float b = k*y;
+	float c = k*z;
+
+	return Vector(a,b,c);
+}
+
+Vector Vector::div(float k) {
+	float a = x/k;
+	float b = y/k;
+	float c = z/k;
+
+	return Vector(a,b,c);
+}
+
+float Vector::dot(Vector v) {
+	return x*v.x + y*v.y + z*v.z;
+}
+
+Vector Vector::cross(Vector v) {
+	float a = y * v.z - z * v.y;
+	float b = z * v.x - x * v.z;
+	float c = x * v.y - y * v.x;
+
+	return Vector(a, b, c);
+}
+
+void Vector::normalize() {
+	float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+	x = x/len;
+	y = y/len;
+	z = z/len;
+}
 
 //***************** NORMAL *****************//
 class Normal {
-    float x, y, z;
-    Normal(float, float, float);
-    Normal add(Normal);
-    Normal add(Normal);
+	float x, y, z;
+	Normal(float, float, float);
+	Normal add(Normal);
+	Normal sub(Normal);
 };
 
-//TODO: Actually Implement the things above
+Normal::Normal(float a, float b, float c) {
+	x = a;
+	y = b;
+	z = c;
+	if(x != 0 || y !=0 || z !=0) {
+		float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+		x = x/len;
+		y = y/len;
+		z = z/len;
+	}
+}
+
+Normal Normal::add(Normal v) {
+	float a = x + v.x;
+	float b = y + v.y;
+	float c = z + v.z;
+
+	return Normal(a,b,c);
+}
+
+Normal Normal::sub(Normal v) {
+	float a = x - v.x;
+	float b = y - v.y;
+	float c = z - v.z;
+
+	return Normal(a,b,c);
+}
 
 //***************** POINT *****************//
 class Point {
-    float x, y, z;
-    Point(float, float, float);
-    Point plus(Vector);
-    Point minus(Vector);
+	float x, y, z;
+	Point();
+	Point(float, float, float);
+	Point plus(Vector);
+	Point minus(Vector);
 };
 
-//TODO: Actually Implement the things above
+Point::Point() {
+	x = 0.0f;
+	y = 0.0f;
+	y = 0.0f;
+}
+
+Point::Point(float a, float b, float c) {
+	x = a;
+	y = b;
+	z = c;
+}
+
+Point Point::plus(Vector v) {
+	a = x + v.x;
+	b = y + v.y;
+	c = z + v.z;
+	return Point(a, b, c);
+}
+
+Point Point::minus(Vector v) {
+	a = x - v.x;
+	b = y - v.y;
+	c = z - v.z;
+	return Point(a, b, c);
+}
 
 //***************** RAY *****************//
 class Ray {
-    /* Represents the ray:
-       r(t) = pos + t*dir*/
-    Point pos;
-    Vector dir;
-    float t_min, t_max;
+	/* Represents the ray:
+	r(t) = pos + t*dir*/
+	Point pos;
+	Vector dir;
+	float t_min, t_max;
+	Ray(Point, Point);
+	Ray(Point, Vector);
 };
 
-//TODO: Actually Implement the things above
+Ray::Ray(Point a, Point b) {
+	pos = a;
+	dir = Vector(a, b);
+}
+
+Ray::Ray(Point a, Vector v) {
+	pos = a;
+	dir = v;
+}
+
 
 //***************** MATRIX *****************//
 class Matrix {
-    float mat[4][4];
-    //TODO: Figure out what a matrix should be able to do
+	float mat[4][4];
+	//TODO: Figure out what a matrix should be able to do
 };
 
 
@@ -96,15 +227,58 @@ class Transformation {
 
 //***************** COLOR *****************//
 class Color {
-    float r, g, b;
-    Color(float, float, float);
-    Color add(Color);
-    Color sub(Color);
-    Color mult(float);
-    Color dif(float);
+	float r, g, b;
+	Color();
+	Color(float, float, float);
+	Color add(Color);
+	Color sub(Color);
+	Color mult(float);
+	Color dif(float);
 };
 
-//TODO: Actually Implement the things above
+Color::Color() {
+	r = 0.0f;
+	g = 0.0f;
+	b = 0.0f;
+}
+
+Color::Color(float a, float b, float c) {
+	r = a;
+	g = b;
+	b = c;
+}
+
+Color Color::add(Color v) {
+	float a = r + v.r;
+	float b = g + v.g;
+	float c = b + v.b;
+
+	return Color(a,b,c);
+}
+
+Color Color::sub(Color v) {
+	float a = r - v.r;
+	float b = g - v.g;
+	float c = b - v.b;
+
+	return Color(a,b,c);
+}
+
+Color Color::mult(float k) {
+	float a = k*r;
+	float b = k*g;
+	float c = k*b;
+
+	return Color(a,b,c);
+}
+
+Color Color::div(float k) {
+	float a = r/k;
+	float b = g/k;
+	float c = b/k;
+
+	return Color(a,b,c);
+}
 
 //***************** CAMERA *****************//
 class Camera {
@@ -136,5 +310,5 @@ Camera eye;
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
-  return 0;
+	return 0;
 }
