@@ -1,5 +1,3 @@
-
-#include <vector>
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -11,11 +9,7 @@
 #endif
 
 #ifdef OSX
-#include <GLUT/glut.h>
-#include <OpenGL/glu.h>
 #else
-#include <GL/glut.h>
-#include <GL/glu.h>
 #endif
 
 #include <time.h>
@@ -30,124 +24,82 @@ using namespace std;
 //****************************************************
 // Some Classes
 //****************************************************
+class Vector;
+class Normal;
+class Point;
+class Ray;
+class Matrix;
+class Transformation;
+class Color;
 
-class Viewport;
-class Rgb;
-class Light;
-class Vec3;
+//***************** VECTOR *****************//
+class Vector {
+    public:
+        float x, y, z;
+        Vector();
+        Vector(float, float, float);
+        Vector(point, point);
+        Vector add(Vector);
+        Vector sub(Vector);
+        Vector mul(Vector);
+        Vector div(Vector);
+        void normalize();
 
-class Viewport {
-  public:
-    int w, h; // width and height
 };
 
-class Rgb {
-  public:
-    float red, green, blue;
-    Rgb();
-    Rgb(float, float, float);
-};
+//TODO: Actually Implement the things above
 
-Rgb::Rgb() {
-  red = 0.0f;
-  green = 0.0f;
-  blue = 0.0f;
-}
-
-Rgb::Rgb(float r, float g, float b) {
-    red = r;
-    green = g;
-    blue = b;
-}
-
-class Light {
-  public:
+//***************** NORMAL *****************//
+class Normal {
     float x, y, z;
-    Rgb rgb;
-    bool isPL;
-    Light();
-    Light(float, float, float, Rgb, bool);
+    Normal(float, float, float);
+    Normal add(Normal);
+    Normal add(Normal);
 };
 
-Light::Light() {
-  x = 0.0f;
-  y = 0.0f;
-  z = 0.0f;
-  rgb = Rgb ();
-  isPL = false;
-}
+//TODO: Actually Implement the things above
 
-Light::Light(float a, float b, float c, Rgb color, bool PL) {
-  x = a;
-  y = b;
-  z = c;
-  rgb = color;
-  isPL = PL;
-}
-
-class Vec3 {
-  public: 
+//***************** POINT *****************//
+class Point {
     float x, y, z;
-    Vec3();
-    Vec3(float, float, float);
-    Vec3 dirToLight(Light);
-    float dot(Vec3);
-    Vec3 times(float);
-    Vec3 sub(Vec3);
-
+    Point(float, float, float);
+    Point plus(Vector);
+    Point minus(Vector);
 };
 
-Vec3::Vec3() {
-  x = 0.0f;
-  y = 0.0f;
-  z = 0.0f;
-}
+//TODO: Actually Implement the things above
 
-Vec3::Vec3(float a, float b, float c) {
-  // constructs a vector, normalizes it if it is not normalized.
-    float len = sqrt(a*a + b*b + c*c);
-    x = a/len;
-    y = b/len;
-    z = c/len;
-}
+//***************** RAY *****************//
+class Ray {
+    /* Represents the ray:
+       r(t) = pos + t*dir*/
+    Point pos;
+    Vector dir;
+    float t_min, t_max;
+};
 
-Vec3 Vec3::dirToLight(Light l) {
-  float a = l.x - x;
-  float b = l.y - y;
-  float c = l.z - z;
+//TODO: Actually Implement the things above
 
-  float len = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
-  a = a/len;
-  b = b/len;
-  c = c/len;
-
-  return Vec3(a,b,c);
-}
-
-float Vec3::dot(Vec3 v) {
-  return x*v.x + y*v.y + z*v.z;
-}
-
-Vec3 Vec3::times(float k) {
-  float a = k*x;
-  float b = k*y;
-  float c = k*z;
-  return Vec3(a,b,c);
-}
-
-Vec3 Vec3::sub(Vec3 v) {
-  float a = x - v.x;
-  float b = y - v.y;
-  float c = z = v.z;
-
-  float len = sqrt(pow(a,2) + pow(b,2) + pow(c,2));
-  a = a/len;
-  b = b/len;
-  c = c/len;
-  return Vec3(a,b,c);
-}
+//***************** MATRIX *****************//
+class Matrix {
+    float mat[4][4];
+    //TODO: Figure out what a matrix should be able to do
+};
 
 
+//***************** COLOR *****************//
+class Color {
+    float r, g, b;
+    Color(float, float, float);
+    Color add(Color);
+    Color sub(Color);
+    Color mult(float);
+    Color dif(float);
+};
+
+//TODO: Actually Implement the things above
+
+//***************** COLOR *****************//
 //****************************************************
 // Global Variables
 //****************************************************
@@ -156,8 +108,6 @@ Vec3 Vec3::sub(Vec3 v) {
 //****************************************************
 // Simple init function
 //****************************************************
-
-}
 
 
 //****************************************************
