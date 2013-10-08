@@ -31,6 +31,7 @@ class Ray;
 class Matrix;
 class Transformation;
 class Color;
+class Camera;
 
 //***************** VECTOR *****************//
 class Vector {
@@ -87,6 +88,12 @@ class Matrix {
 };
 
 
+//***************** TRANSFORMATION *****************//
+class Transformation {
+    Matrix m, minvt
+    //TODO: should support transformations by overloading *
+}
+
 //***************** COLOR *****************//
 class Color {
     float r, g, b;
@@ -99,23 +106,31 @@ class Color {
 
 //TODO: Actually Implement the things above
 
-//***************** COLOR *****************//
+//***************** CAMERA *****************//
+class Camera {
+    Point lookfrom;
+    Point lookat;
+    Vector up;
+    float fov;
+    Camera();
+    Camera(Point, Point, Vector, float);
+    Ray generateRay();
+};
+
+//TODO: Actually Implement the things above
+
 //****************************************************
 // Global Variables
 //****************************************************
+float imgwidth, imgheight;
+int maxdepth = 5;
+string filename;
+Camera eye;
 
 
 //****************************************************
-// Simple init function
+// Testing Code
 //****************************************************
-
-
-//****************************************************
-// reshape viewport if the window is resized
-//****************************************************
-
-//****************************************************
-
 
 //****************************************************
 // the usual stuff, nothing exciting here
@@ -123,11 +138,3 @@ class Color {
 int main(int argc, char *argv[]) {
   return 0;
 }
-
-
-
-
-
-
-
-
