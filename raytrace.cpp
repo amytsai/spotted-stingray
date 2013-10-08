@@ -65,10 +65,10 @@ Vector::Vector(float a, float b, float c) {
   z = c;
 }
 
-Vector::Vector(point a, point b) {
-  x = a.x - b.x;
-  y = a.y - b.y;
-  z = a.z - b.z;
+Vector::Vector(point start, point end) {
+  x = end.x - start.x;
+  y = end.y - start.y;
+  z = end.z - start.z;
 }
 
 Vector Vector::add(Vector v) {
@@ -117,9 +117,11 @@ Vector Vector::cross(Vector v) {
 
 void Vector::normalize() {
   float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
-  x = x/len;
-  y = y/len;
-  z = z/len;
+  if(len != 0) {
+	  x = x/len;
+	  y = y/len;
+	  z = z/len;
+  }
 }
 
 //***************** NORMAL *****************//
@@ -240,7 +242,7 @@ class Color {
     Color add(Color);
     Color sub(Color);
     Color mult(float);
-    Color dif(float);
+    Color div(float);
 };
 
 Color::Color() {
