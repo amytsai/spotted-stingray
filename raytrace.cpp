@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cmath>
+#include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -35,6 +37,17 @@ class Camera;
 class Shape;
 class Sphere;
 class Triangle;
+class LocalGeo;
+
+//***************** POINT *****************//
+class Point {
+  public:
+    float x, y, z;
+    Point();
+    Point(float, float, float);
+    Point plus(Vector);
+    Point minus(Vector);
+};
 
 //***************** VECTOR *****************//
 class Vector {
@@ -42,7 +55,7 @@ class Vector {
     float x, y, z;
     Vector();
     Vector(float, float, float);
-    Vector(point, point);
+    Vector(Point, Point);
     Vector add(Vector);
     Vector sub(Vector);
     Vector mult(float);
@@ -50,8 +63,40 @@ class Vector {
     float dot(Vector);
     Vector cross(Vector);
     void normalize();
+    bool equals(Vector);
+    float len();
 
 };
+
+//***************** POINT METHODS *****************//
+Point::Point() {
+  x = 0.0f;
+  y = 0.0f;
+  z = 0.0f;
+}
+
+Point::Point(float a, float b, float c) {
+  x = a;
+  y = b;
+  z = c;
+}
+
+Point Point::plus(Vector v) {
+  float a = x + v.x;
+  float b = y + v.y;
+  float c = z + v.z;
+  return Point(a, b, c);
+}
+
+Point Point::minus(Vector v) {
+  float a = x - v.x;
+  float b = y - v.y;
+  float c = z - v.z;
+  return Point(a, b, c);
+}
+
+
+//***************** VECTOR METHODS *****************//
 
 Vector::Vector() {
   x = 0.0f;
@@ -65,7 +110,7 @@ Vector::Vector(float a, float b, float c) {
   z = c;
 }
 
-Vector::Vector(point start, point end) {
+Vector::Vector(Point start, Point end) {
   x = end.x - start.x;
   y = end.y - start.y;
   z = end.z - start.z;
@@ -118,19 +163,27 @@ Vector Vector::cross(Vector v) {
 void Vector::normalize() {
   float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
   if(len != 0) {
-	  x = x/len;
-	  y = y/len;
-	  z = z/len;
+    x = x/len;
+    y = y/len;
+    z = z/len;
   }
+}
+
+float Vector::len() {
+  return sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+}
+
+bool Vector::equals(Vector v) {
+  return (x == v.x) && (y == v.y) && ( z == v.z);
 }
 
 //***************** NORMAL *****************//
 class Normal {
-    public:
-      float x, y, z;
-      Normal(float, float, float);
-      Normal add(Normal);
-      Normal sub(Normal);
+  public:
+    float x, y, z;
+    Normal(float, float, float);
+    Normal add(Normal);
+    Normal sub(Normal);
 };
 
 Normal::Normal(float a, float b, float c) {
@@ -159,42 +212,6 @@ Normal Normal::sub(Normal v) {
   float c = z - v.z;
 
   return Normal(a,b,c);
-}
-
-//***************** POINT *****************//
-class Point {
-  public:
-    float x, y, z;
-    Point();
-    Point(float, float, float);
-    Point plus(Vector);
-    Point minus(Vector);
-};
-
-Point::Point() {
-  x = 0.0f;
-  y = 0.0f;
-  y = 0.0f;
-}
-
-Point::Point(float a, float b, float c) {
-  x = a;
-  y = b;
-  z = c;
-}
-
-Point Point::plus(Vector v) {
-  a = x + v.x;
-  b = y + v.y;
-  c = z + v.z;
-  return Point(a, b, c);
-}
-
-Point Point::minus(Vector v) {
-  a = x - v.x;
-  b = y - v.y;
-  c = z - v.z;
-  return Point(a, b, c);
 }
 
 //***************** RAY *****************//
@@ -229,9 +246,9 @@ class Matrix {
 
 //***************** TRANSFORMATION *****************//
 class Transformation {
-  Matrix m, minvt
-    //TODO: should support transformations by overloading *
-}
+  Matrix m, minvt;
+  //TODO: should support transformations by overloading *
+};
 
 //***************** COLOR *****************//
 class Color {
@@ -298,15 +315,27 @@ class Camera {
     float fov;
     Camera();
     Camera(Point, Point, Vector, float);
-    Ray generateRay();
+    //Ray generateRay();
 };
+Camera::Camera() {
+    lookfrom = Point();
+    lookat = Point();
+    up = Vector();
+    fov = 0.0;
+}
 
+Camera::Camera(Point from, Point at, Vector v, float f) {
+    lookfrom = from;
+    lookat = at;
+    up = v;
+    fov = f;
+}
 //TODO: Actually Implement the things above
 
 //***************** SHAPE *****************//
 class Shape {
-    virtual bool intersect(Ray& ray, float* thit, LocalGeo* local);
-    virtual bool ifIntersect(Ray& ray);
+  virtual bool intersect(Ray& ray, float* thit, LocalGeo* local);
+  virtual bool ifIntersect(Ray& ray);
 };
 //***************** SPHERE *****************//
 class Sphere: public Shape {
@@ -318,10 +347,21 @@ class Sphere: public Shape {
     bool ifIntersect(Ray& ray);
 
 };
+
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
-
+  public:
+    Point a, b, c;
 };
+
+//***************** LOCALGEO *****************//
+class LocalGeo {
+  public:
+    Point pos;
+    Normal n;
+    LocalGeo(Point, Normal);
+};
+
 //****************************************************
 // Global Variables
 //****************************************************
@@ -334,7 +374,48 @@ Camera eye;
 //****************************************************
 // Testing Code
 //****************************************************
+bool testVector(string* error) {
+  Vector a = Vector(0.5, 0.5, 0.5);
+  Vector b = Vector(0.2, 0.2, 0.2);
+  Vector c = Vector(0.7, 0.7, 0.7);
+  Vector d = Vector(0.3, 0.3, 0.3);
+  Vector e = Vector(1.0, 1.0, 1.0);
+  Vector f = Vector(1.0, 1.0, 1.0);
 
+  Vector aplusb = a.add(b);
+  Vector aminusb = a.sub(b);
+  Vector atimes2 = a.mult(2.0);
+  Vector ediv2 = e.div(2.0);
+  f.normalize();
+  printf("f.len() = %1.12f \n", f.len());
+  float flen = f.len();
+  float one = 1.0;
+  bool x = flen == one;
+  printf("f.len() == 1.0f: %s \n", x ? "True" : "False");
+
+  if (!aplusb.equals(c)) {
+    *error = "Vector addition failed";
+    return false;
+  } else if (!aminusb.equals(d)) {
+    *error = "Vector subtraction failed";
+    return false;
+  } else if (!atimes2.equals(e)) {
+    *error = "multiplicaiton failed";
+    return false;
+  } else if (!ediv2.equals(a)) {
+    *error = "division failed";
+    return false;
+  } else if(a.dot(e) != 1.5) {
+    *error = "dot product failed";
+    return false;
+  } else if(f.len() != 1.0f) {
+    *error = "normalize failed";
+    return false;
+  } else {
+    *error = "passed tests";
+    return true;
+  }
+}
 //****************************************************
 // Parse Scene File
 //****************************************************
@@ -377,7 +458,7 @@ void loadScene(std::string file) {
       //maxdepth depth
       //  max # of bounces for ray (default 5)
       else if(!splitline[0].compare("maxdepth")) {
-        maxdepth = atoi(splitline[1].c_str())
+        maxdepth = atoi(splitline[1].c_str());
       }
       //output filename
       //  output file to write image to 
@@ -389,13 +470,13 @@ void loadScene(std::string file) {
       //  speciï¬es the camera in the standard way, as in homework 2.
       else if(!splitline[0].compare("camera")) {
         // lookfrom:
-            eye.lookfrom = Point(atof(splitline[1].c_str()), atof(splitline[2].c_str()), atof(splitline[3].c_str()))
-        // lookat:
-            eye.lookat = Point(atof(splitline[4].c_str()), atof(splitline[5].c_str()), atof(splitline[6].c_str()))
-        // up:
-            eye.up = Vector(atof(splitline[7].c_str()), atof(splitline[8].c_str()), atof(splitline[9].c_str()))
-        // fov: atof(splitline[10].c_str());
-            eye.fov = atof(splitline[10].c_str());
+        eye.lookfrom = Point(atof(splitline[1].c_str()), atof(splitline[2].c_str()), atof(splitline[3].c_str()));
+          // lookat:
+          eye.lookat = Point(atof(splitline[4].c_str()), atof(splitline[5].c_str()), atof(splitline[6].c_str()));
+          // up:
+          eye.up = Vector(atof(splitline[7].c_str()), atof(splitline[8].c_str()), atof(splitline[9].c_str()));
+          // fov: atof(splitline[10].c_str());
+          eye.fov = atof(splitline[10].c_str());
       }
 
       //sphere x y z radius
@@ -410,9 +491,14 @@ void loadScene(std::string file) {
         //   Store current property values
         //   Store current top of matrix stack
       }
-      //****************************************************
-      // the usual stuff, nothing exciting here
-      //****************************************************
-      int main(int argc, char *argv[]) {
-        return 0;
-      }
+    }
+  }
+}
+//****************************************************
+// the usual stuff, nothing exciting here
+//****************************************************
+int main(int argc, char *argv[]) {
+  string error = "no error";
+  bool vectest = testVector(&error);
+  printf("vectest returned with error message: %s \n", error.c_str());
+}
