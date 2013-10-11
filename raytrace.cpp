@@ -16,6 +16,7 @@
 
 #include <time.h>
 #include <math.h>
+#include "FreeImage.h"
 
 
 #define PI 3.14159265  // Should be used from mathlib
@@ -52,7 +53,7 @@ class Point {
 //***************** VECTOR *****************//
 class Vector {
   public:
-    float x, y, z;
+    float x, y, z, len;
     Vector();
     Vector(float, float, float);
     Vector(Point, Point);
@@ -64,8 +65,6 @@ class Vector {
     Vector cross(Vector);
     void normalize();
     bool equals(Vector);
-    float len();
-
 };
 
 //***************** POINT METHODS *****************//
@@ -102,18 +101,21 @@ Vector::Vector() {
   x = 0.0f;
   y = 0.0f;
   z = 0.0f;
+  len = 0.0f;
 }
 
 Vector::Vector(float a, float b, float c) {
   x = a;
   y = b;
   z = c;
+  len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 
 Vector::Vector(Point start, Point end) {
   x = end.x - start.x;
   y = end.y - start.y;
   z = end.z - start.z;
+  len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 
 Vector Vector::add(Vector v) {
@@ -161,16 +163,13 @@ Vector Vector::cross(Vector v) {
 }
 
 void Vector::normalize() {
-  float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+  float l = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
   if(len != 0) {
-    x = x/len;
-    y = y/len;
-    z = z/len;
+    x = x/l;
+    y = y/l;
+    z = z/l;
+    len = 1.0f;
   }
-}
-
-float Vector::len() {
-  return sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 
 bool Vector::equals(Vector v) {
@@ -181,10 +180,16 @@ bool Vector::equals(Vector v) {
 class Normal {
   public:
     float x, y, z;
+    Normal();
     Normal(float, float, float);
     Normal add(Normal);
     Normal sub(Normal);
+    bool equals(Normal);
 };
+
+Normal::Normal() {
+    x, y, z == 0.0;
+}
 
 Normal::Normal(float a, float b, float c) {
   x = a;
@@ -212,6 +217,10 @@ Normal Normal::sub(Normal v) {
   float c = z - v.z;
 
   return Normal(a,b,c);
+}
+
+bool Normal::equals(Normal n) {
+    return (x == n.x) && (y == n.y) && (z == n.z);
 }
 
 //***************** RAY *****************//
@@ -387,11 +396,6 @@ bool testVector(string* error) {
   Vector atimes2 = a.mult(2.0);
   Vector ediv2 = e.div(2.0);
   f.normalize();
-  printf("f.len() = %1.12f \n", f.len());
-  float flen = f.len();
-  float one = 1.0;
-  bool x = flen == one;
-  printf("f.len() == 1.0f: %s \n", x ? "True" : "False");
 
   if (!aplusb.equals(c)) {
     *error = "Vector addition failed";
@@ -408,7 +412,7 @@ bool testVector(string* error) {
   } else if(a.dot(e) != 1.5) {
     *error = "dot product failed";
     return false;
-  } else if(f.len() != 1.0f) {
+  } else if(f.len != 1.0f) {
     *error = "normalize failed";
     return false;
   } else {
@@ -416,9 +420,39 @@ bool testVector(string* error) {
     return true;
   }
 }
+
+bool testNormal(string* error) {
+    Normal a = Normal(1.0, 1.0, 1.0);
+    Normal b = Normal(2.0, 2.0, 2.0);
+
+    Normal c = Normal(1.0, 0.0, 0.0);
+    Normal d = Normal(2.0, 0.0, 0.0);
+    Normal e = Normal(-1.0, 0.0, 0.0);
+    Normal zero = Normal();
+
+    Normal csubd = c.sub(d);
+    Normal eaddd = e.add(d);
+    printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
+
+    if(!a.equals(b)) {
+      *error = "normal equality failed";
+      return false;
+    } else if(!eaddd.equals(zero)) {
+      *error = "normal addition failed";
+      return false;
+    } else if(!csubd.equals(zero)) {
+      *error = "normal subraction failed";
+      return false;
+    } else {
+      *error = "passed tests";
+      return true;
+    }
+}
+
 //****************************************************
 // Parse Scene File
 //****************************************************
+
 void loadScene(std::string file) {
 
   ifstream inpfile(file.c_str());
@@ -500,5 +534,13 @@ void loadScene(std::string file) {
 int main(int argc, char *argv[]) {
   string error = "no error";
   bool vectest = testVector(&error);
-  printf("vectest returned with error message: %s \n", error.c_str());
+  printf("vectest returned with message: %s \n", error.c_str());
+  bool normaltest = testNormal(&error);
+  //printf("normaltest returned with message: %s \n", error.c_str());
+  FreeImage_Initialise();
+  cout << "FreeImage " << FreeImage_GetVersion() << "\n";
+  cout << FreeImage_GetCopyrightMessage() << "\n\n";
+  FIBITMAP * bitmap = FreeImage_Allocate(100, 100, 24);
+  FreeImage_Save(FIF_PNG, bitmap, "testimage.png", 0);
+  FreeImage_DeInitialise();
 }
