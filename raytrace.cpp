@@ -572,10 +572,13 @@ bool Triangle::ifIntersect(Ray& ray) {
 class Light {
   public:
     float x, y, z;
+	Vector direction;
     Color rgb;
     bool isPL;
     Light();
     Light(float, float, float, Color, bool);
+	Light(float, float, float, Color, bool, Vector);
+	void generateLightRay(LocalGeo&, Ray*, Color*);
 };
 
 Light::Light() {
@@ -592,6 +595,33 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
   z = c;
   rgb = color;
   isPL = PL;
+}
+
+Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
+  x = a;
+  y = b;
+  z = c;
+  rgb = color;
+  isPL = PL;
+  direction = dir;
+}
+
+void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
+	if(isPL) {
+		Point origin = Point(x, y, z);
+		Vector dir = Vector(origin, local.pos);
+		*lray = Ray(origin, dir);
+		*lcolor = rgb;
+		return;
+	}
+	else {
+		Point origin = Point(x, y, z);
+		Vector dir = direction;
+		*lray = Ray(origin, dir);
+		*lcolor = rgb;
+		return;
+	}
+
 }
 
 //***************** SAMPLE *****************//
@@ -701,6 +731,29 @@ BRDF::BRDF(float d, float s, float a, float r) {
 }
 
 //****************************************************
+// Material
+//****************************************************
+
+class Material {
+  public:
+    BRDF constantBRDF;
+    Material();
+	Material(BRDF);
+	BRDF getBRDF(LocalGeo& local, BRDF* brdf);
+};
+
+Material::Material() {
+	constantBRDF = BRDF();
+}
+
+Material::Material(BRDF mat) {
+	constantBRDF = mat;
+}
+
+BRDF Material::getBRDF(LocalGeo& local, BRDF* brdf) {
+	return constantBRDF;
+}
+//****************************************************
 // SHADER
 //****************************************************
 
@@ -712,11 +765,33 @@ class Shader {
 };
 
 void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
+	// Obtain the brdf at intersection point
+	in.primitive->getBRDF(in.local, &brdf);
+
+	// There is an intersection, loop through all light source
+	for (i = 0; i < #lights; i++) {
+		lights[i].generateLightRay(in.local, &lray, &lcolor);
+
+		// Check if the light is blocked or not
+		if (!primitive->intersectP(lray))
+			// If not, do shading calculation for this
+				// light source
+					*color += shading(in.local, brdf, lray, lcolor);
+	}
+
+	// Handle mirror reflection
+	if (brdf.kr > 0) {
+		reflectRay = createReflectRay(in.local, ray);
+
+		// Make a recursive call to trace the reflected ray
+		trace(reflectRay, depth+1, &tempColor);
+		*color += brdf.kr * tempColor;
+	}
 
 }
 
 //****************************************************
-// Ray Tracer trace
+// Ray Tracer TRACE
 //****************************************************
 
 void trace(Ray& ray, int depth, Color* color) {
