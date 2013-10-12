@@ -3,7 +3,6 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
-#include <list>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -17,7 +16,12 @@
 
 #include <time.h>
 #include <math.h>
-#include "FreeImage.h"
+#include "FreeImage/FreeImage.h"
+
+
+#include <iostream>
+#include <Eigen/Dense>
+using namespace Eigen;
 
 
 #define PI 3.14159265  // Should be used from mathlib
@@ -32,7 +36,7 @@ class Vector;
 class Normal;
 class Point;
 class Ray;
-class Matrix;
+class MatrixGenerator;
 class Transformation;
 class Color;
 class Camera;
@@ -40,7 +44,6 @@ class Shape;
 class Sphere;
 class Triangle;
 class LocalGeo;
-class Light;
 
 class Sample;
 class Sampler;
@@ -48,9 +51,10 @@ class Sampler;
 //***************** POINT *****************//
 class Point {
   public:
-    float x, y, z;
+    Vector4f point;
     Point();
     Point(float, float, float);
+	Point(Vector4f);
     Point plus(Vector);
     Point minus(Vector);
 };
@@ -58,10 +62,12 @@ class Point {
 //***************** VECTOR *****************//
 class Vector {
   public:
-    float x, y, z, len;
+    Vector4f vector;
+	float len;
     Vector();
     Vector(float, float, float);
     Vector(Point, Point);
+	Vector(Vector4f);
     Vector add(Vector);
     Vector sub(Vector);
     Vector mult(float);
@@ -74,158 +80,133 @@ class Vector {
 
 //***************** POINT METHODS *****************//
 Point::Point() {
-  x = 0.0f;
-  y = 0.0f;
-  z = 0.0f;
+  Vector4f temp(0, 0, 0, 1);
+  point = temp;
 }
 
 Point::Point(float a, float b, float c) {
-  x = a;
-  y = b;
-  z = c;
+  Vector4f temp(a, b, c, 1);
+  point = temp;
+}
+
+Point::Point(Vector4f vec) {
+	point = vec;
+	point(3) = 1;
 }
 
 Point Point::plus(Vector v) {
-  float a = x + v.x;
-  float b = y + v.y;
-  float c = z + v.z;
-  return Point(a, b, c);
+  Vector4f temp = point + v.vector;
+  return Point(temp);
 }
 
 Point Point::minus(Vector v) {
-  float a = x - v.x;
-  float b = y - v.y;
-  float c = z - v.z;
-  return Point(a, b, c);
+  Vector4f temp = point - v.vector;
+  return Point(temp);
 }
+
 
 
 //***************** VECTOR METHODS *****************//
 
 Vector::Vector() {
-  x = 0.0f;
-  y = 0.0f;
-  z = 0.0f;
-  len = 0.0f;
+  Vector4f temp(0, 0, 0, 0);
+  vector = temp;
+  len = vector.norm();
 }
 
 Vector::Vector(float a, float b, float c) {
-  x = a;
-  y = b;
-  z = c;
-  len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+  Vector4f temp(a, b, c, 0);
+  vector = temp;
+  len = vector.norm();
+}
+
+Vector::Vector(Vector4f vec) {
+	vector = vec;
+	vector(3) = 0;
+	len = vector.norm();
 }
 
 Vector::Vector(Point start, Point end) {
-  x = end.x - start.x;
-  y = end.y - start.y;
-  z = end.z - start.z;
-  len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
+	vector = end.point - start.point;
+	vector(3) = 0;
+  len = vector.norm();
 }
 
 Vector Vector::add(Vector v) {
-  float a = x + v.x;
-  float b = y + v.y;
-  float c = z + v.z;
-
-  return Vector(a,b,c);
+  Vector4f temp = vector + v.vector;
+  return Vector(temp);
 }
 
 Vector Vector::sub(Vector v) {
-  float a = x - v.x;
-  float b = y - v.y;
-  float c = z - v.z;
-
-  return Vector(a,b,c);
+  Vector4f temp = vector - v.vector;
+  return Vector(temp);
 }
 
 Vector Vector::mult(float k) {
-  float a = k*x;
-  float b = k*y;
-  float c = k*z;
-
-  return Vector(a,b,c);
+  Vector4f temp = vector * k;
+  return Vector(temp);
 }
 
 Vector Vector::div(float k) {
-  float a = x/k;
-  float b = y/k;
-  float c = z/k;
-
-  return Vector(a,b,c);
+  Vector4f temp = vector / k;
+  return Vector(temp);
 }
 
 float Vector::dot(Vector v) {
-  return x*v.x + y*v.y + z*v.z;
+  return vector.dot(v.vector);
 }
 
 Vector Vector::cross(Vector v) {
-  float a = y * v.z - z * v.y;
-  float b = z * v.x - x * v.z;
-  float c = x * v.y - y * v.x;
-
-  return Vector(a, b, c);
+  return vector.cross(v.vector);
 }
 
 void Vector::normalize() {
-  float l = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
-  if(len != 0) {
-    x = x/l;
-    y = y/l;
-    z = z/l;
-    len = 1.0f;
-  }
+  vector.normalize();
 }
 
 bool Vector::equals(Vector v) {
-  return (x == v.x) && (y == v.y) && ( z == v.z);
+	Vector4f temp = v.vector - vector;
+	float size = temp.norm();
+  return size == 0;
 }
 
 //***************** NORMAL *****************//
 class Normal {
   public:
-    float x, y, z;
+    Vector4f normal;
     Normal();
     Normal(float, float, float);
+	Normal(Vector4f);
     Normal add(Normal);
     Normal sub(Normal);
     bool equals(Normal);
 };
 
 Normal::Normal() {
-    x, y, z == 0.0;
+    Vector4f temp(0, 0, 0, 0);
+  normal = temp;
 }
 
 Normal::Normal(float a, float b, float c) {
-  x = a;
-  y = b;
-  z = c;
-  if(x != 0 || y !=0 || z !=0) {
-    float len = sqrt(pow(x,2) + pow(y,2) + pow(z,2));
-    x = x/len;
-    y = y/len;
-    z = z/len;
-  }
+  Vector4f temp(a, b, c, 0);
+  normal = temp;
+  normal.normalize();
 }
 
 Normal Normal::add(Normal v) {
-  float a = x + v.x;
-  float b = y + v.y;
-  float c = z + v.z;
-
-  return Normal(a,b,c);
+  Vector4f temp = normal + v.normal;
+  return Normal(temp);
 }
 
 Normal Normal::sub(Normal v) {
-  float a = x - v.x;
-  float b = y - v.y;
-  float c = z - v.z;
-
-  return Normal(a,b,c);
+  Vector4f temp = normal - v.normal;
+  return Normal(temp);
 }
 
 bool Normal::equals(Normal n) {
-    return (x == n.x) && (y == n.y) && (z == n.z);
+    Vector4f temp = n.normal - normal;
+	float size = temp.norm();
+  return size == 0;
 }
 
 //***************** RAY *****************//
@@ -243,26 +224,99 @@ class Ray {
 Ray::Ray(Point a, Point b) {
   pos = a;
   dir = Vector(a, b);
+  t_min = 0;
+  t_max = 99999999;
 }
 
 Ray::Ray(Point a, Vector v) {
   pos = a;
   dir = v;
+  t_min = 0;
+  t_max = 99999999;
+}
+
+//***************** TRANSFORMATION *****************//
+class Transformation {
+  //Matrix m, minvt;
+	public: 
+		Matrix4f matrix, matrixinv;
+		Transformation(Matrix4f);
+  //TODO: should support transformations by overloading *
+};
+
+Transformation::Transformation(Matrix4f mat) {
+	matrix = mat;
+	matrixinv = mat.inverse();
 }
 
 
 //***************** MATRIX *****************//
-class Matrix {
-  float mat[4][4];
+class MatrixGenerator {
+  //float mat[4][4];
   //TODO: Figure out what a matrix should be able to do
+	public:
+		MatrixGenerator();
+		Transformation generateTranslation(float, float, float);
+		Transformation generateRotationx(float);
+		Transformation generateRotationy(float);
+		Transformation generateRotationz(float);
+		Transformation generateScale(float, float, float);
 };
 
+MatrixGenerator::MatrixGenerator() {
+}
 
-//***************** TRANSFORMATION *****************//
-class Transformation {
-  Matrix m, minvt;
-  //TODO: should support transformations by overloading *
-};
+Transformation MatrixGenerator::generateTranslation(float x, float y, float z) {
+	Matrix4f temp;
+	temp << 1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateRotationx(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << 1, 0, 0, 0,
+			0, cos(rad), -sin(rad), 0,
+			0, sin(rad), cos(rad), 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+
+Transformation MatrixGenerator::generateRotationy(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << cos(rad), 0, -sin(rad), 0,
+			0, 1, 0, 0,
+			sin(rad), 0, cos(rad), 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateRotationz(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << cos(rad), -sin(rad), 0, 0,
+			sin(rad), cos(rad), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateScale(float x, float y, float z) {
+	Matrix4f temp;
+	temp << x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+
+
 
 //***************** COLOR *****************//
 class Color {
@@ -541,7 +595,7 @@ bool testNormal(string* error) {
 
     Normal csubd = c.sub(d);
     Normal eaddd = e.add(d);
-    printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
+    //printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
 
     if(!a.equals(b)) {
       *error = "normal equality failed";
