@@ -234,6 +234,7 @@ class Ray {
     Point pos;
     Vector dir;
     float t_min, t_max;
+    Ray();
     Ray(Point, Point);
     Ray(Point, Vector);
 };
@@ -250,6 +251,11 @@ Ray::Ray(Point a, Vector v) {
   dir = v;
   t_min = 0;
   t_max = 99999999;
+}
+
+Ray::Ray() {
+    pos = Point();
+    dir = Vector();
 }
 
 //***************** TRANSFORMATION *****************//
@@ -401,7 +407,7 @@ class Camera {
     float fov;
     Camera();
     Camera(Point, Point, Vector, float);
-    void generateRay(Sample &, Ray* ray);
+    void generateRay(Sample, Ray*);
 };
 Camera::Camera() {
     lookfrom = Point();
@@ -429,7 +435,13 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     UR = zplusx.add(up);
     LR = zplusx.sub(up);
 
+    printf("UL <%f, %f, %f> \n", UL.vector(0), UL.vector(1), UL.vector(2));
+    printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
+    printf("UR <%f, %f, %f> \n", UR.vector(0), UR.vector(1), UR.vector(2));
+    printf("LR <%f, %f, %f> \n", LR.vector(0), LR.vector(1), LR.vector(2));
+
 }
+
 
 //***************** SHAPE *****************//
 class Shape {
@@ -522,6 +534,16 @@ class Sample {
 Sample::Sample() {
     x, y = 0.0;
 }
+
+void Camera::generateRay(Sample s, Ray* ray) {
+    float v = s.y - height/2;
+    float u = s.x - width/2;
+    Vector t1 = LL.mult(v).add(UL.mult(1-v));
+    Vector t2 = LR.mult(v).add(UR.mult(1-v));
+    Vector t3 = t1.mult(u).add(t2.mult(1-u));
+    Point P = Point(t3.vector);
+    *ray  = Ray(lookfrom, P);
+}
 //***************** SAMPLER *****************//
 class Sampler {
   public:
@@ -592,8 +614,10 @@ void render() {
     Sampler mySampler = Sampler();
     while(mySampler.getSample(&s)) {
         printf("sample generated at: %f, %f \n", s.x, s.y);
-        //Ray r;
-        //camera.generateRay(sample, &r;);
+        Ray r;
+        eye.generateRay(s, &r);
+        printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
+        
     }
 }
 
@@ -738,10 +762,10 @@ void loadScene(std::string file) {
         //fov:
         float fov = atof(splitline[10].c_str());
 
-        eye.lookfrom = Point(lfx, lfy, lfz);
-        eye.lookat = Point(lax, lay, laz);
-        eye.up = Vector(upx, upy, upz);
-        eye.fov = fov;
+        Point lookfrom = Point(lfx, lfy, lfz);
+        Point lookat = Point(lax, lay, laz);
+        Vector up = Vector(upx, upy, upz);
+        eye = Camera(lookfrom, lookat, up, fov);
         printf("==== CAMERA ADDED ====\n");
         printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
         printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
