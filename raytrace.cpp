@@ -205,6 +205,11 @@ Normal::Normal(float a, float b, float c) {
   normal.normalize();
 }
 
+Normal::Normal(Vector4f vec) {
+	normal = vec;
+	normal.normalize();
+}
+
 Normal Normal::add(Normal v) {
   Vector4f temp = normal + v.normal;
   return Normal(temp);
