@@ -42,6 +42,9 @@ class Triangle;
 class LocalGeo;
 class Light;
 
+class Sample;
+class Sampler;
+
 //***************** POINT *****************//
 class Point {
   public:
@@ -376,7 +379,7 @@ bool Sphere::ifIntersect(Ray& ray) {
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
   public:
-    Point a, b, c;
+   Point a, b, c;
     bool intersect(Ray&, float* , LocalGeo* );
     bool ifIntersect(Ray& );
 };
@@ -423,6 +426,33 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
   isPL = PL;
 }
 
+//***************** SAMPLE *****************//
+class Sample {
+    //holds screen coordinates;
+    float x, y;
+}
+//***************** SAMPLER *****************//
+class Sampler {
+    int i, j;
+    bool getSample(Sample *);
+    Sampler();
+}
+Sampler::Sampler() {
+    curx, cury = 0;
+}
+bool Sampler::getSample(Sample *s) {
+    if(i < width) {
+        if (j < height) {
+        
+        } else {
+            return false;
+        }
+    } else {
+        i = 0;
+        j++;
+    }
+
+}
 //****************************************************
 // Global Variables
 //****************************************************
@@ -447,6 +477,18 @@ void setPixel(int x, int y, Color rgb) {
     FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
 
+
+//****************************************************
+// Render Loop
+//****************************************************
+
+
+//****************************************************
+
+//****************************************************
+void render() {
+    
+}
 //****************************************************
 // Testing Code
 //****************************************************
