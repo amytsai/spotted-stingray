@@ -442,18 +442,20 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     up = v;
     up.normalize();
     fov = f;
+    Vector y  = up.mult(cos(fov/2));
 
     Vector z = Vector(from, at);
     z.normalize();
-    Vector x = z.cross(up);
+    Vector x = up.cross(z);
     x.normalize();
+    x = x.mult((width/height)*y.len);
     Vector zminusx = z.sub(x);
     Vector zplusx = z.add(x);
 
-    UL = zminusx.add(up);
-    LL = zminusx.sub(up);
-    UR = zplusx.add(up);
-    LR = zplusx.sub(up);
+    UL = zminusx.add(y);
+    LL = zminusx.sub(y);
+    UR = zplusx.add(y);
+    LR = zplusx.sub(y);
 
     printf("UL <%f, %f, %f> \n", UL.vector(0), UL.vector(1), UL.vector(2));
     printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
@@ -818,7 +820,7 @@ void loadScene(std::string file) {
         float upy  = atof(splitline[8].c_str());
         float upz  = atof(splitline[9].c_str());
         //fov:
-        float fov = atof(splitline[10].c_str());
+        float fov = (PI/180)*atof(splitline[10].c_str()); // convert to radians
 
         Point lookfrom = Point(lfx, lfy, lfz);
         Point lookat = Point(lax, lay, laz);
