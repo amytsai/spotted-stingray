@@ -769,7 +769,7 @@ class Shader {
     Shader();
 };
 
-void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
+/*void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
 	// Obtain the brdf at intersection point
 	in.primitive->getBRDF(in.local, &brdf);
 
@@ -793,7 +793,7 @@ void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
 		*color += brdf.kr * tempColor;
 	}
 
-}
+}*/
 
 //****************************************************
 // Ray Tracer TRACE
