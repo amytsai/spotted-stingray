@@ -63,8 +63,8 @@ class Point {
     Point(float, float, float);
     Point(Vector4f);
     Point add(Vector);
-    Point minus(Vector);
-    Vector minus(Point);
+    Point sub(Vector);
+    Vector sub(Point);
 };
 
 //***************** VECTOR *****************//
@@ -107,12 +107,12 @@ Point Point::add(Vector v) {
   return Point(temp);
 }
 
-Point Point::minus(Vector v) {
+Point Point::sub(Vector v) {
   Vector4f temp = point - v.vector;
   return Point(temp);
 }
 
-Vector Point::minus(Point p) {
+Vector Point::sub(Point p) {
     Vector4f temp = point - p.point;
     return Vector(temp);
 }
@@ -181,6 +181,7 @@ Vector Vector::cross(Vector v) {
 
 void Vector::normalize() {
   vector.normalize();
+  len = 1;
 }
 
 bool Vector::equals(Vector v) {
@@ -510,10 +511,10 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         return false;
     }
     else {
-        float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
+        float hittime = (sqrt(determinant) + (-1*d).dot(e - c))/(d.dot(d));
         *thit = hittime;
         Point hitPoint = ray.getPoint(hittime);
-        Normal norm = Normal((hitPoint.minus(center)));
+        Normal norm = Normal((hitPoint.sub(center)));
         *local = LocalGeo(hitPoint, norm);
         return true;
     }
