@@ -477,9 +477,14 @@ class LocalGeo {
   public:
     Point pos;
     Normal n;
+	LocalGeo();
     LocalGeo(Point, Normal);
 };
 
+LocalGeo::LocalGeo() {
+	pos = Point();
+	n = Normal();
+}
 LocalGeo::LocalGeo(Point p, Normal norm) {
     pos = p;
     n = norm;
@@ -527,8 +532,6 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         *local = LocalGeo(hitPoint, norm);
         return true;
     }
-
-    
 }
 
 bool Sphere::ifIntersect(Ray& ray) {
@@ -670,6 +673,54 @@ void setPixel(int x, int y, Color rgb) {
     color.rgbGreen = rgb.g;
     color.rgbBlue = rgb.b;
     FreeImage_SetPixelColor(bitmap, x, y, &color);
+}
+
+//****************************************************
+// Ray Tracer trace
+//****************************************************
+
+void trace(Ray& ray, int depth, Color* color) {
+	float thit = 0.0f;
+	LocalGeo localGeo = LocalGeo();
+	if (depth > maxdepth) {
+		Color temp = Color(0, 0, 0);
+		*color = temp;
+		return;
+	}
+	else if (!*((Shape*)scene_shapes[0]).intersect(ray, &thit, &localGeo)) {
+		Color temp = Color(0, 0, 0);
+		*color = temp;
+		return;
+	}
+
+	else {
+		Color temp = Color(1, 0, 0);
+		*color = temp;
+		return;
+	}
+	/*// Obtain the brdf at intersection point
+	in.primitive->getBRDF(in.local, &brdf);
+
+	// There is an intersection, loop through all light source
+	for (i = 0; i < #lights; i++) {
+		lights[i].generateLightRay(in.local, &lray, &lcolor);
+
+		// Check if the light is blocked or not
+		if (!primitive->intersectP(lray))
+			// If not, do shading calculation for this
+				// light source
+					*color += shading(in.local, brdf, lray, lcolor);
+	}
+
+	// Handle mirror reflection
+	if (brdf.kr > 0) {
+		reflectRay = createReflectRay(in.local, ray);
+
+		// Make a recursive call to trace the reflected ray
+		trace(reflectRay, depth+1, &tempColor);
+		*color += brdf.kr * tempColor;
+	}*/
+
 }
 
 
