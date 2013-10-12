@@ -48,6 +48,12 @@ class LocalGeo;
 class Sample;
 class Sampler;
 
+//****************************************************
+//  Global Variables
+//****************************************************
+int width, height;
+int maxdepth = 5;
+
 //***************** POINT *****************//
 class Point {
   public:
@@ -157,7 +163,8 @@ float Vector::dot(Vector v) {
 }
 
 Vector Vector::cross(Vector v) {
-  return vector.cross(v.vector);
+  Vector4f temp = vector.cross(v.vector);
+  return Vector(temp);
 }
 
 void Vector::normalize() {
@@ -383,7 +390,7 @@ class Camera {
     float fov;
     Camera();
     Camera(Point, Point, Vector, float);
-    //Ray generateRay();
+    void generateRay(Sample &, Ray* ray);
 };
 Camera::Camera() {
     lookfrom = Point();
@@ -484,16 +491,17 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
 class Sample {
     //holds screen coordinates;
     float x, y;
-}
+};
 //***************** SAMPLER *****************//
 class Sampler {
     int i, j;
     bool getSample(Sample *);
     Sampler();
-}
+};
 Sampler::Sampler() {
-    curx, cury = 0;
+    i, j = 0;
 }
+
 bool Sampler::getSample(Sample *s) {
     if(i < width) {
         if (j < height) {
@@ -508,10 +516,8 @@ bool Sampler::getSample(Sample *s) {
 
 }
 //****************************************************
-// Global Variables
+// More Global Variables
 //****************************************************
-int width, height;
-int maxdepth = 5;
 string filename;
 Camera eye;
 FIBITMAP * bitmap;
@@ -536,6 +542,13 @@ void setPixel(int x, int y, Color rgb) {
 // Render Loop
 //****************************************************
 
+void render() {
+    Sample s;
+    while(!sampler.generateSample(&s)) {
+        Ray r;
+        camera.generateRay(sample, &r;);
+    }
+}
 
 //****************************************************
 
