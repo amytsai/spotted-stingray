@@ -640,10 +640,10 @@ void Camera::generateRay(Sample s, Ray* ray) {
     float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
     float imgToscreen = imagePlaneW/width;
-    float v = s.y*imgToscreen - imagePlaneH/2;
-    float u = s.x*imgToscreen - imagePlaneW/2;
-    /*float v = s.y*imgToscreen ;
-    float u = s.x*imgToscreen ;*/
+    /*float v = s.y*imgToscreen - imagePlaneH/2;
+    float u = s.x*imgToscreen - imagePlaneW/2;*/
+    float v = s.y*imgToscreen ;
+    float u = s.x*imgToscreen ;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
@@ -664,28 +664,30 @@ Sampler::Sampler() {
 bool Sampler::getSample(Sample *s) {
     //printf("getSample i = %d, j = %d \n", i , j);
     if(i < width) {
-        if (j < height-1) {
-            Sample news = Sample();
-            news.x = i + 0.5;
-            news.y = j + 0.5;
-            *s = news;
-            i++;
-            //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        i = 0;
-        j++;
-        Sample news = Sample();
-        news.x = i + 0.5;
-        news.y = j + 0.5;
-        *s = news;
-        i++;
-        //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
-        return true;
-    }
+      if (j < height) {
+          Sample news = Sample();
+          news.x = i + 0.5;
+          news.y = j + 0.5;
+          *s = news;
+          i++;
+          //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+          return true;
+      } else {
+          return false;
+      }
+  } else if(j <  height-1){
+      i = 0;
+      j++;
+      Sample news = Sample();
+      news.x = i + 0.5;
+      news.y = j + 0.5;
+      *s = news;
+      i++;
+      //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+      return true;
+  } else {
+      return false;
+  }
 
 }
 //****************************************************
@@ -703,11 +705,11 @@ shape_list* l = new shape_list();
 //****************************************************
 
 void setPixel(int x, int y, Color rgb) {
-    RGBQUAD color;
-    color.rgbRed = rgb.r*255;
-    color.rgbGreen = rgb.g*255;
-    color.rgbBlue = rgb.b*255;
-    FreeImage_SetPixelColor(bitmap, x, y, &color);
+  RGBQUAD color;
+  color.rgbRed = rgb.r*255;
+  color.rgbGreen = rgb.g*255;
+  color.rgbBlue = rgb.b*255;
+  FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
 
 //****************************************************
@@ -715,24 +717,24 @@ void setPixel(int x, int y, Color rgb) {
 //****************************************************
 
 class BRDF {
-  public:
-    float kd, ks, ka, kr;
-    BRDF();
-	BRDF(float, float, float, float);
+public:
+  float kd, ks, ka, kr;
+  BRDF();
+  BRDF(float, float, float, float);
 };
 
 BRDF::BRDF() {
-	kd = 0;
-	ks = 0;
-	ka = 0;
-	kr = 0;
+  kd = 0;
+  ks = 0;
+  ka = 0;
+  kr = 0;
 }
 
 BRDF::BRDF(float d, float s, float a, float r) {
-	kd = d;
-	ks = s;
-	ka = a;
-	kr = r;
+  kd = d;
+  ks = s;
+  ka = a;
+  kr = r;
 }
 
 //****************************************************
@@ -740,38 +742,38 @@ BRDF::BRDF(float d, float s, float a, float r) {
 //****************************************************
 
 class Material {
-  public:
-    BRDF constantBRDF;
-    Material();
-	Material(BRDF);
-	BRDF getBRDF(LocalGeo& local, BRDF* brdf);
+public:
+  BRDF constantBRDF;
+  Material();
+  Material(BRDF);
+  BRDF getBRDF(LocalGeo& local, BRDF* brdf);
 };
 
 Material::Material() {
-	constantBRDF = BRDF();
+  constantBRDF = BRDF();
 }
 
 Material::Material(BRDF mat) {
-	constantBRDF = mat;
+  constantBRDF = mat;
 }
 
 BRDF Material::getBRDF(LocalGeo& local, BRDF* brdf) {
-	return constantBRDF;
+  return constantBRDF;
 }
 //****************************************************
 // SHADER
 //****************************************************
 
 class Shader {
-  public:
-    //holds screen coordinates;
-    //float x, y;
-    Shader();
+public:
+  //holds screen coordinates;
+  //float x, y;
+  Shader();
 };
 
 /*void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
-	// Obtain the brdf at intersection point
-	in.primitive->getBRDF(in.local, &brdf);
+  // Obtain the brdf at intersection point
+  in.primitive->getBRDF(in.local, &brdf);
 
 	// There is an intersection, loop through all light source
 	for (i = 0; i < #lights; i++) {

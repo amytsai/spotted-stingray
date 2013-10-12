@@ -1,0 +1,142 @@
+loading Scene .. 
+
+Outputting image of size: 5 x 5
+Raytracing with maxdepth = 5
+Writing to file: test.png
+UL <-0.414214, 0.414214, 2.000000> 
+LL <-0.414214, -0.414214, 2.000000> 
+UR <0.414214, 0.414214, 2.000000> 
+LR <0.414214, -0.414214, 2.000000> 
+==== Camera Added ====
+lookfrom: 	 0.000000, 	 0.000000, 	 3.000000 
+lookat: 	 0.000000, 	 0.000000, 	 0.000000 
+up vector: 	 0.000000, 	 1.000000, 	 0.000000 
+
+==== Sphere Added ====
+center: 	 0.000000, 	 0.000000, 	 0.000000
+radius: 	 1.000000 
+sample generated at: 0.500000, 0.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 0.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 0.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.345584, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 0.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.345584, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 0.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 1.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.208326, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 1.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.208326, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 1.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.208326, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 1.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.208326, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 1.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.208326, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 2.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.071068, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 2.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.071068, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 2.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.071068, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 2.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.071068, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 2.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.071068, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 3.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.066191, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 3.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.066191, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 3.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.066191, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 3.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.066191, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 3.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.066191, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 4.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.203449, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 4.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.203449, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 4.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.203449, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 4.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.203449, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 4.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.203449, -1.000000>
+hit
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 5.500000 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.340707, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.340707, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
+image sucessfully saved to test.png
