@@ -607,8 +607,13 @@ Sample::Sample() {
 }
 
 void Camera::generateRay(Sample s, Ray* ray) {
-    float v = s.y - height/2;
-    float u = s.x - width/2;
+    float imagePlaneW = (UL.sub(UR)).len;
+    float imagePlaneH = (UL.sub(LL)).len;
+    float imgToscreen = imagePlaneW/width;
+    float v = s.y*imgToscreen - imagePlaneH/2;
+    float u = s.x*imgToscreen - imagePlaneW/2;
+    /*float v = s.y*imgToscreen ;
+    float u = s.x*imgToscreen ;*/
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
@@ -659,9 +664,9 @@ bool Sampler::getSample(Sample *s) {
 string filename;
 Camera eye;
 FIBITMAP * bitmap;
-vector<Shape *> scene_shapes;
 vector<Light> scene_lights;
-
+typedef vector<Shape*> shape_list;
+shape_list* l = new shape_list();
 
 //****************************************************
 // Image Writing
@@ -669,9 +674,9 @@ vector<Light> scene_lights;
 
 void setPixel(int x, int y, Color rgb) {
     RGBQUAD color;
-    color.rgbRed = rgb.r;
-    color.rgbGreen = rgb.g;
-    color.rgbBlue = rgb.b;
+    color.rgbRed = rgb.r*255;
+    color.rgbGreen = rgb.g*255;
+    color.rgbBlue = rgb.b*255;
     FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
 
@@ -680,24 +685,29 @@ void setPixel(int x, int y, Color rgb) {
 //****************************************************
 
 void trace(Ray& ray, int depth, Color* color) {
-	float thit = 0.0f;
-	LocalGeo localGeo = LocalGeo();
-	if (depth > maxdepth) {
-		Color temp = Color(0, 0, 0);
-		*color = temp;
-		return;
-	}
-	else if (!*((Shape*)scene_shapes[0]).intersect(ray, &thit, &localGeo)) {
-		Color temp = Color(0, 0, 0);
-		*color = temp;
-		return;
-	}
+  float thit = 0.0f;
+  printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
+  LocalGeo localGeo = LocalGeo();
+  if (depth > maxdepth) {
+    Color temp = Color(0, 0, 0);
+    *color = temp;
+    return;
+  }
+  else {
+    Shape* shapePtr = l->front();
+    bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
+    if(intersects) {
+      printf("hit\n");
+      Color temp = Color(1, 0, 0);
+      *color = temp;
+      return;
+    } else {
+      Color temp = Color(0, 0, 0);
+      *color = temp;
+      return;
+    }
+  }
 
-	else {
-		Color temp = Color(1, 0, 0);
-		*color = temp;
-		return;
-	}
 	/*// Obtain the brdf at intersection point
 	in.primitive->getBRDF(in.local, &brdf);
 
@@ -736,8 +746,9 @@ void render() {
         Ray r;
         eye.generateRay(s, &r);
         printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-        Color c;
+        Color c = Color();
         trace(r, 0, &c);
+        printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
         setPixel(s.x, s.y, c);
     }
 }
@@ -850,6 +861,7 @@ void loadScene(std::string file) {
       else if(!splitline[0].compare("size")) {
         width = atoi(splitline[1].c_str());
         height = atoi(splitline[2].c_str());
+        bitmap = FreeImage_Allocate(width, height, 24);
         printf("Outputting image of size: %d x %d\n", width, height);
       }
       //maxdepth depth
@@ -887,7 +899,7 @@ void loadScene(std::string file) {
         Point lookat = Point(lax, lay, laz);
         Vector up = Vector(upx, upy, upz);
         eye = Camera(lookfrom, lookat, up, fov);
-        printf("==== CAMERA ADDED ====\n");
+        printf("==== Camera Added ====\n");
         printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
         printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
         printf("up vector: \t %f, \t %f, \t %f \n\n", upx, upy, upz);
@@ -901,10 +913,12 @@ void loadScene(std::string file) {
         float z = atof(splitline[3].c_str());
         float r = atof(splitline[4].c_str());
         // Create new sphere:
-        scene_shapes.push_back(&Sphere(Point(x, y, z), r));
-        printf("==== SPHERE ADDED ====\n");
+        //Sphere newSphere = ;
+        l->push_back(new Sphere(Point(x, y, z), r));
+        printf("==== Sphere Added ====\n");
         printf("center: \t %f, \t %f, \t %f\n", x, y, z);
         printf("radius: \t %f \n", r);
+        //cout << scene_shapes.size() << endl;
 
         //   Store 4 numbers
         //   Store current property values
@@ -924,11 +938,10 @@ int main(int argc, char *argv[]) {
   //printf("normaltest returned with message: %s \n", error.c_str());
 
   loadScene(argv[1]);
-  render();
   FreeImage_Initialise();
-  cout << "FreeImage " << FreeImage_GetVersion() << "\n";
-  cout << FreeImage_GetCopyrightMessage() << "\n\n";
-  FIBITMAP * bitmap = FreeImage_Allocate(100, 100, 24);
+  render();
+  //cout << "FreeImage " << FreeImage_GetVersion() << "\n";
+  //cout << FreeImage_GetCopyrightMessage() << "\n\n";
   FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
   printf("image sucessfully saved to %s\n", filename.c_str());
   FreeImage_DeInitialise();
