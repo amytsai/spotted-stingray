@@ -63,8 +63,8 @@ class Point {
     Point(float, float, float);
     Point(Vector4f);
     Point add(Vector);
-    Point minus(Vector);
-    Vector minus(Point);
+    Point sub(Vector);
+    Vector sub(Point);
 };
 
 //***************** VECTOR *****************//
@@ -107,12 +107,12 @@ Point Point::add(Vector v) {
   return Point(temp);
 }
 
-Point Point::minus(Vector v) {
+Point Point::sub(Vector v) {
   Vector4f temp = point - v.vector;
   return Point(temp);
 }
 
-Vector Point::minus(Point p) {
+Vector Point::sub(Point p) {
     Vector4f temp = point - p.point;
     return Vector(temp);
 }
@@ -181,6 +181,7 @@ Vector Vector::cross(Vector v) {
 
 void Vector::normalize() {
   vector.normalize();
+  len = 1.0;
 }
 
 bool Vector::equals(Vector v) {
@@ -439,6 +440,8 @@ Camera::Camera() {
 Camera::Camera(Point from, Point at, Vector v, float f) {
     lookfrom = from;
     lookat = at;
+    Vector offset = Vector(from, at);
+
     up = v;
     up.normalize();
     fov = f;
@@ -446,7 +449,7 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 
     Vector z = Vector(from, at);
     z.normalize();
-    Vector x = up.cross(z);
+    Vector x = z.cross(up);
     x.normalize();
     x = x.mult((width/height)*y.len);
     Vector zminusx = z.sub(x);
@@ -456,6 +459,11 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     LL = zminusx.sub(y);
     UR = zplusx.add(y);
     LR = zplusx.sub(y);
+
+    UL = UL.sub(offset);
+    LL = LL.sub(offset);
+    UR = UR.sub(offset);
+    LR = LR.sub(offset);
 
     printf("UL <%f, %f, %f> \n", UL.vector(0), UL.vector(1), UL.vector(2));
     printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
@@ -515,7 +523,7 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
         *thit = hittime;
         Point hitPoint = ray.getPoint(hittime);
-        Normal norm = Normal((hitPoint.minus(center)));
+        Normal norm = Normal((hitPoint.sub(center)));
         *local = LocalGeo(hitPoint, norm);
         return true;
     }
