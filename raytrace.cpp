@@ -61,21 +61,21 @@ class Point {
     Vector4f point;
     Point();
     Point(float, float, float);
-	Point(Vector4f);
+    Point(Vector4f);
     Point add(Vector);
     Point minus(Vector);
-	Vector minus(Point);
+    Vector minus(Point);
 };
 
 //***************** VECTOR *****************//
 class Vector {
   public:
     Vector4f vector;
-	float len;
+    float len;
     Vector();
     Vector(float, float, float);
     Vector(Point, Point);
-	Vector(Vector4f);
+    Vector(Vector4f);
     Vector add(Vector);
     Vector sub(Vector);
     Vector mult(float);
@@ -98,8 +98,8 @@ Point::Point(float a, float b, float c) {
 }
 
 Point::Point(Vector4f vec) {
-	point = vec;
-	point(3) = 1;
+    point = vec;
+    point(3) = 1;
 }
 
 Point Point::add(Vector v) {
@@ -113,8 +113,8 @@ Point Point::minus(Vector v) {
 }
 
 Vector Point::minus(Point p) {
-	Vector4f temp = point - p.point;
-	return Vector(temp);
+    Vector4f temp = point - p.point;
+    return Vector(temp);
 }
 
 
@@ -134,14 +134,14 @@ Vector::Vector(float a, float b, float c) {
 }
 
 Vector::Vector(Vector4f vec) {
-	vector = vec;
-	vector(3) = 0;
-	len = vector.norm();
+    vector = vec;
+    vector(3) = 0;
+    len = vector.norm();
 }
 
 Vector::Vector(Point start, Point end) {
-	vector = end.point - start.point;
-	vector(3) = 0;
+    vector = end.point - start.point;
+    vector(3) = 0;
   len = vector.norm();
 }
 
@@ -170,13 +170,13 @@ float Vector::dot(Vector v) {
 }
 
 Vector Vector::cross(Vector v) {
-	Vector3f temp1, temp2, temp3;
-	temp1 << vector(0), vector(1), vector(2);
-	temp2 << v.vector(0), v.vector(1), v.vector(2);
-	temp3 = temp1.cross(temp2);
-	Vector4f temp4;
-	temp4 << temp3(0), temp3(1), temp3(2), 0;
-	return Vector(temp4);
+    Vector3f temp1, temp2, temp3;
+    temp1 << vector(0), vector(1), vector(2);
+    temp2 << v.vector(0), v.vector(1), v.vector(2);
+    temp3 = temp1.cross(temp2);
+    Vector4f temp4;
+    temp4 << temp3(0), temp3(1), temp3(2), 0;
+    return Vector(temp4);
 }
 
 void Vector::normalize() {
@@ -184,8 +184,8 @@ void Vector::normalize() {
 }
 
 bool Vector::equals(Vector v) {
-	Vector4f temp = v.vector - vector;
-	float size = temp.norm();
+    Vector4f temp = v.vector - vector;
+    float size = temp.norm();
   return size == 0;
 }
 
@@ -195,8 +195,8 @@ class Normal {
     Vector4f normal;
     Normal();
     Normal(float, float, float);
-	Normal(Vector);
-	Normal(Vector4f);
+    Normal(Vector);
+    Normal(Vector4f);
     Normal add(Normal);
     Normal sub(Normal);
     bool equals(Normal);
@@ -214,12 +214,12 @@ Normal::Normal(float a, float b, float c) {
 }
 
 Normal::Normal(Vector v) {
-	normal = v.vector;
-	normal.normalize();
+    normal = v.vector;
+    normal.normalize();
 }
 Normal::Normal(Vector4f vec) {
-	normal = vec;
-	normal.normalize();
+    normal = vec;
+    normal.normalize();
 }
 
 Normal Normal::add(Normal v) {
@@ -234,7 +234,7 @@ Normal Normal::sub(Normal v) {
 
 bool Normal::equals(Normal n) {
     Vector4f temp = n.normal - normal;
-	float size = temp.norm();
+    float size = temp.norm();
   return size == 0;
 }
 
@@ -249,7 +249,7 @@ class Ray {
     Ray();
     Ray(Point, Point);
     Ray(Point, Vector);
-	Point getPoint(float);
+    Point getPoint(float);
 };
 
 Ray::Ray(Point a, Point b) {
@@ -272,24 +272,24 @@ Ray::Ray() {
 }
 
 Point Ray::getPoint(float time) {
-	Vector travel = dir.mult(time);
-	Point temp;
-	temp = pos.add(travel);
-	return temp;
+    Vector travel = dir.mult(time);
+    Point temp;
+    temp = pos.add(travel);
+    return temp;
 }
 
 //***************** TRANSFORMATION *****************//
 class Transformation {
   //Matrix m, minvt;
-	public: 
-		Matrix4f matrix, matrixinv;
-		Transformation(Matrix4f);
+    public: 
+        Matrix4f matrix, matrixinv;
+        Transformation(Matrix4f);
   //TODO: should support transformations by overloading *
 };
 
 Transformation::Transformation(Matrix4f mat) {
-	matrix = mat;
-	matrixinv = mat.inverse();
+    matrix = mat;
+    matrixinv = mat.inverse();
 }
 
 
@@ -297,65 +297,65 @@ Transformation::Transformation(Matrix4f mat) {
 class MatrixGenerator {
   //float mat[4][4];
   //TODO: Figure out what a matrix should be able to do
-	public:
-		MatrixGenerator();
-		Transformation generateTranslation(float, float, float);
-		Transformation generateRotationx(float);
-		Transformation generateRotationy(float);
-		Transformation generateRotationz(float);
-		Transformation generateScale(float, float, float);
+    public:
+        MatrixGenerator();
+        Transformation generateTranslation(float, float, float);
+        Transformation generateRotationx(float);
+        Transformation generateRotationy(float);
+        Transformation generateRotationz(float);
+        Transformation generateScale(float, float, float);
 };
 
 MatrixGenerator::MatrixGenerator() {
 }
 
 Transformation MatrixGenerator::generateTranslation(float x, float y, float z) {
-	Matrix4f temp;
-	temp << 1, 0, 0, x,
-			0, 1, 0, y,
-			0, 0, 1, z,
-			0, 0, 0, 1;
-	return temp;
+    Matrix4f temp;
+    temp << 1, 0, 0, x,
+            0, 1, 0, y,
+            0, 0, 1, z,
+            0, 0, 0, 1;
+    return temp;
 }
 
 Transformation MatrixGenerator::generateRotationx(float angle) {
-	float rad = angle * PI/180;
-	Matrix4f temp;
-	temp << 1, 0, 0, 0,
-			0, cos(rad), -sin(rad), 0,
-			0, sin(rad), cos(rad), 0,
-			0, 0, 0, 1;
-	return temp;
+    float rad = angle * PI/180;
+    Matrix4f temp;
+    temp << 1, 0, 0, 0,
+            0, cos(rad), -sin(rad), 0,
+            0, sin(rad), cos(rad), 0,
+            0, 0, 0, 1;
+    return temp;
 }
 
 
 Transformation MatrixGenerator::generateRotationy(float angle) {
-	float rad = angle * PI/180;
-	Matrix4f temp;
-	temp << cos(rad), 0, -sin(rad), 0,
-			0, 1, 0, 0,
-			sin(rad), 0, cos(rad), 0,
-			0, 0, 0, 1;
-	return temp;
+    float rad = angle * PI/180;
+    Matrix4f temp;
+    temp << cos(rad), 0, -sin(rad), 0,
+            0, 1, 0, 0,
+            sin(rad), 0, cos(rad), 0,
+            0, 0, 0, 1;
+    return temp;
 }
 
 Transformation MatrixGenerator::generateRotationz(float angle) {
-	float rad = angle * PI/180;
-	Matrix4f temp;
-	temp << cos(rad), -sin(rad), 0, 0,
-			sin(rad), cos(rad), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1;
-	return temp;
+    float rad = angle * PI/180;
+    Matrix4f temp;
+    temp << cos(rad), -sin(rad), 0, 0,
+            sin(rad), cos(rad), 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1;
+    return temp;
 }
 
 Transformation MatrixGenerator::generateScale(float x, float y, float z) {
-	Matrix4f temp;
-	temp << x, 0, 0, 0,
-			0, y, 0, 0,
-			0, 0, z, 0,
-			0, 0, 0, 1;
-	return temp;
+    Matrix4f temp;
+    temp << x, 0, 0, 0,
+            0, y, 0, 0,
+            0, 0, z, 0,
+            0, 0, 0, 1;
+    return temp;
 }
 
 
@@ -471,8 +471,8 @@ class LocalGeo {
 };
 
 LocalGeo::LocalGeo(Point p, Normal norm) {
-	pos = p;
-	n = norm;
+    pos = p;
+    n = norm;
 }
 
 //***************** SHAPE *****************//
@@ -498,43 +498,43 @@ Sphere::Sphere(Point p, float rad) {
 }
 
 bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
-	Point raystart = ray.pos;
-	Vector direction = ray.dir;
-	Point center = pos;
-	Vector3f e, d, c;
-	e << raystart.point(0), raystart.point(1), raystart.point(2);
-	d << direction.vector(0), direction.vector(1), direction.vector(2);
-	c << center.point(0), center.point(1), center.point(2);
-	float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
-	if(determinant < 0) {
-		return false;
-	}
-	else {
-		float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
-		*thit = hittime;
-		Point hitPoint = ray.getPoint(hittime);
-		Normal norm = Normal((hitPoint.minus(center)));
-		*local = LocalGeo(hitPoint, norm);
-		return true;
-	}
+    Point raystart = ray.pos;
+    Vector direction = ray.dir;
+    Point center = pos;
+    Vector3f e, d, c;
+    e << raystart.point(0), raystart.point(1), raystart.point(2);
+    d << direction.vector(0), direction.vector(1), direction.vector(2);
+    c << center.point(0), center.point(1), center.point(2);
+    float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
+    if(determinant < 0) {
+        return false;
+    }
+    else {
+        float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
+        *thit = hittime;
+        Point hitPoint = ray.getPoint(hittime);
+        Normal norm = Normal((hitPoint.minus(center)));
+        *local = LocalGeo(hitPoint, norm);
+        return true;
+    }
 
     
 }
 
 bool Sphere::ifIntersect(Ray& ray) {
     Point raystart = ray.pos;
-	Vector direction = ray.dir;
-	Point center = pos;
-	Vector3f e, d, c;
-	e << raystart.point(0), raystart.point(1), raystart.point(2);
-	d << direction.vector(0), direction.vector(1), direction.vector(2);
-	c << center.point(0), center.point(1), center.point(2);
-	if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
-		return false;
-	}
-	else {
-		return true;
-	}
+    Vector direction = ray.dir;
+    Point center = pos;
+    Vector3f e, d, c;
+    e << raystart.point(0), raystart.point(1), raystart.point(2);
+    d << direction.vector(0), direction.vector(1), direction.vector(2);
+    c << center.point(0), center.point(1), center.point(2);
+    if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 //***************** TRIANGLE *****************//
