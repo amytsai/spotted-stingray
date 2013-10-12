@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <math.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -61,8 +62,9 @@ class Point {
     Point();
     Point(float, float, float);
 	Point(Vector4f);
-    Point plus(Vector);
+    Point add(Vector);
     Point minus(Vector);
+	Vector minus(Point);
 };
 
 //***************** VECTOR *****************//
@@ -100,7 +102,7 @@ Point::Point(Vector4f vec) {
 	point(3) = 1;
 }
 
-Point Point::plus(Vector v) {
+Point Point::add(Vector v) {
   Vector4f temp = point + v.vector;
   return Point(temp);
 }
@@ -108,6 +110,11 @@ Point Point::plus(Vector v) {
 Point Point::minus(Vector v) {
   Vector4f temp = point - v.vector;
   return Point(temp);
+}
+
+Vector Point::minus(Point p) {
+	Vector4f temp = point - p.point;
+	return Vector(temp);
 }
 
 
@@ -188,6 +195,7 @@ class Normal {
     Vector4f normal;
     Normal();
     Normal(float, float, float);
+	Normal(Vector);
 	Normal(Vector4f);
     Normal add(Normal);
     Normal sub(Normal);
@@ -205,6 +213,10 @@ Normal::Normal(float a, float b, float c) {
   normal.normalize();
 }
 
+Normal::Normal(Vector v) {
+	normal = v.vector;
+	normal.normalize();
+}
 Normal::Normal(Vector4f vec) {
 	normal = vec;
 	normal.normalize();
@@ -237,6 +249,7 @@ class Ray {
     Ray();
     Ray(Point, Point);
     Ray(Point, Vector);
+	Point getPoint(float);
 };
 
 Ray::Ray(Point a, Point b) {
@@ -256,6 +269,13 @@ Ray::Ray(Point a, Vector v) {
 Ray::Ray() {
     pos = Point();
     dir = Vector();
+}
+
+Point Ray::getPoint(float time) {
+	Vector travel = dir.mult(time);
+	Point temp;
+	temp = pos.add(travel);
+	return temp;
 }
 
 //***************** TRANSFORMATION *****************//
@@ -442,6 +462,18 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 
 }
 
+//***************** LOCAL GEO *****************//
+class LocalGeo {
+  public:
+    Point pos;
+    Normal n;
+    LocalGeo(Point, Normal);
+};
+
+LocalGeo::LocalGeo(Point p, Normal norm) {
+	pos = p;
+	n = norm;
+}
 
 //***************** SHAPE *****************//
 class Shape {
@@ -466,11 +498,43 @@ Sphere::Sphere(Point p, float rad) {
 }
 
 bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
-    return false;
+	Point raystart = ray.pos;
+	Vector direction = ray.dir;
+	Point center = pos;
+	Vector3f e, d, c;
+	e << raystart.point(0), raystart.point(1), raystart.point(2);
+	d << direction.vector(0), direction.vector(1), direction.vector(2);
+	c << center.point(0), center.point(1), center.point(2);
+	float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
+	if(determinant < 0) {
+		return false;
+	}
+	else {
+		float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
+		*thit = hittime;
+		Point hitPoint = ray.getPoint(hittime);
+		Normal norm = Normal((hitPoint.minus(center)));
+		*local = LocalGeo(hitPoint, norm);
+		return true;
+	}
+
+    
 }
 
 bool Sphere::ifIntersect(Ray& ray) {
-    return false;
+    Point raystart = ray.pos;
+	Vector direction = ray.dir;
+	Point center = pos;
+	Vector3f e, d, c;
+	e << raystart.point(0), raystart.point(1), raystart.point(2);
+	d << direction.vector(0), direction.vector(1), direction.vector(2);
+	c << center.point(0), center.point(1), center.point(2);
+	if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 //***************** TRIANGLE *****************//
@@ -489,13 +553,7 @@ bool Triangle::ifIntersect(Ray& ray) {
     return false;
 }
 
-//***************** LOCAL GEO *****************//
-class LocalGeo {
-  public:
-    Point pos;
-    Normal n;
-    LocalGeo(Point, Normal);
-};
+
 
 //***************** LIGHT *****************//
 class Light {
