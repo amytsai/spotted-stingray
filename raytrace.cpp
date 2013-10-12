@@ -163,8 +163,13 @@ float Vector::dot(Vector v) {
 }
 
 Vector Vector::cross(Vector v) {
-  Vector4f temp = vector.cross(v.vector);
-  return Vector(temp);
+	Vector3f temp1, temp2, temp3;
+	temp1 << vector(0), vector(1), vector(2);
+	temp2 << v.vector(0), v.vector(1), v.vector(2);
+	temp3 = temp1.cross(temp2);
+	Vector4f temp4;
+	temp4 << temp3(0), temp3(1), temp3(2), 0;
+	return Vector(temp4);
 }
 
 void Vector::normalize() {
