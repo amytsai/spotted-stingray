@@ -676,6 +676,46 @@ void setPixel(int x, int y, Color rgb) {
 }
 
 //****************************************************
+// BRDF
+//****************************************************
+
+class BRDF {
+  public:
+    float kd, ks, ka, kr;
+    BRDF();
+	BRDF(float, float, float, float);
+};
+
+BRDF::BRDF() {
+	kd = 0;
+	ks = 0;
+	ka = 0;
+	kr = 0;
+}
+
+BRDF::BRDF(float d, float s, float a, float r) {
+	kd = d;
+	ks = s;
+	ka = a;
+	kr = r;
+}
+
+//****************************************************
+// SHADER
+//****************************************************
+
+class Shader {
+  public:
+    //holds screen coordinates;
+    //float x, y;
+    Shader();
+};
+
+void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
+
+}
+
+//****************************************************
 // Ray Tracer trace
 //****************************************************
 
