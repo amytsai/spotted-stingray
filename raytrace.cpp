@@ -392,6 +392,7 @@ class Camera {
     Point lookfrom;
     Point lookat;
     Vector up;
+    Vector UL, LL, UR, LR;
     float fov;
     Camera();
     Camera(Point, Point, Vector, float);
@@ -408,9 +409,22 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     lookfrom = from;
     lookat = at;
     up = v;
+    up.normalize();
     fov = f;
+
+    Vector z = Vector(from, at);
+    z.normalize();
+    Vector x = z.cross(up);
+    x.normalize();
+    Vector zminusx = z.sub(x);
+    Vector zplusx = z.add(x);
+
+    UL = zminusx.add(up);
+    LL = zminusx.sub(up);
+    UR = zplusx.add(up);
+    LR = zplusx.sub(up);
+
 }
-//TODO: Actually Implement the things above
 
 //***************** SHAPE *****************//
 class Shape {
@@ -494,11 +508,13 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
 
 //***************** SAMPLE *****************//
 class Sample {
+  public:
     //holds screen coordinates;
     float x, y;
 };
 //***************** SAMPLER *****************//
 class Sampler {
+  public:
     int i, j;
     bool getSample(Sample *);
     Sampler();
@@ -549,18 +565,14 @@ void setPixel(int x, int y, Color rgb) {
 
 void render() {
     Sample s;
-    while(!sampler.generateSample(&s)) {
-        Ray r;
-        camera.generateRay(sample, &r;);
+    Sampler mySampler = Sampler();
+    while(!mySampler.getSample(&s)) {
+        printf("sample generated at: %f, %f \n", s.x, s.y);
+        //Ray r;
+        //camera.generateRay(sample, &r;);
     }
 }
 
-//****************************************************
-
-//****************************************************
-void render() {
-    
-}
 //****************************************************
 // Testing Code
 //****************************************************
@@ -743,6 +755,7 @@ int main(int argc, char *argv[]) {
   //printf("normaltest returned with message: %s \n", error.c_str());
 
   loadScene(argv[1]);
+  render();
   FreeImage_Initialise();
   cout << "FreeImage " << FreeImage_GetVersion() << "\n";
   cout << FreeImage_GetCopyrightMessage() << "\n\n";
