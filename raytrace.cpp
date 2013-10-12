@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <list>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -39,6 +40,7 @@ class Shape;
 class Sphere;
 class Triangle;
 class LocalGeo;
+class Light;
 
 //***************** POINT *****************//
 class Point {
@@ -343,27 +345,51 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 
 //***************** SHAPE *****************//
 class Shape {
-  virtual bool intersect(Ray& ray, float* thit, LocalGeo* local);
-  virtual bool ifIntersect(Ray& ray);
+public:
+  virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
+  virtual bool ifIntersect(Ray& ) = 0;
 };
+
 //***************** SPHERE *****************//
 class Sphere: public Shape {
   public:
     Point pos;
     float r;
     Sphere(Point, float);
-    bool intersect(Ray& ray, float* thit, LocalGeo* local);
-    bool ifIntersect(Ray& ray);
-
+    bool intersect(Ray&, float*, LocalGeo*);
+    bool ifIntersect(Ray&);
 };
+
+Sphere::Sphere(Point p, float rad) {
+    pos  = p;
+    r = rad;
+}
+
+bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
+    return false;
+}
+
+bool Sphere::ifIntersect(Ray& ray) {
+    return false;
+}
 
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
   public:
     Point a, b, c;
+    bool intersect(Ray&, float* , LocalGeo* );
+    bool ifIntersect(Ray& );
 };
 
-//***************** LOCALGEO *****************//
+bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
+    return false;
+}
+
+bool Triangle::ifIntersect(Ray& ray) {
+    return false;
+}
+
+//***************** LOCAL GEO *****************//
 class LocalGeo {
   public:
     Point pos;
@@ -371,14 +397,55 @@ class LocalGeo {
     LocalGeo(Point, Normal);
 };
 
+//***************** LIGHT *****************//
+class Light {
+  public:
+    float x, y, z;
+    Color rgb;
+    bool isPL;
+    Light();
+    Light(float, float, float, Color, bool);
+};
+
+Light::Light() {
+  x = 0.0f;
+  y = 0.0f;
+  z = 0.0f;
+  rgb = Color ();
+  isPL = false;
+}
+
+Light::Light(float a, float b, float c, Color color, bool PL) {
+  x = a;
+  y = b;
+  z = c;
+  rgb = color;
+  isPL = PL;
+}
+
 //****************************************************
 // Global Variables
 //****************************************************
-float width, height;
+int width, height;
 int maxdepth = 5;
 string filename;
 Camera eye;
+FIBITMAP * bitmap;
+vector<Shape *> scene_shapes;
+vector<Light> scene_lights;
 
+
+//****************************************************
+// Image Writing
+//****************************************************
+
+void setPixel(int x, int y, Color rgb) {
+    RGBQUAD color;
+    color.rgbRed = rgb.r;
+    color.rgbGreen = rgb.g;
+    color.rgbBlue = rgb.b;
+    FreeImage_SetPixelColor(bitmap, x, y, &color);
+}
 
 //****************************************************
 // Testing Code
@@ -454,7 +521,7 @@ bool testNormal(string* error) {
 //****************************************************
 
 void loadScene(std::string file) {
-
+  cout << "loading Scene .. \n"<< endl;
   ifstream inpfile(file.c_str());
   if(!inpfile.is_open()) {
     std::cout << "Unable to open file" << std::endl;
@@ -488,39 +555,62 @@ void loadScene(std::string file) {
       else if(!splitline[0].compare("size")) {
         width = atoi(splitline[1].c_str());
         height = atoi(splitline[2].c_str());
+        printf("Outputting image of size: %d x %d\n", width, height);
       }
       //maxdepth depth
       //  max # of bounces for ray (default 5)
       else if(!splitline[0].compare("maxdepth")) {
         maxdepth = atoi(splitline[1].c_str());
+        printf("Raytracing with maxdepth = %d\n", maxdepth);
       }
       //output filename
       //  output file to write image to 
       else if(!splitline[0].compare("output")) {
         filename = splitline[1];
+        printf("Writing to file: %s\n", filename.c_str());
       }
 
       //camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
       //  speciï¬es the camera in the standard way, as in homework 2.
       else if(!splitline[0].compare("camera")) {
         // lookfrom:
-        eye.lookfrom = Point(atof(splitline[1].c_str()), atof(splitline[2].c_str()), atof(splitline[3].c_str()));
-          // lookat:
-          eye.lookat = Point(atof(splitline[4].c_str()), atof(splitline[5].c_str()), atof(splitline[6].c_str()));
-          // up:
-          eye.up = Vector(atof(splitline[7].c_str()), atof(splitline[8].c_str()), atof(splitline[9].c_str()));
-          // fov: atof(splitline[10].c_str());
-          eye.fov = atof(splitline[10].c_str());
+        float lfx  = atof(splitline[1].c_str());
+        float lfy  = atof(splitline[2].c_str());
+        float lfz  = atof(splitline[3].c_str());
+        // lookat:
+        float lax  = atof(splitline[4].c_str());
+        float lay  = atof(splitline[5].c_str());
+        float laz  = atof(splitline[6].c_str());
+        // up:
+        float upx  = atof(splitline[7].c_str());
+        float upy  = atof(splitline[8].c_str());
+        float upz  = atof(splitline[9].c_str());
+        //fov:
+        float fov = atof(splitline[10].c_str());
+
+        eye.lookfrom = Point(lfx, lfy, lfz);
+        eye.lookat = Point(lax, lay, laz);
+        eye.up = Vector(upx, upy, upz);
+        eye.fov = fov;
+        printf("==== CAMERA ADDED ====\n");
+        printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
+        printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
+        printf("up vector: \t %f, \t %f, \t %f \n\n", upx, upy, upz);
       }
 
       //sphere x y z radius
       //  Deï¬nes a sphere with a given position and radius.
       else if(!splitline[0].compare("sphere")) {
-        // x: atof(splitline[1].c_str())
-        // y: atof(splitline[1].c_str())
-        // z: atof(splitline[1].c_str())
-        // r: atof(splitline[4].c_str())
+        float x = atof(splitline[1].c_str());
+        float y = atof(splitline[2].c_str());
+        float z = atof(splitline[3].c_str());
+        float r = atof(splitline[4].c_str());
         // Create new sphere:
+        scene_shapes.push_back(&Sphere(Point(x, y, z), r));
+        printf("==== SPHERE ADDED ====\n");
+        printf("center: \t %f, \t %f, \t %f\n", x, y, z);
+        printf("radius: \t %f \n", r);
+
         //   Store 4 numbers
         //   Store current property values
         //   Store current top of matrix stack
@@ -532,15 +622,18 @@ void loadScene(std::string file) {
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
-  string error = "no error";
-  bool vectest = testVector(&error);
-  printf("vectest returned with message: %s \n", error.c_str());
-  bool normaltest = testNormal(&error);
+  //string error = "no error";
+  //bool vectest = testVector(&error);
+  //printf("vectest returned with message: %s \n", error.c_str());
+  //bool normaltest = testNormal(&error);
   //printf("normaltest returned with message: %s \n", error.c_str());
+
+  loadScene(argv[1]);
   FreeImage_Initialise();
   cout << "FreeImage " << FreeImage_GetVersion() << "\n";
   cout << FreeImage_GetCopyrightMessage() << "\n\n";
   FIBITMAP * bitmap = FreeImage_Allocate(100, 100, 24);
-  FreeImage_Save(FIF_PNG, bitmap, "testimage.png", 0);
+  FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
+  printf("image sucessfully saved to %s\n", filename.c_str());
   FreeImage_DeInitialise();
 }
