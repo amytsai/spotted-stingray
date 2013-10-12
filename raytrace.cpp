@@ -445,7 +445,7 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     up = v;
     up.normalize();
     fov = f;
-    Vector y  = up.mult(cos(fov/2));
+    Vector y  = up.mult(tan(fov/2));
 
     Vector z = Vector(from, at);
     z.normalize();
