@@ -685,7 +685,9 @@ void render() {
         Ray r;
         eye.generateRay(s, &r);
         printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-        
+        Color c;
+        trace(r, 0, &c);
+        setPixel(s.x, s.y, c);
     }
 }
 
