@@ -36,7 +36,7 @@ class Vector;
 class Normal;
 class Point;
 class Ray;
-class Matrix;
+class MatrixGenerator;
 class Transformation;
 class Color;
 class Camera;
@@ -56,33 +56,6 @@ class Point {
     Point minus(Vector);
 };
 
-//***************** POINT METHODS *****************//
-Point::Point() {
-  Vector4f temp(0, 0, 0, 1);
-  point = temp;
-}
-
-Point::Point(float a, float b, float c) {
-  Vector4f temp(a, b, c, 1);
-  point = temp;
-}
-
-Point::Point(Vector4f vec) {
-	point = vec;
-	point(3) = 1;
-}
-
-Point Point::plus(Vector v) {
-  Vector4f temp = point + v.vec;
-  return Point(temp);
-}
-
-Point Point::minus(Vector v) {
-  Vector4f temp = point - v.vec;
-  return Point(temp);
-}
-
-
 //***************** VECTOR *****************//
 class Vector {
   public:
@@ -101,6 +74,32 @@ class Vector {
     void normalize();
     bool equals(Vector);
 };
+
+//***************** POINT METHODS *****************//
+Point::Point() {
+  Vector4f temp(0, 0, 0, 1);
+  point = temp;
+}
+
+Point::Point(float a, float b, float c) {
+  Vector4f temp(a, b, c, 1);
+  point = temp;
+}
+
+Point::Point(Vector4f vec) {
+	point = vec;
+	point(3) = 1;
+}
+
+Point Point::plus(Vector v) {
+  Vector4f temp = point + v.vector;
+  return Point(temp);
+}
+
+Point Point::minus(Vector v) {
+  Vector4f temp = point - v.vector;
+  return Point(temp);
+}
 
 
 
@@ -222,26 +221,99 @@ class Ray {
 Ray::Ray(Point a, Point b) {
   pos = a;
   dir = Vector(a, b);
+  t_min = 0;
+  t_max = 99999999;
 }
 
 Ray::Ray(Point a, Vector v) {
   pos = a;
   dir = v;
+  t_min = 0;
+  t_max = 99999999;
+}
+
+//***************** TRANSFORMATION *****************//
+class Transformation {
+  //Matrix m, minvt;
+	public: 
+		Matrix4f matrix, matrixinv;
+		Transformation(Matrix4f);
+  //TODO: should support transformations by overloading *
+};
+
+Transformation::Transformation(Matrix4f mat) {
+	matrix = mat;
+	matrixinv = mat.inverse();
 }
 
 
 //***************** MATRIX *****************//
-class Matrix {
-  float mat[4][4];
+class MatrixGenerator {
+  //float mat[4][4];
   //TODO: Figure out what a matrix should be able to do
+	public:
+		MatrixGenerator();
+		Transformation generateTranslation(float, float, float);
+		Transformation generateRotationx(float);
+		Transformation generateRotationy(float);
+		Transformation generateRotationz(float);
+		Transformation generateScale(float, float, float);
 };
 
+MatrixGenerator::MatrixGenerator() {
+}
 
-//***************** TRANSFORMATION *****************//
-class Transformation {
-  Matrix m, minvt;
-  //TODO: should support transformations by overloading *
-};
+Transformation MatrixGenerator::generateTranslation(float x, float y, float z) {
+	Matrix4f temp;
+	temp << 1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateRotationx(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << 1, 0, 0, 0,
+			0, cos(rad), -sin(rad), 0,
+			0, sin(rad), cos(rad), 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+
+Transformation MatrixGenerator::generateRotationy(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << cos(rad), 0, -sin(rad), 0,
+			0, 1, 0, 0,
+			sin(rad), 0, cos(rad), 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateRotationz(float angle) {
+	float rad = angle * PI/180;
+	Matrix4f temp;
+	temp << cos(rad), -sin(rad), 0, 0,
+			sin(rad), cos(rad), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+Transformation MatrixGenerator::generateScale(float x, float y, float z) {
+	Matrix4f temp;
+	temp << x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, 0,
+			0, 0, 0, 1;
+	return temp;
+}
+
+
+
 
 //***************** COLOR *****************//
 class Color {
@@ -481,7 +553,7 @@ bool testNormal(string* error) {
 
     Normal csubd = c.sub(d);
     Normal eaddd = e.add(d);
-    printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
+    //printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
 
     if(!a.equals(b)) {
       *error = "normal equality failed";
