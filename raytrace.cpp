@@ -516,7 +516,12 @@ class Sample {
   public:
     //holds screen coordinates;
     float x, y;
+    Sample();
 };
+
+Sample::Sample() {
+    x, y = 0.0;
+}
 //***************** SAMPLER *****************//
 class Sampler {
   public:
@@ -529,15 +534,29 @@ Sampler::Sampler() {
 }
 
 bool Sampler::getSample(Sample *s) {
+    //printf("getSample i = %d, j = %d \n", i , j);
     if(i < width) {
-        if (j < height) {
-        
+        if (j < height-1) {
+            Sample news = Sample();
+            news.x = i + 0.5;
+            news.y = j + 0.5;
+            *s = news;
+            i++;
+            //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+            return true;
         } else {
             return false;
         }
     } else {
         i = 0;
         j++;
+        Sample news = Sample();
+        news.x = i + 0.5;
+        news.y = j + 0.5;
+        *s = news;
+        i++;
+        //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+        return true;
     }
 
 }
@@ -569,9 +588,9 @@ void setPixel(int x, int y, Color rgb) {
 //****************************************************
 
 void render() {
-    Sample s;
+    Sample s = Sample();
     Sampler mySampler = Sampler();
-    while(!mySampler.getSample(&s)) {
+    while(mySampler.getSample(&s)) {
         printf("sample generated at: %f, %f \n", s.x, s.y);
         //Ray r;
         //camera.generateRay(sample, &r;);
