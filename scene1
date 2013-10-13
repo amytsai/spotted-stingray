@@ -1,7 +1,7 @@
 # Test Scene 1 
 # A simple quad viewed from different camera positions
 
-size 10 10
+size 5 5
 maxdepth 5
 output test.png
 
@@ -11,7 +11,7 @@ output test.png
 #camera 0 0 4 0 0 0 0 1 0 30
 #camera 0 -3 3 0 0 0 0 1 0 30
 #camera -4 0 1 0 0 1 0 0 1 45
-camera 0 0 3 0 1 0 0 1 0 30
+camera 0 0 3 0 0 0 0 1 0 45
 
 # lighting/material definitions
 # for initial testing, you should get the geometry right

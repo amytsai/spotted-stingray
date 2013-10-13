@@ -208,7 +208,7 @@ class Primitive {
 public:
   virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
   virtual bool ifIntersect(Ray& ) = 0;
-  virtual voic getBRDF(LocalGeo& local, BRDF* brdf);
+  virtual void getBRDF(LocalGeo& local, BRDF* brdf);
 };
 
 //***************** INTERSECTION *****************//
