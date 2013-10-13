@@ -754,7 +754,7 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		printf("Fail on hittime check: %f \n", hittime);
 		return false;
 	}
-	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c))/M;
 	if(gamma < 0 || gamma > 1) {
 		printf("Fail on gamma check: %f \n", gamma);
 		return false;
