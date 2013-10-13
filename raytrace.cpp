@@ -67,7 +67,8 @@ class Point {
     Point(Vector4f);
     Point add(Vector);
     Point sub(Vector);
-    Vector sub(Point); //Uses current point as tail of vector
+    Vector sub(Point); //Uses current point as the arrow side of vector
+	Point transform(Transformation); //Returns the transformed point
 };
 
 //***************** VECTOR *****************//
@@ -77,7 +78,7 @@ class Vector {
     float len;
     Vector();
     Vector(float, float, float);
-    Vector(Point, Point);
+    Vector(Point, Point); //Vector(start point, end point)
     Vector(Vector4f);
     Vector add(Vector);
     Vector sub(Vector);
@@ -87,6 +88,7 @@ class Vector {
     Vector cross(Vector);
     void normalize();
     bool equals(Vector);
+	Vector transform(Transformation); //Returns the transformed vector
 };
 
 //***************** NORMAL *****************//
@@ -114,6 +116,7 @@ class Ray {
     Ray(Point, Point);
     Ray(Point, Vector);
     Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
+	Ray transform(Transformation); //Returns the transformed ray
 };
 
 //***************** TRANSFORMATION *****************//
@@ -189,8 +192,10 @@ class Sphere: public Shape {
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
   public:
-   Point a, b, c;
-   Triangle(Point, Point, Point);
+   Point r, s, t;
+   Normal norm;
+   bool vertexNormal;
+   Triangle(Point, Point, Point, bool);
     bool intersect(Ray&, float* , LocalGeo* ); //Returns whether it intersects, the time it hits, and the point/normal
     bool ifIntersect(Ray& ); //Returns whether it intersects
 };
@@ -290,6 +295,12 @@ Vector Point::sub(Point p) {
     return Vector(temp);
 }
 
+Point Point::transform(Transformation trans) {
+	Point temp;
+	temp = Point(trans.matrix * point);
+	return temp;
+}
+
 
 
 //***************** VECTOR METHODS *****************//
@@ -363,6 +374,12 @@ bool Vector::equals(Vector v) {
   return size == 0;
 }
 
+Vector Vector::transform(Transformation trans){
+	Vector temp;
+	temp = Vector(trans.matrix * vector);
+	return temp;
+}
+
 
 //***************** NORMAL METHODS*****************//
 
@@ -429,6 +446,12 @@ Point Ray::getPoint(float time) {
     Point temp;
     temp = pos.add(travel);
     return temp;
+}
+
+Ray Ray::transform(Transformation trans) {
+	Point newPoint = pos.transform(trans);
+	Vector newDir = dir.transform(trans);
+	return Ray(newPoint, newDir);
 }
 
 
@@ -655,19 +678,100 @@ bool Sphere::ifIntersect(Ray& ray) {
 
 //***************** TRIANGLE METHODS *****************//
 
-Triangle::Triangle(Point first, Point second, Point third) {
-	a = first;
-	b = second;
-	c = third;
+Triangle::Triangle(Point first, Point second, Point third, bool isVertexNorm) {
+	r = first;
+	s = second;
+	t = third;
+	vertexNormal = isVertexNorm;
+	Vector sr = r.sub(s);
+	Vector st = t.sub(s);
+	norm = sr.cross(st);
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
-
-    return false;
+	Point rayStart = ray.pos;
+	Vector rayDirection = ray.dir;
+	Vector4f av = r.point;
+	Vector4f bv = s.point;
+	Vector4f cv = t.point;
+	Vector4f dv = rayDirection.vector;
+	Vector4f ev = rayStart.point;
+	float a, b, c, d, e, f, g, h, i, j, k, l, M;
+	float beta, gamma, hittime;
+	a = av(0) - bv(0);
+	b = av(1) - bv(1);
+	c = av(2) - bv(2);
+	d = av(0) - cv(0);
+	e = av(1) - cv(1);
+	f = av(2) - cv(2);
+	g = dv(0);
+	h = dv(1);
+	i = dv(2);
+	j = av(0) - ev(0);
+	k = av(1) - ev(1);
+	l = av(2) - ev(2);
+	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		return false;
+	}
+	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+	if(beta < 0 || beta > 1) {
+		return false;
+	}
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(gamma < 0 || gamma > 1) {
+		return false;
+	}
+	else {
+		*thit = hittime;
+		Vector temp = Vector(norm.normal);
+		if(temp.dot(rayDirection) > 0) {
+			temp = temp.mult(-1);
+		}
+		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+		return true;
+	}
 }
 
 bool Triangle::ifIntersect(Ray& ray) {
-    return false;
+    	Point rayStart = ray.pos;
+	Vector rayDirection = ray.dir;
+	Vector4f av = r.point;
+	Vector4f bv = s.point;
+	Vector4f cv = t.point;
+	Vector4f dv = rayDirection.vector;
+	Vector4f ev = rayStart.point;
+	float a, b, c, d, e, f, g, h, i, j, k, l, M;
+	float beta, gamma, hittime;
+	a = av(0) - bv(0);
+	b = av(1) - bv(1);
+	c = av(2) - bv(2);
+	d = av(0) - cv(0);
+	e = av(1) - cv(1);
+	f = av(2) - cv(2);
+	g = dv(0);
+	h = dv(1);
+	i = dv(2);
+	j = av(0) - ev(0);
+	k = av(1) - ev(1);
+	l = av(2) - ev(2);
+	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		return false;
+	}
+	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+	if(beta < 0 || beta > 1) {
+		return false;
+	}
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(gamma < 0 || gamma > 1) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 //***************** LIGHT METHODS *****************//
