@@ -712,7 +712,8 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	l = av(2) - ev(2);
 	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
 	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(hittime < ray.t_min || hittime > ray.t_max) {
+	//if(hittime < ray.t_min || hittime > ray.t_max) {
+	if(hittime < 0) {
 		return false;
 	}
 	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
@@ -758,7 +759,8 @@ bool Triangle::ifIntersect(Ray& ray) {
 	l = av(2) - ev(2);
 	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
 	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(hittime < ray.t_min || hittime > ray.t_max) {
+	//if(hittime < ray.t_min || hittime > ray.t_max) {
+	if(hittime < 0) {
 		return false;
 	}
 	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
