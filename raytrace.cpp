@@ -1341,3 +1341,5 @@ int main(int argc, char *argv[]) {
   printf("image sucessfully saved to %s\n", filename.c_str());
   FreeImage_DeInitialise();
 }
+
+//asdfasdfasfasdfasdfsdafsafsadfsadfsadf
