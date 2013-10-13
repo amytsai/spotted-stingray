@@ -1,7 +1,10 @@
 #red ambient sphere at origin
-size 5 5
+size 100 100
 maxdepth 5
 output test.png
-camera 0 3 0 0 0 0 0 1 0 45
+#camera on z y is up
+#camera 0 0 3 0 0 0 0 1 0 45
+#camera 0 3 0 0 0 0 0 0 1 45
+camera 3 0 0 0 0 0 0 1 0 45
 sphere 0 0 0 1
 ambient 1 0 0 
