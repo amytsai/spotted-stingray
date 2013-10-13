@@ -86,6 +86,169 @@ class Vector {
     bool equals(Vector);
 };
 
+//***************** NORMAL *****************//
+class Normal {
+  public:
+    Vector4f normal;
+    Normal();
+    Normal(float, float, float);
+    Normal(Vector);
+    Normal(Vector4f);
+    Normal add(Normal);
+    Normal sub(Normal);
+    bool equals(Normal);
+};
+
+//***************** RAY *****************//
+class Ray {
+  /* Represents the ray:
+     r(t) = pos + t*dir*/
+  public:
+    Point pos;
+    Vector dir;
+    float t_min, t_max;
+    Ray();
+    Ray(Point, Point);
+    Ray(Point, Vector);
+    Point getPoint(float);
+};
+
+//***************** TRANSFORMATION *****************//
+class Transformation {
+  //Matrix m, minvt;
+    public: 
+        Matrix4f matrix, matrixinv;
+        Transformation(Matrix4f);
+  //TODO: should support transformations by overloading *
+};
+
+//***************** MATRIX *****************//
+class MatrixGenerator {
+  //float mat[4][4];
+  //TODO: Figure out what a matrix should be able to do
+    public:
+        MatrixGenerator();
+        Transformation generateTranslation(float, float, float);
+        Transformation generateRotationx(float);
+        Transformation generateRotationy(float);
+        Transformation generateRotationz(float);
+        Transformation generateScale(float, float, float);
+};
+
+//***************** COLOR *****************//
+class Color {
+  public:
+    float r, g, b;
+    Color();
+    Color(float, float, float);
+    Color add(Color);
+    Color sub(Color);
+    Color mult(float);
+    Color div(float);
+};
+
+//***************** CAMERA *****************//
+class Camera {
+  public:
+    Point lookfrom;
+    Point lookat;
+    Vector up;
+    Vector UL, LL, UR, LR;
+    float fov;
+    Camera();
+    Camera(Point, Point, Vector, float);
+    void generateRay(Sample, Ray*);
+};
+
+//***************** LOCAL GEO *****************//
+class LocalGeo {
+  public:
+    Point pos;
+    Normal n;
+    LocalGeo();
+    LocalGeo(Point, Normal);
+};
+
+//***************** SHAPE *****************//
+class Shape {
+public:
+  virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
+  virtual bool ifIntersect(Ray& ) = 0;
+};
+
+//***************** TRIANGLE *****************//
+class Triangle : public Shape {
+  public:
+   Point a, b, c;
+   Triangle(Point, Point, Point);
+    bool intersect(Ray&, float* , LocalGeo* );
+    bool ifIntersect(Ray& );
+};
+
+//***************** LIGHT *****************//
+class Light {
+  public:
+    float x, y, z;
+    Vector direction;
+    Color rgb;
+    bool isPL;
+    Light();
+    Light(float, float, float, Color, bool);
+    Light(float, float, float, Color, bool, Vector);
+    void generateLightRay(LocalGeo&, Ray*, Color*);
+};
+
+//***************** SAMPLE *****************//
+class Sample {
+  public:
+    //holds screen coordinates;
+    float x, y;
+    Sample();
+};
+
+//***************** SAMPLER *****************//
+class Sampler {
+  public:
+    int i, j;
+    bool getSample(Sample *);
+    Sampler();
+};
+
+//****************************************************
+// BRDF
+//****************************************************
+
+class BRDF {
+public:
+  float kd, ks, ka, kr;
+  BRDF();
+  BRDF(float, float, float, float);
+};
+
+//****************************************************
+// Material
+//****************************************************
+
+class Material {
+public:
+  BRDF constantBRDF;
+  Material();
+  Material(BRDF);
+  BRDF getBRDF(LocalGeo& local, BRDF* brdf);
+};
+
+//****************************************************
+// SHADER
+//****************************************************
+
+class Shader {
+public:
+  //holds screen coordinates;
+  //float x, y;
+  Shader();
+};
+
+
 //***************** POINT METHODS *****************//
 Point::Point() {
   Vector4f temp(0, 0, 0, 1);
@@ -190,18 +353,8 @@ bool Vector::equals(Vector v) {
   return size == 0;
 }
 
-//***************** NORMAL *****************//
-class Normal {
-  public:
-    Vector4f normal;
-    Normal();
-    Normal(float, float, float);
-    Normal(Vector);
-    Normal(Vector4f);
-    Normal add(Normal);
-    Normal sub(Normal);
-    bool equals(Normal);
-};
+
+//***************** NORMAL METHODS*****************//
 
 Normal::Normal() {
     Vector4f temp(0, 0, 0, 0);
@@ -239,19 +392,8 @@ bool Normal::equals(Normal n) {
   return size == 0;
 }
 
-//***************** RAY *****************//
-class Ray {
-  /* Represents the ray:
-     r(t) = pos + t*dir*/
-  public:
-    Point pos;
-    Vector dir;
-    float t_min, t_max;
-    Ray();
-    Ray(Point, Point);
-    Ray(Point, Vector);
-    Point getPoint(float);
-};
+
+//***************** RAY METHODS*****************//
 
 Ray::Ray(Point a, Point b) {
   pos = a;
@@ -279,14 +421,9 @@ Point Ray::getPoint(float time) {
     return temp;
 }
 
-//***************** TRANSFORMATION *****************//
-class Transformation {
-  //Matrix m, minvt;
-    public: 
-        Matrix4f matrix, matrixinv;
-        Transformation(Matrix4f);
-  //TODO: should support transformations by overloading *
-};
+
+
+//***************** TRANSFORMATION METHODS*****************//
 
 Transformation::Transformation(Matrix4f mat) {
     matrix = mat;
@@ -294,18 +431,7 @@ Transformation::Transformation(Matrix4f mat) {
 }
 
 
-//***************** MATRIX *****************//
-class MatrixGenerator {
-  //float mat[4][4];
-  //TODO: Figure out what a matrix should be able to do
-    public:
-        MatrixGenerator();
-        Transformation generateTranslation(float, float, float);
-        Transformation generateRotationx(float);
-        Transformation generateRotationy(float);
-        Transformation generateRotationz(float);
-        Transformation generateScale(float, float, float);
-};
+//***************** MATRIX METHODS*****************//
 
 MatrixGenerator::MatrixGenerator() {
 }
@@ -360,19 +486,7 @@ Transformation MatrixGenerator::generateScale(float x, float y, float z) {
 }
 
 
-
-
-//***************** COLOR *****************//
-class Color {
-  public:
-    float r, g, b;
-    Color();
-    Color(float, float, float);
-    Color add(Color);
-    Color sub(Color);
-    Color mult(float);
-    Color div(float);
-};
+//***************** COLOR METHODS *****************//
 
 Color::Color() {
   r = 0.0f;
@@ -418,18 +532,10 @@ Color Color::div(float k) {
   return Color(a,b,c);
 }
 
-//***************** CAMERA *****************//
-class Camera {
-  public:
-    Point lookfrom;
-    Point lookat;
-    Vector up;
-    Vector UL, LL, UR, LR;
-    float fov;
-    Camera();
-    Camera(Point, Point, Vector, float);
-    void generateRay(Sample, Ray*);
-};
+
+
+//***************** CAMERA METHODS *****************//
+
 Camera::Camera() {
     lookfrom = Point();
     lookat = Point();
@@ -472,14 +578,9 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 
 }
 
-//***************** LOCAL GEO *****************//
-class LocalGeo {
-  public:
-    Point pos;
-    Normal n;
-    LocalGeo();
-    LocalGeo(Point, Normal);
-};
+
+
+//***************** LOCAL GEO METHODS *****************//
 
 LocalGeo::LocalGeo() {
     pos = Point();
@@ -490,14 +591,9 @@ LocalGeo::LocalGeo(Point p, Normal norm) {
     n = norm;
 }
 
-//***************** SHAPE *****************//
-class Shape {
-public:
-  virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
-  virtual bool ifIntersect(Ray& ) = 0;
-};
 
-//***************** SPHERE *****************//
+
+//***************** SPHERE METHODS *****************//
 class Sphere: public Shape {
   public:
     Point pos;
@@ -550,13 +646,15 @@ bool Sphere::ifIntersect(Ray& ray) {
     }
 }
 
-//***************** TRIANGLE *****************//
-class Triangle : public Shape {
-  public:
-   Point a, b, c;
-    bool intersect(Ray&, float* , LocalGeo* );
-    bool ifIntersect(Ray& );
-};
+
+
+//***************** TRIANGLE METHODS *****************//
+
+Triangle::Triangle(Point first, Point second, Point third) {
+	a = first;
+	b = second;
+	c = third;
+}
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
     return false;
@@ -568,18 +666,8 @@ bool Triangle::ifIntersect(Ray& ray) {
 
 
 
-//***************** LIGHT *****************//
-class Light {
-  public:
-    float x, y, z;
-    Vector direction;
-    Color rgb;
-    bool isPL;
-    Light();
-    Light(float, float, float, Color, bool);
-    Light(float, float, float, Color, bool, Vector);
-    void generateLightRay(LocalGeo&, Ray*, Color*);
-};
+
+//***************** LIGHT METHODS *****************//
 
 Light::Light() {
   x = 0.0f;
@@ -624,13 +712,8 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 
 }
 
-//***************** SAMPLE *****************//
-class Sample {
-  public:
-    //holds screen coordinates;
-    float x, y;
-    Sample();
-};
+
+//***************** SAMPLE METHODS *****************//
 
 Sample::Sample() {
     x, y = 0.0;
@@ -650,13 +733,10 @@ void Camera::generateRay(Sample s, Ray* ray) {
     Point P = Point(t3.vector);
     *ray  = Ray(lookfrom, P);
 }
-//***************** SAMPLER *****************//
-class Sampler {
-  public:
-    int i, j;
-    bool getSample(Sample *);
-    Sampler();
-};
+
+
+//***************** SAMPLER METHODS *****************//
+
 Sampler::Sampler() {
     i, j = 0;
 }
@@ -712,16 +792,9 @@ void setPixel(int x, int y, Color rgb) {
   FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
 
-//****************************************************
-// BRDF
-//****************************************************
 
-class BRDF {
-public:
-  float kd, ks, ka, kr;
-  BRDF();
-  BRDF(float, float, float, float);
-};
+//***************** BRDF METHODS *****************//
+
 
 BRDF::BRDF() {
   kd = 0;
@@ -737,17 +810,9 @@ BRDF::BRDF(float d, float s, float a, float r) {
   kr = r;
 }
 
-//****************************************************
-// Material
-//****************************************************
 
-class Material {
-public:
-  BRDF constantBRDF;
-  Material();
-  Material(BRDF);
-  BRDF getBRDF(LocalGeo& local, BRDF* brdf);
-};
+
+//***************** MATERIAL METHODS *****************//
 
 Material::Material() {
   constantBRDF = BRDF();
@@ -760,16 +825,11 @@ Material::Material(BRDF mat) {
 BRDF Material::getBRDF(LocalGeo& local, BRDF* brdf) {
   return constantBRDF;
 }
-//****************************************************
-// SHADER
-//****************************************************
 
-class Shader {
-public:
-  //holds screen coordinates;
-  //float x, y;
-  Shader();
-};
+
+//****************************************************
+// SHADER METHODS
+//****************************************************
 
 /*void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
   // Obtain the brdf at intersection point
