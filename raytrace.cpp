@@ -714,14 +714,17 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
 	//if(hittime < ray.t_min || hittime > ray.t_max) {
 	if(hittime < 0) {
+		printf("Fail on hittime check: %f \n", hittime);
 		return false;
 	}
 	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
 	if(beta < 0 || beta > 1) {
+		printf("Fail on beta check: %f \n", beta);
 		return false;
 	}
 	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
 	if(gamma < 0 || gamma > 1) {
+		printf("Fail on gamma check: %f \n", gamma);
 		return false;
 	}
 	else {
@@ -834,13 +837,13 @@ void Camera::generateRay(Sample s, Ray* ray) {
   float imgToScreen = imagePlaneW/width;
   float u = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
   float v = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
-  printf("value of v and u: %f, %f \n", v, u);
+  //printf("value of v and u: %f, %f \n", v, u);
   v = v/imagePlaneH;
   u = u/imagePlaneW;
   Vector t1 = LL.mult(v).add(UL.mult(1-v));
   Vector t2 = LR.mult(v).add(UR.mult(1-v));
   Vector t3 = t1.mult(u).add(t2.mult(1-u));
-  printf("value of the 3 vectors: v1<%f, %f, %f>, v2<%f, %f, %f>, v3<%f, %f, %f> \n", t1.vector(0), t1.vector(1), t1.vector(2), t2.vector(0), t2.vector(1), t2.vector(2), t3.vector(0), t3.vector(1), t3.vector(2));
+  //printf("value of the 3 vectors: v1<%f, %f, %f>, v2<%f, %f, %f>, v3<%f, %f, %f> \n", t1.vector(0), t1.vector(1), t1.vector(2), t2.vector(0), t2.vector(1), t2.vector(2), t3.vector(0), t3.vector(1), t3.vector(2));
   Point P = Point(t3.vector);
   *ray  = Ray(lookfrom, P);
 }
