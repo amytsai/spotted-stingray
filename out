@@ -17,202 +17,222 @@ center: 	 0.000000, 	 0.000000, 	 0.000000
 radius: 	 1.000000 
 sample generated at: 0.500000, 0.500000 
 original value at: -2.000000, 2.000000 
-scaled value at: -0.082843, 0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, 0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, 0.082843, -1.000000>
-hit
-color returned: 1.000000, 0.000000, 0.000000
+scaled value at: -0.331371, 0.331371 
+value of u and v: 0.745584, 0.082843 
+difference between scale and computed values: 0.127922, 0.014214 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
 sample generated at: 1.500000, 0.500000 
 original value at: -1.000000, 2.000000 
-scaled value at: -0.041421, 0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, 0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, 0.082843, -1.000000>
+scaled value at: -0.165685, 0.331371 
+value of u and v: 0.745584, 0.248528 
+difference between scale and computed values: -0.037763, -0.123045 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.208326, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 2.500000, 0.500000 
 original value at: 0.000000, 2.000000 
-scaled value at: 0.000000, 0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, 0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, 0.082843, -1.000000>
+scaled value at: 0.000000, 0.331371 
+value of u and v: 0.745584, 0.414214 
+difference between scale and computed values: -0.203449, -0.260303 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, 0.071068, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 3.500000, 0.500000 
 original value at: 1.000000, 2.000000 
-scaled value at: 0.041421, 0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, 0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, 0.082843, -1.000000>
+scaled value at: 0.165685, 0.331371 
+value of u and v: 0.745584, 0.579899 
+difference between scale and computed values: -0.369134, -0.397561 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.066191, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 4.500000, 0.500000 
 original value at: 2.000000, 2.000000 
-scaled value at: 0.082843, 0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, 0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, 0.082843, -1.000000>
+scaled value at: 0.331371, 0.331371 
+value of u and v: 0.745584, 0.745584 
+difference between scale and computed values: -0.534820, -0.534820 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.203449, -0.203449, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 0.500000, 1.500000 
 original value at: -2.000000, 1.000000 
-scaled value at: -0.082843, 0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, 0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, 0.041421, -1.000000>
+scaled value at: -0.331371, 0.165685 
+value of u and v: 0.579899, 0.082843 
+difference between scale and computed values: 0.265180, 0.179899 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.345584, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 1.500000, 1.500000 
 original value at: -1.000000, 1.000000 
-scaled value at: -0.041421, 0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, 0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, 0.041421, -1.000000>
+scaled value at: -0.165685, 0.165685 
+value of u and v: 0.579899, 0.248528 
+difference between scale and computed values: 0.099495, 0.042641 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.208326, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 2.500000, 1.500000 
 original value at: 0.000000, 1.000000 
-scaled value at: 0.000000, 0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, 0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, 0.041421, -1.000000>
+scaled value at: 0.000000, 0.165685 
+value of u and v: 0.579899, 0.414214 
+difference between scale and computed values: -0.066191, -0.094618 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, 0.071068, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 3.500000, 1.500000 
 original value at: 1.000000, 1.000000 
-scaled value at: 0.041421, 0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, 0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, 0.041421, -1.000000>
+scaled value at: 0.165685, 0.165685 
+value of u and v: 0.579899, 0.579899 
+difference between scale and computed values: -0.231876, -0.231876 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.066191, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 4.500000, 1.500000 
 original value at: 2.000000, 1.000000 
-scaled value at: 0.082843, 0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, 0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, 0.041421, -1.000000>
+scaled value at: 0.331371, 0.165685 
+value of u and v: 0.579899, 0.745584 
+difference between scale and computed values: -0.397561, -0.369134 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.066191, -0.203449, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 0.500000, 2.500000 
 original value at: -2.000000, -0.000000 
-scaled value at: -0.082843, -0.000000 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.000000, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.000000, -1.000000>
+scaled value at: -0.331371, -0.000000 
+value of u and v: 0.414214, 0.082843 
+difference between scale and computed values: 0.402439, 0.345584 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.345584, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 1.500000, 2.500000 
 original value at: -1.000000, -0.000000 
-scaled value at: -0.041421, -0.000000 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.000000, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.000000, -1.000000>
+scaled value at: -0.165685, -0.000000 
+value of u and v: 0.414214, 0.248528 
+difference between scale and computed values: 0.236753, 0.208326 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.208326, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 2.500000, 2.500000 
 original value at: 0.000000, -0.000000 
 scaled value at: 0.000000, -0.000000 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.000000, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.000000, -1.000000>
+value of u and v: 0.414214, 0.414214 
+difference between scale and computed values: 0.071068, 0.071068 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, 0.071068, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 3.500000, 2.500000 
 original value at: 1.000000, -0.000000 
-scaled value at: 0.041421, -0.000000 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.000000, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.000000, -1.000000>
+scaled value at: 0.165685, -0.000000 
+value of u and v: 0.414214, 0.579899 
+difference between scale and computed values: -0.094618, -0.066191 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.066191, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 4.500000, 2.500000 
 original value at: 2.000000, -0.000000 
-scaled value at: 0.082843, -0.000000 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.000000, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.000000, -1.000000>
+scaled value at: 0.331371, -0.000000 
+value of u and v: 0.414214, 0.745584 
+difference between scale and computed values: -0.260303, -0.203449 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.071068, -0.203449, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 0.500000, 3.500000 
 original value at: -2.000000, -1.000000 
-scaled value at: -0.082843, -0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.041421, -1.000000>
-hit
-color returned: 1.000000, 0.000000, 0.000000
+scaled value at: -0.331371, -0.165685 
+value of u and v: 0.248528, 0.082843 
+difference between scale and computed values: 0.539697, 0.511270 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
 sample generated at: 1.500000, 3.500000 
 original value at: -1.000000, -1.000000 
-scaled value at: -0.041421, -0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.041421, -1.000000>
+scaled value at: -0.165685, -0.165685 
+value of u and v: 0.248528, 0.248528 
+difference between scale and computed values: 0.374012, 0.374012 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.208326, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 2.500000, 3.500000 
 original value at: 0.000000, -1.000000 
-scaled value at: 0.000000, -0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.041421, -1.000000>
+scaled value at: 0.000000, -0.165685 
+value of u and v: 0.248528, 0.414214 
+difference between scale and computed values: 0.208326, 0.236753 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, 0.071068, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 3.500000, 3.500000 
 original value at: 1.000000, -1.000000 
-scaled value at: 0.041421, -0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.041421, -1.000000>
+scaled value at: 0.165685, -0.165685 
+value of u and v: 0.248528, 0.579899 
+difference between scale and computed values: 0.042641, 0.099495 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.066191, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 4.500000, 3.500000 
 original value at: 2.000000, -1.000000 
-scaled value at: 0.082843, -0.041421 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.041421, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.041421, -1.000000>
+scaled value at: 0.331371, -0.165685 
+value of u and v: 0.248528, 0.745584 
+difference between scale and computed values: -0.123045, -0.037763 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.208326, -0.203449, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 0.500000, 4.500000 
 original value at: -2.000000, -2.000000 
-scaled value at: -0.082843, -0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.082843, -0.082843, -1.000000>
-hit
-color returned: 1.000000, 0.000000, 0.000000
+scaled value at: -0.331371, -0.331371 
+value of u and v: 0.082843, 0.082843 
+difference between scale and computed values: 0.676955, 0.676955 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.345584, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.345584, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
 sample generated at: 1.500000, 4.500000 
 original value at: -1.000000, -2.000000 
-scaled value at: -0.041421, -0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <-0.041421, -0.082843, -1.000000>
-hit
-color returned: 1.000000, 0.000000, 0.000000
+scaled value at: -0.165685, -0.331371 
+value of u and v: 0.082843, 0.248528 
+difference between scale and computed values: 0.511270, 0.539697 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.208326, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.208326, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
 sample generated at: 2.500000, 4.500000 
 original value at: 0.000000, -2.000000 
-scaled value at: 0.000000, -0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.000000, -0.082843, -1.000000>
+scaled value at: 0.000000, -0.331371 
+value of u and v: 0.082843, 0.414214 
+difference between scale and computed values: 0.345584, 0.402439 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.071068, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, 0.071068, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 3.500000, 4.500000 
 original value at: 1.000000, -2.000000 
-scaled value at: 0.041421, -0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.041421, -0.082843, -1.000000>
+scaled value at: 0.165685, -0.331371 
+value of u and v: 0.082843, 0.579899 
+difference between scale and computed values: 0.179899, 0.265180 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.066191, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.066191, -1.000000>
 hit
 color returned: 1.000000, 0.000000, 0.000000
 sample generated at: 4.500000, 4.500000 
 original value at: 2.000000, -2.000000 
-scaled value at: 0.082843, -0.082843 
-difference between scale and computed values: 0.000000, 0.000000 
-ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.082843, -1.000000>
-tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.082843, -0.082843, -1.000000>
-hit
-color returned: 1.000000, 0.000000, 0.000000
+scaled value at: 0.331371, -0.331371 
+value of u and v: 0.082843, 0.745584 
+difference between scale and computed values: 0.014214, 0.127922 
+ray generated with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.203449, -1.000000>
+tracing ray with pos (0.000000, 0.000000, 3.000000) and dir <0.345584, -0.203449, -1.000000>
+color returned: 0.000000, 0.000000, 0.000000
 image sucessfully saved to test.png

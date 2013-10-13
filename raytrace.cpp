@@ -654,9 +654,9 @@ void Camera::generateRay(Sample s, Ray* ray) {
     float v = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
     float u = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
 	printf("value of u and v: %f, %f \n", u, v);
-    Vector t1 = LL.mult(v).add(UL.mult(1-v));
-    Vector t2 = LR.mult(v).add(UR.mult(1-v));
-    Vector t3 = t1.mult(u).add(t2.mult(1-u));
+    Vector t1 = (LL.mult(v)).add(UL.mult(1-v));
+    Vector t2 = (LR.mult(v)).add(UR.mult(1-v));
+    Vector t3 = (t1.mult(u)).add(t2.mult(1-u));
     Point P = Point(t3.vector);
     //Point P = Point(x, y, 2);
     printf("difference between scale and computed values: %f, %f \n", P.point(0) - x, P.point(1) - y);
