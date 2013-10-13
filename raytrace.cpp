@@ -477,13 +477,13 @@ class LocalGeo {
   public:
     Point pos;
     Normal n;
-	LocalGeo();
+    LocalGeo();
     LocalGeo(Point, Normal);
 };
 
 LocalGeo::LocalGeo() {
-	pos = Point();
-	n = Normal();
+    pos = Point();
+    n = Normal();
 }
 LocalGeo::LocalGeo(Point p, Normal norm) {
     pos = p;
@@ -572,13 +572,13 @@ bool Triangle::ifIntersect(Ray& ray) {
 class Light {
   public:
     float x, y, z;
-	Vector direction;
+    Vector direction;
     Color rgb;
     bool isPL;
     Light();
     Light(float, float, float, Color, bool);
-	Light(float, float, float, Color, bool, Vector);
-	void generateLightRay(LocalGeo&, Ray*, Color*);
+    Light(float, float, float, Color, bool, Vector);
+    void generateLightRay(LocalGeo&, Ray*, Color*);
 };
 
 Light::Light() {
@@ -607,20 +607,20 @@ Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
 }
 
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-	if(isPL) {
-		Point origin = Point(x, y, z);
-		Vector dir = Vector(origin, local.pos);
-		*lray = Ray(origin, dir);
-		*lcolor = rgb;
-		return;
-	}
-	else {
-		Point origin = Point(x, y, z);
-		Vector dir = direction;
-		*lray = Ray(origin, dir);
-		*lcolor = rgb;
-		return;
-	}
+    if(isPL) {
+        Point origin = Point(x, y, z);
+        Vector dir = Vector(origin, local.pos);
+        *lray = Ray(origin, dir);
+        *lcolor = rgb;
+        return;
+    }
+    else {
+        Point origin = Point(x, y, z);
+        Vector dir = direction;
+        *lray = Ray(origin, dir);
+        *lcolor = rgb;
+        return;
+    }
 
 }
 
@@ -639,11 +639,11 @@ Sample::Sample() {
 void Camera::generateRay(Sample s, Ray* ray) {
     float x = (s.x - ((float) width)/2);
     float y = -(s.y - ((float) height)/2);
-	printf("original value at: %f, %f \n", x, y);
+    printf("original value at: %f, %f \n", x, y);
     float theta = fov/2;
     x = x*tan(theta)/(((float) width) / 2) ;
     y = y*tan(theta)/(((float) height) / 2) ;
-	printf("scaled value at: %f, %f \n", x, y);
+    printf("scaled value at: %f, %f \n", x, y);
     float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
     float imgToScreen = imagePlaneW/width;
@@ -651,14 +651,14 @@ void Camera::generateRay(Sample s, Ray* ray) {
     //float u = s.x*imgToscreen - imagePlaneW/2;
     //float v = s.y*imgToscreen ;
     //float u = s.x*imgToscreen ;
-	float v = ((s.x - width/2)*imgToScreen + imagePlaneW/2);
-	float u = (-((s.y - height/2)*imgToScreen)) + imagePlaneH/2;
+    float v = ((s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2);
+    float u = (-((s.y - (((float) height) / 2))*imgToScreen)) + imagePlaneH/2;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
     Point P = Point(t3.vector);
-	//Point P = Point(x, y, 2);
-	printf("difference between scale and computed values: %f, %f \n", P.point(0) - x, P.point(1) - y);
+    //Point P = Point(x, y, 2);
+    printf("difference between scale and computed values: %f, %f \n", P.point(0) - x, P.point(1) - y);
     *ray  = Ray(lookfrom, P);
 }
 //***************** SAMPLER *****************//
@@ -786,25 +786,25 @@ public:
   // Obtain the brdf at intersection point
   in.primitive->getBRDF(in.local, &brdf);
 
-	// There is an intersection, loop through all light source
-	for (i = 0; i < #lights; i++) {
-		lights[i].generateLightRay(in.local, &lray, &lcolor);
+    // There is an intersection, loop through all light source
+    for (i = 0; i < #lights; i++) {
+        lights[i].generateLightRay(in.local, &lray, &lcolor);
 
-		// Check if the light is blocked or not
-		if (!primitive->intersectP(lray))
-			// If not, do shading calculation for this
-				// light source
-					*color += shading(in.local, brdf, lray, lcolor);
-	}
+        // Check if the light is blocked or not
+        if (!primitive->intersectP(lray))
+            // If not, do shading calculation for this
+                // light source
+                    *color += shading(in.local, brdf, lray, lcolor);
+    }
 
-	// Handle mirror reflection
-	if (brdf.kr > 0) {
-		reflectRay = createReflectRay(in.local, ray);
+    // Handle mirror reflection
+    if (brdf.kr > 0) {
+        reflectRay = createReflectRay(in.local, ray);
 
-		// Make a recursive call to trace the reflected ray
-		trace(reflectRay, depth+1, &tempColor);
-		*color += brdf.kr * tempColor;
-	}
+        // Make a recursive call to trace the reflected ray
+        trace(reflectRay, depth+1, &tempColor);
+        *color += brdf.kr * tempColor;
+    }
 
 }*/
 
@@ -836,28 +836,28 @@ void trace(Ray& ray, int depth, Color* color) {
     }
   }
 
-	/*// Obtain the brdf at intersection point
-	in.primitive->getBRDF(in.local, &brdf);
+    /*// Obtain the brdf at intersection point
+    in.primitive->getBRDF(in.local, &brdf);
 
-	// There is an intersection, loop through all light source
-	for (i = 0; i < #lights; i++) {
-		lights[i].generateLightRay(in.local, &lray, &lcolor);
+    // There is an intersection, loop through all light source
+    for (i = 0; i < #lights; i++) {
+        lights[i].generateLightRay(in.local, &lray, &lcolor);
 
-		// Check if the light is blocked or not
-		if (!primitive->intersectP(lray))
-			// If not, do shading calculation for this
-				// light source
-					*color += shading(in.local, brdf, lray, lcolor);
-	}
+        // Check if the light is blocked or not
+        if (!primitive->intersectP(lray))
+            // If not, do shading calculation for this
+                // light source
+                    *color += shading(in.local, brdf, lray, lcolor);
+    }
 
-	// Handle mirror reflection
-	if (brdf.kr > 0) {
-		reflectRay = createReflectRay(in.local, ray);
+    // Handle mirror reflection
+    if (brdf.kr > 0) {
+        reflectRay = createReflectRay(in.local, ray);
 
-		// Make a recursive call to trace the reflected ray
-		trace(reflectRay, depth+1, &tempColor);
-		*color += brdf.kr * tempColor;
-	}*/
+        // Make a recursive call to trace the reflected ray
+        trace(reflectRay, depth+1, &tempColor);
+        *color += brdf.kr * tempColor;
+    }*/
 
 }
 
