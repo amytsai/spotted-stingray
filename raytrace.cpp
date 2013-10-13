@@ -639,21 +639,25 @@ Sample::Sample() {
 void Camera::generateRay(Sample s, Ray* ray) {
     float x = -(s.x - width/2);
     float y = s.y - height/2;
-    theta = fov/2;
-    x = x*tan(theta/(width/2));
-    y = y*tan(theta/(height/2));
-    /*float imagePlaneW = (UL.sub(UR)).len;
+    float theta = fov/2;
+    x = x*tan(theta)/(width/2);
+    y = y*tan(theta)/(height/2);
+	printf("scaled value at: %f, %f \n", x, y);
+    float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
-    float imgToscreen = imagePlaneW/width;
-    float v = s.y*imgToscreen - imagePlaneH/2;
-    float u = s.x*imgToscreen - imagePlaneW/2;
-    float v = s.y*imgToscreen ;
-    float u = s.x*imgToscreen ;
+    float imgToScreen = imagePlaneW/width;
+    //float v = s.y*imgToscreen - imagePlaneH/2;
+    //float u = s.x*imgToscreen - imagePlaneW/2;
+    //float v = s.y*imgToscreen ;
+    //float u = s.x*imgToscreen ;
+	float u = ((s.x - width/2)*imgToScreen/* + imagePlaneW/2*/);
+	float v = -((s.y - height/2)*imgToScreen/* + imagePlaneH/2*/);
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
     Point P = Point(t3.vector);
-    *ray  = Ray(lookfrom, P);*/
+	printf("difference between scale and computed values: %f, %f \n", P.point(0) - x, P.point(1) - y);
+    *ray  = Ray(lookfrom, P);
 }
 //***************** SAMPLER *****************//
 class Sampler {
