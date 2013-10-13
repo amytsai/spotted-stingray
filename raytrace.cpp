@@ -641,8 +641,8 @@ void Camera::generateRay(Sample s, Ray* ray) {
     float y = -(s.y - ((float) height)/2);
 	printf("original value at: %f, %f \n", x, y);
     float theta = fov/2;
-    x = x*tan(theta)/((float) width)/2);
-    y = y*tan(theta)/((float) height)/2);
+    x = x*tan(theta)/(((float) width) / 2) ;
+    y = y*tan(theta)/(((float) height) / 2) ;
 	printf("scaled value at: %f, %f \n", x, y);
     float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
