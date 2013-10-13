@@ -33,21 +33,24 @@ using namespace std;
 //****************************************************
 // Some Classes
 //****************************************************
+class Point;
 class Vector;
 class Normal;
-class Point;
 class Ray;
-class MatrixGenerator;
-class Transformation;
+class Transformation; //Created from MatrixGenerator, contains the matrix and inverse
+class MatrixGenerator; //Generates the transformations
 class Color;
 class Camera;
+class LocalGeo;
 class Shape;
 class Sphere;
 class Triangle;
-class LocalGeo;
-
+class Light;
 class Sample;
 class Sampler;
+class BRDF; //Stores the coefficients for specular, ambient, diffuse, reflection
+class Material; //I have no clue, but it's in the design document
+class Shader; //Was going to write all the shading functions in here
 
 //****************************************************
 //  Global Variables
@@ -64,7 +67,7 @@ class Point {
     Point(Vector4f);
     Point add(Vector);
     Point sub(Vector);
-    Vector sub(Point);
+    Vector sub(Point); //Uses current point as tail of vector
 };
 
 //***************** VECTOR *****************//
@@ -110,29 +113,25 @@ class Ray {
     Ray();
     Ray(Point, Point);
     Ray(Point, Vector);
-    Point getPoint(float);
+    Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
 };
 
 //***************** TRANSFORMATION *****************//
 class Transformation {
-  //Matrix m, minvt;
     public: 
-        Matrix4f matrix, matrixinv;
+        Matrix4f matrix, matrixinv; //matrix and inverse matrix
         Transformation(Matrix4f);
-  //TODO: should support transformations by overloading *
 };
 
 //***************** MATRIX *****************//
 class MatrixGenerator {
-  //float mat[4][4];
-  //TODO: Figure out what a matrix should be able to do
     public:
         MatrixGenerator();
-        Transformation generateTranslation(float, float, float);
-        Transformation generateRotationx(float);
-        Transformation generateRotationy(float);
-        Transformation generateRotationz(float);
-        Transformation generateScale(float, float, float);
+        Transformation generateTranslation(float, float, float); //Translation transform matrix
+        Transformation generateRotationx(float); //Rotation around x axis matrix
+        Transformation generateRotationy(float); //Rotation around y axis matrix
+        Transformation generateRotationz(float); //Rotation around z axis matrix
+        Transformation generateScale(float, float, float); //Scale transform matrix
 };
 
 //***************** COLOR *****************//
@@ -176,13 +175,24 @@ public:
   virtual bool ifIntersect(Ray& ) = 0;
 };
 
+//***************** SPHERE *****************//
+
+class Sphere: public Shape {
+  public:
+    Point pos;
+    float r;
+    Sphere(Point, float);
+    bool intersect(Ray&, float*, LocalGeo*); //Returns whether it intersects, the time it hits, and the point/normal
+    bool ifIntersect(Ray&); //Returns whether it intersects
+};
+
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
   public:
    Point a, b, c;
    Triangle(Point, Point, Point);
-    bool intersect(Ray&, float* , LocalGeo* );
-    bool ifIntersect(Ray& );
+    bool intersect(Ray&, float* , LocalGeo* ); //Returns whether it intersects, the time it hits, and the point/normal
+    bool ifIntersect(Ray& ); //Returns whether it intersects
 };
 
 //***************** LIGHT *****************//
@@ -220,7 +230,7 @@ class Sampler {
 
 class BRDF {
 public:
-  float kd, ks, ka, kr;
+  float kd, ks, ka, kr; //All the constants for shading
   BRDF();
   BRDF(float, float, float, float);
 };
@@ -594,14 +604,7 @@ LocalGeo::LocalGeo(Point p, Normal norm) {
 
 
 //***************** SPHERE METHODS *****************//
-class Sphere: public Shape {
-  public:
-    Point pos;
-    float r;
-    Sphere(Point, float);
-    bool intersect(Ray&, float*, LocalGeo*);
-    bool ifIntersect(Ray&);
-};
+
 
 Sphere::Sphere(Point p, float rad) {
     pos  = p;
