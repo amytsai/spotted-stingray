@@ -504,10 +504,10 @@ Color::Color() {
   b = 0.0f;
 }
 
-Color::Color(float a, float b, float c) {
-  r = a;
-  g = b;
-  b = c;
+Color::Color(float red, float green, float blue) {
+  r = red;
+  g = green;
+  b = blue;
 }
 
 Color Color::add(Color v) {
@@ -878,7 +878,7 @@ void trace(Ray& ray, int depth, Color* color) {
     bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
     if(intersects) {
       printf("hit\n");
-      Color temp = Color(1, 0, 0);
+      Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(0) + 1)/2);
       *color = temp;
       return;
     } else {
