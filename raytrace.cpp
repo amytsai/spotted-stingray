@@ -624,7 +624,9 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         return false;
     }
     else {
-        float hittime = (sqrt(determinant) + -d.dot(e - c))/(d.dot(d));
+        float hittime1 = (-d.dot(e - c) + sqrt(determinant))/(d.dot(d));
+		float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
+		float hittime = min(hittime1, hittime2);
         *thit = hittime;
         Point hitPoint = ray.getPoint(hittime);
         Normal norm = Normal((hitPoint.sub(center)));
@@ -660,6 +662,7 @@ Triangle::Triangle(Point first, Point second, Point third) {
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
+
     return false;
 }
 
