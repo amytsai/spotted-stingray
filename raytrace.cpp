@@ -689,89 +689,91 @@ Triangle::Triangle(Point first, Point second, Point third) {
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
-  Point rayStart = ray.pos;
-  Vector rayDirection = ray.dir;
-  Vector4f av = r.point;
-  Vector4f bv = s.point;
-  Vector4f cv = t.point;
-  Vector4f dv = rayDirection.vector;
-  Vector4f ev = rayStart.point;
-  float a, b, c, d, e, f, g, h, i, j, k, l, M;
-  float beta, gamma, hittime;
-  a = av(0) - bv(0);
-  b = av(1) - bv(1);
-  c = av(2) - bv(2);
-  d = av(0) - cv(0);
-  e = av(1) - cv(1);
-  f = av(2) - cv(2);
-  g = dv(0);
-  h = dv(1);
-  i = dv(2);
-  j = av(0) - ev(0);
-  k = av(1) - ev(1);
-  l = av(2) - ev(2);
-  M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-  hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-  if(hittime < ray.t_min || hittime > ray.t_max) {
-    return false;
-  }
-  beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-  if(beta < 0 || beta > 1) {
-    return false;
-  }
-  gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
-  if(gamma < 0 || gamma > 1) {
-    return false;
-  }
-  else {
-    *thit = hittime;
-    Vector temp = Vector(norm.normal);
-    if(temp.dot(rayDirection) > 0) {
-      temp = temp.mult(-1);
-    }
-    *local = LocalGeo(ray.getPoint(hittime), Normal(temp));
-    return true;
-  }
+	Point rayStart = ray.pos;
+	Vector rayDirection = ray.dir;
+	Vector4f av = r.point;
+	Vector4f bv = s.point;
+	Vector4f cv = t.point;
+	Vector4f dv = rayDirection.vector;
+	Vector4f ev = rayStart.point;
+	float a, b, c, d, e, f, g, h, i, j, k, l, M;
+	float beta, gamma, hittime;
+	a = av(0) - bv(0);
+	b = av(1) - bv(1);
+	c = av(2) - bv(2);
+	d = av(0) - cv(0);
+	e = av(1) - cv(1);
+	f = av(2) - cv(2);
+	g = dv(0);
+	h = dv(1);
+	i = dv(2);
+	j = av(0) - ev(0);
+	k = av(1) - ev(1);
+	l = av(2) - ev(2);
+	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	//if(hittime < ray.t_min || hittime > ray.t_max) {
+	if(hittime < 0) {
+		return false;
+	}
+	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+	if(beta < 0 || beta > 1) {
+		return false;
+	}
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(gamma < 0 || gamma > 1) {
+		return false;
+	}
+	else {
+		*thit = hittime;
+		Vector temp = Vector(norm.normal);
+		if(temp.dot(rayDirection) > 0) {
+			temp = temp.mult(-1);
+		}
+		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+		return true;
+	}
 }
 
 bool Triangle::ifIntersect(Ray& ray) {
-  Point rayStart = ray.pos;
-  Vector rayDirection = ray.dir;
-  Vector4f av = r.point;
-  Vector4f bv = s.point;
-  Vector4f cv = t.point;
-  Vector4f dv = rayDirection.vector;
-  Vector4f ev = rayStart.point;
-  float a, b, c, d, e, f, g, h, i, j, k, l, M;
-  float beta, gamma, hittime;
-  a = av(0) - bv(0);
-  b = av(1) - bv(1);
-  c = av(2) - bv(2);
-  d = av(0) - cv(0);
-  e = av(1) - cv(1);
-  f = av(2) - cv(2);
-  g = dv(0);
-  h = dv(1);
-  i = dv(2);
-  j = av(0) - ev(0);
-  k = av(1) - ev(1);
-  l = av(2) - ev(2);
-  M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-  hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-  if(hittime < ray.t_min || hittime > ray.t_max) {
-    return false;
-  }
-  beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-  if(beta < 0 || beta > 1) {
-    return false;
-  }
-  gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
-  if(gamma < 0 || gamma > 1) {
-    return false;
-  }
-  else {
-    return true;
-  }
+    	Point rayStart = ray.pos;
+	Vector rayDirection = ray.dir;
+	Vector4f av = r.point;
+	Vector4f bv = s.point;
+	Vector4f cv = t.point;
+	Vector4f dv = rayDirection.vector;
+	Vector4f ev = rayStart.point;
+	float a, b, c, d, e, f, g, h, i, j, k, l, M;
+	float beta, gamma, hittime;
+	a = av(0) - bv(0);
+	b = av(1) - bv(1);
+	c = av(2) - bv(2);
+	d = av(0) - cv(0);
+	e = av(1) - cv(1);
+	f = av(2) - cv(2);
+	g = dv(0);
+	h = dv(1);
+	i = dv(2);
+	j = av(0) - ev(0);
+	k = av(1) - ev(1);
+	l = av(2) - ev(2);
+	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	//if(hittime < ray.t_min || hittime > ray.t_max) {
+	if(hittime < 0) {
+		return false;
+	}
+	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+	if(beta < 0 || beta > 1) {
+		return false;
+	}
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+	if(gamma < 0 || gamma > 1) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 //***************** LIGHT METHODS *****************//
