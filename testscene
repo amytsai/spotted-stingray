@@ -5,6 +5,7 @@ output test.png
 #camera on z y is up
 #camera 0 0 3 0 0 0 0 1 0 45
 #camera 0 3 0 0 0 0 0 0 1 45
-camera 3 0 0 0 0 0 0 1 0 45
+#camera 3 0 0 0 0 0 0 1 0 45
+camera 3 0 0 0 0 0 0 0 1 45
 sphere 0 0 0 1
 ambient 1 0 0 

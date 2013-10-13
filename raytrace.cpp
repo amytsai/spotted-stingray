@@ -734,7 +734,7 @@ void Camera::generateRay(Sample s, Ray* ray) {
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
-	printf("value of the 3 vectors: %f, %f, %f \n", t1, t2, t3);
+	printf("value of the 3 vectors: v1<%f, %f, %f>, v2<%f, %f, %f>, v3<%f, %f, %f> \n", t1.vector(0), t1.vector(1), t1.vector(2), t2.vector(0), t2.vector(1), t2.vector(2), t3.vector(0), t3.vector(1), t3.vector(2));
     Point P = Point(t3.vector);
     *ray  = Ray(lookfrom, P);
 }
@@ -880,7 +880,8 @@ void trace(Ray& ray, int depth, Color* color) {
     bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
     if(intersects) {
       printf("hit\n");
-      Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
+      //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
+      Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
       *color = temp;
       return;
     } else {
