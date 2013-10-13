@@ -68,7 +68,7 @@ class Point {
     Point add(Vector);
     Point sub(Vector);
     Vector sub(Point); //Uses current point as the arrow side of vector
-	Point transform(Transformation); //Returns the transformed point
+    Point transform(Transformation); //Returns the transformed point
 };
 
 //***************** VECTOR *****************//
@@ -88,7 +88,7 @@ class Vector {
     Vector cross(Vector);
     void normalize();
     bool equals(Vector);
-	Vector transform(Transformation); //Returns the transformed vector
+    Vector transform(Transformation); //Returns the transformed vector
 };
 
 //***************** NORMAL *****************//
@@ -116,25 +116,25 @@ class Ray {
     Ray(Point, Point);
     Ray(Point, Vector);
     Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
-	Ray transform(Transformation); //Returns the transformed ray
+    Ray transform(Transformation); //Returns the transformed ray
 };
 
 //***************** TRANSFORMATION *****************//
 class Transformation {
-    public: 
-        Matrix4f matrix, matrixinv; //matrix and inverse matrix
-        Transformation(Matrix4f);
+  public: 
+    Matrix4f matrix, matrixinv; //matrix and inverse matrix
+    Transformation(Matrix4f);
 };
 
 //***************** MATRIX *****************//
 class MatrixGenerator {
-    public:
-        MatrixGenerator();
-        Transformation generateTranslation(float, float, float); //Translation transform matrix
-        Transformation generateRotationx(float); //Rotation around x axis matrix
-        Transformation generateRotationy(float); //Rotation around y axis matrix
-        Transformation generateRotationz(float); //Rotation around z axis matrix
-        Transformation generateScale(float, float, float); //Scale transform matrix
+  public:
+    MatrixGenerator();
+    Transformation generateTranslation(float, float, float); //Translation transform matrix
+    Transformation generateRotationx(float); //Rotation around x axis matrix
+    Transformation generateRotationy(float); //Rotation around y axis matrix
+    Transformation generateRotationz(float); //Rotation around z axis matrix
+    Transformation generateScale(float, float, float); //Scale transform matrix
 };
 
 //***************** COLOR *****************//
@@ -173,9 +173,9 @@ class LocalGeo {
 
 //***************** SHAPE *****************//
 class Shape {
-public:
-  virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
-  virtual bool ifIntersect(Ray& ) = 0;
+  public:
+    virtual bool intersect(Ray&, float*, LocalGeo* ) = 0;
+    virtual bool ifIntersect(Ray& ) = 0;
 };
 
 //***************** SPHERE *****************//
@@ -192,10 +192,10 @@ class Sphere: public Shape {
 //***************** TRIANGLE *****************//
 class Triangle : public Shape {
   public:
-   Point r, s, t;
-   Normal norm;
-   bool vertexNormal;
-   Triangle(Point, Point, Point, bool);
+    Point r, s, t;
+    Normal norm;
+    bool vertexNormal;
+    Triangle(Point, Point, Point);
     bool intersect(Ray&, float* , LocalGeo* ); //Returns whether it intersects, the time it hits, and the point/normal
     bool ifIntersect(Ray& ); //Returns whether it intersects
 };
@@ -234,10 +234,10 @@ class Sampler {
 //****************************************************
 
 class BRDF {
-public:
-  float kd, ks, ka, kr; //All the constants for shading
-  BRDF();
-  BRDF(float, float, float, float);
+  public:
+    float kd, ks, ka, kr; //All the constants for shading
+    BRDF();
+    BRDF(float, float, float, float);
 };
 
 //****************************************************
@@ -245,11 +245,11 @@ public:
 //****************************************************
 
 class Material {
-public:
-  BRDF constantBRDF;
-  Material();
-  Material(BRDF);
-  BRDF getBRDF(LocalGeo& local, BRDF* brdf);
+  public:
+    BRDF constantBRDF;
+    Material();
+    Material(BRDF);
+    BRDF getBRDF(LocalGeo& local, BRDF* brdf);
 };
 
 //****************************************************
@@ -257,10 +257,10 @@ public:
 //****************************************************
 
 class Shader {
-public:
-  //holds screen coordinates;
-  //float x, y;
-  Shader();
+  public:
+    //holds screen coordinates;
+    //float x, y;
+    Shader();
 };
 
 
@@ -276,8 +276,8 @@ Point::Point(float a, float b, float c) {
 }
 
 Point::Point(Vector4f vec) {
-    point = vec;
-    point(3) = 1;
+  point = vec;
+  point(3) = 1;
 }
 
 Point Point::add(Vector v) {
@@ -291,14 +291,14 @@ Point Point::sub(Vector v) {
 }
 
 Vector Point::sub(Point p) {
-    Vector4f temp = point - p.point;
-    return Vector(temp);
+  Vector4f temp = point - p.point;
+  return Vector(temp);
 }
 
 Point Point::transform(Transformation trans) {
-	Point temp;
-	temp = Point(trans.matrix * point);
-	return temp;
+  Point temp;
+  temp = Point(trans.matrix * point);
+  return temp;
 }
 
 
@@ -318,14 +318,14 @@ Vector::Vector(float a, float b, float c) {
 }
 
 Vector::Vector(Vector4f vec) {
-    vector = vec;
-    vector(3) = 0;
-    len = vector.norm();
+  vector = vec;
+  vector(3) = 0;
+  len = vector.norm();
 }
 
 Vector::Vector(Point start, Point end) {
-    vector = end.point - start.point;
-    vector(3) = 0;
+  vector = end.point - start.point;
+  vector(3) = 0;
   len = vector.norm();
 }
 
@@ -354,13 +354,13 @@ float Vector::dot(Vector v) {
 }
 
 Vector Vector::cross(Vector v) {
-    Vector3f temp1, temp2, temp3;
-    temp1 << vector(0), vector(1), vector(2);
-    temp2 << v.vector(0), v.vector(1), v.vector(2);
-    temp3 = temp1.cross(temp2);
-    Vector4f temp4;
-    temp4 << temp3(0), temp3(1), temp3(2), 0;
-    return Vector(temp4);
+  Vector3f temp1, temp2, temp3;
+  temp1 << vector(0), vector(1), vector(2);
+  temp2 << v.vector(0), v.vector(1), v.vector(2);
+  temp3 = temp1.cross(temp2);
+  Vector4f temp4;
+  temp4 << temp3(0), temp3(1), temp3(2), 0;
+  return Vector(temp4);
 }
 
 void Vector::normalize() {
@@ -369,22 +369,22 @@ void Vector::normalize() {
 }
 
 bool Vector::equals(Vector v) {
-    Vector4f temp = v.vector - vector;
-    float size = temp.norm();
+  Vector4f temp = v.vector - vector;
+  float size = temp.norm();
   return size == 0;
 }
 
 Vector Vector::transform(Transformation trans){
-	Vector temp;
-	temp = Vector(trans.matrix * vector);
-	return temp;
+  Vector temp;
+  temp = Vector(trans.matrix * vector);
+  return temp;
 }
 
 
 //***************** NORMAL METHODS*****************//
 
 Normal::Normal() {
-    Vector4f temp(0, 0, 0, 0);
+  Vector4f temp(0, 0, 0, 0);
   normal = temp;
 }
 
@@ -395,12 +395,12 @@ Normal::Normal(float a, float b, float c) {
 }
 
 Normal::Normal(Vector v) {
-    normal = v.vector;
-    normal.normalize();
+  normal = v.vector;
+  normal.normalize();
 }
 Normal::Normal(Vector4f vec) {
-    normal = vec;
-    normal.normalize();
+  normal = vec;
+  normal.normalize();
 }
 
 Normal Normal::add(Normal v) {
@@ -414,8 +414,8 @@ Normal Normal::sub(Normal v) {
 }
 
 bool Normal::equals(Normal n) {
-    Vector4f temp = n.normal - normal;
-    float size = temp.norm();
+  Vector4f temp = n.normal - normal;
+  float size = temp.norm();
   return size == 0;
 }
 
@@ -437,21 +437,21 @@ Ray::Ray(Point a, Vector v) {
 }
 
 Ray::Ray() {
-    pos = Point();
-    dir = Vector();
+  pos = Point();
+  dir = Vector();
 }
 
 Point Ray::getPoint(float time) {
-    Vector travel = dir.mult(time);
-    Point temp;
-    temp = pos.add(travel);
-    return temp;
+  Vector travel = dir.mult(time);
+  Point temp;
+  temp = pos.add(travel);
+  return temp;
 }
 
 Ray Ray::transform(Transformation trans) {
-	Point newPoint = pos.transform(trans);
-	Vector newDir = dir.transform(trans);
-	return Ray(newPoint, newDir);
+  Point newPoint = pos.transform(trans);
+  Vector newDir = dir.transform(trans);
+  return Ray(newPoint, newDir);
 }
 
 
@@ -459,8 +459,8 @@ Ray Ray::transform(Transformation trans) {
 //***************** TRANSFORMATION METHODS*****************//
 
 Transformation::Transformation(Matrix4f mat) {
-    matrix = mat;
-    matrixinv = mat.inverse();
+  matrix = mat;
+  matrixinv = mat.inverse();
 }
 
 
@@ -470,52 +470,52 @@ MatrixGenerator::MatrixGenerator() {
 }
 
 Transformation MatrixGenerator::generateTranslation(float x, float y, float z) {
-    Matrix4f temp;
-    temp << 1, 0, 0, x,
-            0, 1, 0, y,
-            0, 0, 1, z,
-            0, 0, 0, 1;
-    return temp;
+  Matrix4f temp;
+  temp << 1, 0, 0, x,
+       0, 1, 0, y,
+       0, 0, 1, z,
+       0, 0, 0, 1;
+  return temp;
 }
 
 Transformation MatrixGenerator::generateRotationx(float angle) {
-    float rad = angle * PI/180;
-    Matrix4f temp;
-    temp << 1, 0, 0, 0,
-            0, cos(rad), -sin(rad), 0,
-            0, sin(rad), cos(rad), 0,
-            0, 0, 0, 1;
-    return temp;
+  float rad = angle * PI/180;
+  Matrix4f temp;
+  temp << 1, 0, 0, 0,
+       0, cos(rad), -sin(rad), 0,
+       0, sin(rad), cos(rad), 0,
+       0, 0, 0, 1;
+  return temp;
 }
 
 
 Transformation MatrixGenerator::generateRotationy(float angle) {
-    float rad = angle * PI/180;
-    Matrix4f temp;
-    temp << cos(rad), 0, -sin(rad), 0,
-            0, 1, 0, 0,
-            sin(rad), 0, cos(rad), 0,
-            0, 0, 0, 1;
-    return temp;
+  float rad = angle * PI/180;
+  Matrix4f temp;
+  temp << cos(rad), 0, -sin(rad), 0,
+       0, 1, 0, 0,
+       sin(rad), 0, cos(rad), 0,
+       0, 0, 0, 1;
+  return temp;
 }
 
 Transformation MatrixGenerator::generateRotationz(float angle) {
-    float rad = angle * PI/180;
-    Matrix4f temp;
-    temp << cos(rad), -sin(rad), 0, 0,
-            sin(rad), cos(rad), 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1;
-    return temp;
+  float rad = angle * PI/180;
+  Matrix4f temp;
+  temp << cos(rad), -sin(rad), 0, 0,
+       sin(rad), cos(rad), 0, 0,
+       0, 0, 1, 0,
+       0, 0, 0, 1;
+  return temp;
 }
 
 Transformation MatrixGenerator::generateScale(float x, float y, float z) {
-    Matrix4f temp;
-    temp << x, 0, 0, 0,
-            0, y, 0, 0,
-            0, 0, z, 0,
-            0, 0, 0, 1;
-    return temp;
+  Matrix4f temp;
+  temp << x, 0, 0, 0,
+       0, y, 0, 0,
+       0, 0, z, 0,
+       0, 0, 0, 1;
+  return temp;
 }
 
 
@@ -570,44 +570,44 @@ Color Color::div(float k) {
 //***************** CAMERA METHODS *****************//
 
 Camera::Camera() {
-    lookfrom = Point();
-    lookat = Point();
-    up = Vector();
-    fov = 0.0;
+  lookfrom = Point();
+  lookat = Point();
+  up = Vector();
+  fov = 0.0;
 }
 
 Camera::Camera(Point from, Point at, Vector v, float f) {
-    lookfrom = from;
-    lookat = at;
-    Vector offset = Vector(from, at);
+  lookfrom = from;
+  lookat = at;
+  Vector offset = Vector(from, at);
 
-    up = v;
-    up.normalize();
-    fov = f;
-    Vector y  = up.mult(tan(fov/2));
+  up = v;
+  up.normalize();
+  fov = f;
+  Vector y  = up.mult(tan(fov/2));
 
-    Vector z = Vector(from, at);
-    z.normalize();
-    Vector x = z.cross(up);
-    x.normalize();
-    x = x.mult((width/height)*y.len);
-    Vector zminusx = z.sub(x);
-    Vector zplusx = z.add(x);
+  Vector z = Vector(from, at);
+  z.normalize();
+  Vector x = z.cross(up);
+  x.normalize();
+  x = x.mult((width/height)*y.len);
+  Vector zminusx = z.sub(x);
+  Vector zplusx = z.add(x);
 
-    UL = zminusx.add(y);
-    LL = zminusx.sub(y);
-    UR = zplusx.add(y);
-    LR = zplusx.sub(y);
+  UL = zminusx.add(y);
+  LL = zminusx.sub(y);
+  UR = zplusx.add(y);
+  LR = zplusx.sub(y);
 
-    UL = UL.sub(offset);
-    LL = LL.sub(offset);
-    UR = UR.sub(offset);
-    LR = LR.sub(offset);
+  UL = UL.sub(offset);
+  LL = LL.sub(offset);
+  UR = UR.sub(offset);
+  LR = LR.sub(offset);
 
-    printf("UL <%f, %f, %f> \n", UL.vector(0), UL.vector(1), UL.vector(2));
-    printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
-    printf("UR <%f, %f, %f> \n", UR.vector(0), UR.vector(1), UR.vector(2));
-    printf("LR <%f, %f, %f> \n", LR.vector(0), LR.vector(1), LR.vector(2));
+  printf("UL <%f, %f, %f> \n", UL.vector(0), UL.vector(1), UL.vector(2));
+  printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
+  printf("UR <%f, %f, %f> \n", UR.vector(0), UR.vector(1), UR.vector(2));
+  printf("LR <%f, %f, %f> \n", LR.vector(0), LR.vector(1), LR.vector(2));
 
 }
 
@@ -616,12 +616,12 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 //***************** LOCAL GEO METHODS *****************//
 
 LocalGeo::LocalGeo() {
-    pos = Point();
-    n = Normal();
+  pos = Point();
+  n = Normal();
 }
 LocalGeo::LocalGeo(Point p, Normal norm) {
-    pos = p;
-    n = norm;
+  pos = p;
+  n = norm;
 }
 
 
@@ -630,148 +630,148 @@ LocalGeo::LocalGeo(Point p, Normal norm) {
 
 
 Sphere::Sphere(Point p, float rad) {
-    pos  = p;
-    r = rad;
+  pos  = p;
+  r = rad;
 }
 
 bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
-    Point raystart = ray.pos;
-    Vector direction = ray.dir;
-    Point center = pos;
-    Vector3f e, d, c;
-    e << raystart.point(0), raystart.point(1), raystart.point(2);
-    d << direction.vector(0), direction.vector(1), direction.vector(2);
-    c << center.point(0), center.point(1), center.point(2);
-    float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
-    if(determinant < 0) {
-        return false;
-    }
-    else {
-        float hittime1 = (-d.dot(e - c) + sqrt(determinant))/(d.dot(d));
-		float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
-		float hittime = min(hittime1, hittime2);
-        *thit = hittime;
-        Point hitPoint = ray.getPoint(hittime);
-        Normal norm = Normal((hitPoint.sub(center)));
-        *local = LocalGeo(hitPoint, norm);
-        return true;
-    }
+  Point raystart = ray.pos;
+  Vector direction = ray.dir;
+  Point center = pos;
+  Vector3f e, d, c;
+  e << raystart.point(0), raystart.point(1), raystart.point(2);
+  d << direction.vector(0), direction.vector(1), direction.vector(2);
+  c << center.point(0), center.point(1), center.point(2);
+  float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
+  if(determinant < 0) {
+    return false;
+  }
+  else {
+    float hittime1 = (-d.dot(e - c) + sqrt(determinant))/(d.dot(d));
+    float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
+    float hittime = min(hittime1, hittime2);
+    *thit = hittime;
+    Point hitPoint = ray.getPoint(hittime);
+    Normal norm = Normal((hitPoint.sub(center)));
+    *local = LocalGeo(hitPoint, norm);
+    return true;
+  }
 }
 
 bool Sphere::ifIntersect(Ray& ray) {
-    Point raystart = ray.pos;
-    Vector direction = ray.dir;
-    Point center = pos;
-    Vector3f e, d, c;
-    e << raystart.point(0), raystart.point(1), raystart.point(2);
-    d << direction.vector(0), direction.vector(1), direction.vector(2);
-    c << center.point(0), center.point(1), center.point(2);
-    if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
-        return false;
-    }
-    else {
-        return true;
-    }
+  Point raystart = ray.pos;
+  Vector direction = ray.dir;
+  Point center = pos;
+  Vector3f e, d, c;
+  e << raystart.point(0), raystart.point(1), raystart.point(2);
+  d << direction.vector(0), direction.vector(1), direction.vector(2);
+  c << center.point(0), center.point(1), center.point(2);
+  if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 
 
 //***************** TRIANGLE METHODS *****************//
 
-Triangle::Triangle(Point first, Point second, Point third, bool isVertexNorm) {
-	r = first;
-	s = second;
-	t = third;
-	vertexNormal = isVertexNorm;
-	Vector sr = r.sub(s);
-	Vector st = t.sub(s);
-	norm = sr.cross(st);
+Triangle::Triangle(Point first, Point second, Point third) {
+  r = first;
+  s = second;
+  t = third;
+  vertexNormal = false;
+  Vector sr = r.sub(s);
+  Vector st = t.sub(s);
+  norm = sr.cross(st);
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
-	Point rayStart = ray.pos;
-	Vector rayDirection = ray.dir;
-	Vector4f av = r.point;
-	Vector4f bv = s.point;
-	Vector4f cv = t.point;
-	Vector4f dv = rayDirection.vector;
-	Vector4f ev = rayStart.point;
-	float a, b, c, d, e, f, g, h, i, j, k, l, M;
-	float beta, gamma, hittime;
-	a = av(0) - bv(0);
-	b = av(1) - bv(1);
-	c = av(2) - bv(2);
-	d = av(0) - cv(0);
-	e = av(1) - cv(1);
-	f = av(2) - cv(2);
-	g = dv(0);
-	h = dv(1);
-	i = dv(2);
-	j = av(0) - ev(0);
-	k = av(1) - ev(1);
-	l = av(2) - ev(2);
-	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(hittime < ray.t_min || hittime > ray.t_max) {
-		return false;
-	}
-	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-	if(beta < 0 || beta > 1) {
-		return false;
-	}
-	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(gamma < 0 || gamma > 1) {
-		return false;
-	}
-	else {
-		*thit = hittime;
-		Vector temp = Vector(norm.normal);
-		if(temp.dot(rayDirection) > 0) {
-			temp = temp.mult(-1);
-		}
-		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
-		return true;
-	}
+  Point rayStart = ray.pos;
+  Vector rayDirection = ray.dir;
+  Vector4f av = r.point;
+  Vector4f bv = s.point;
+  Vector4f cv = t.point;
+  Vector4f dv = rayDirection.vector;
+  Vector4f ev = rayStart.point;
+  float a, b, c, d, e, f, g, h, i, j, k, l, M;
+  float beta, gamma, hittime;
+  a = av(0) - bv(0);
+  b = av(1) - bv(1);
+  c = av(2) - bv(2);
+  d = av(0) - cv(0);
+  e = av(1) - cv(1);
+  f = av(2) - cv(2);
+  g = dv(0);
+  h = dv(1);
+  i = dv(2);
+  j = av(0) - ev(0);
+  k = av(1) - ev(1);
+  l = av(2) - ev(2);
+  M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+  hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+  if(hittime < ray.t_min || hittime > ray.t_max) {
+    return false;
+  }
+  beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+  if(beta < 0 || beta > 1) {
+    return false;
+  }
+  gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+  if(gamma < 0 || gamma > 1) {
+    return false;
+  }
+  else {
+    *thit = hittime;
+    Vector temp = Vector(norm.normal);
+    if(temp.dot(rayDirection) > 0) {
+      temp = temp.mult(-1);
+    }
+    *local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+    return true;
+  }
 }
 
 bool Triangle::ifIntersect(Ray& ray) {
-    	Point rayStart = ray.pos;
-	Vector rayDirection = ray.dir;
-	Vector4f av = r.point;
-	Vector4f bv = s.point;
-	Vector4f cv = t.point;
-	Vector4f dv = rayDirection.vector;
-	Vector4f ev = rayStart.point;
-	float a, b, c, d, e, f, g, h, i, j, k, l, M;
-	float beta, gamma, hittime;
-	a = av(0) - bv(0);
-	b = av(1) - bv(1);
-	c = av(2) - bv(2);
-	d = av(0) - cv(0);
-	e = av(1) - cv(1);
-	f = av(2) - cv(2);
-	g = dv(0);
-	h = dv(1);
-	i = dv(2);
-	j = av(0) - ev(0);
-	k = av(1) - ev(1);
-	l = av(2) - ev(2);
-	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(hittime < ray.t_min || hittime > ray.t_max) {
-		return false;
-	}
-	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-	if(beta < 0 || beta > 1) {
-		return false;
-	}
-	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(gamma < 0 || gamma > 1) {
-		return false;
-	}
-	else {
-		return true;
-	}
+  Point rayStart = ray.pos;
+  Vector rayDirection = ray.dir;
+  Vector4f av = r.point;
+  Vector4f bv = s.point;
+  Vector4f cv = t.point;
+  Vector4f dv = rayDirection.vector;
+  Vector4f ev = rayStart.point;
+  float a, b, c, d, e, f, g, h, i, j, k, l, M;
+  float beta, gamma, hittime;
+  a = av(0) - bv(0);
+  b = av(1) - bv(1);
+  c = av(2) - bv(2);
+  d = av(0) - cv(0);
+  e = av(1) - cv(1);
+  f = av(2) - cv(2);
+  g = dv(0);
+  h = dv(1);
+  i = dv(2);
+  j = av(0) - ev(0);
+  k = av(1) - ev(1);
+  l = av(2) - ev(2);
+  M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+  hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+  if(hittime < ray.t_min || hittime > ray.t_max) {
+    return false;
+  }
+  beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+  if(beta < 0 || beta > 1) {
+    return false;
+  }
+  gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
+  if(gamma < 0 || gamma > 1) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 //***************** LIGHT METHODS *****************//
@@ -802,20 +802,20 @@ Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
 }
 
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-    if(isPL) {
-        Point origin = Point(x, y, z);
-        Vector dir = Vector(origin, local.pos);
-        *lray = Ray(origin, dir);
-        *lcolor = rgb;
-        return;
-    }
-    else {
-        Point origin = Point(x, y, z);
-        Vector dir = direction;
-        *lray = Ray(origin, dir);
-        *lcolor = rgb;
-        return;
-    }
+  if(isPL) {
+    Point origin = Point(x, y, z);
+    Vector dir = Vector(origin, local.pos);
+    *lray = Ray(origin, dir);
+    *lcolor = rgb;
+    return;
+  }
+  else {
+    Point origin = Point(x, y, z);
+    Vector dir = direction;
+    *lray = Ray(origin, dir);
+    *lcolor = rgb;
+    return;
+  }
 
 }
 
@@ -823,50 +823,37 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 //***************** SAMPLE METHODS *****************//
 
 Sample::Sample() {
-    x, y = 0.0;
+  x, y = 0.0;
 }
 
 void Camera::generateRay(Sample s, Ray* ray) {
-    float imagePlaneW = (UL.sub(UR)).len;
-    float imagePlaneH = (UL.sub(LL)).len;
-    float imgToScreen = imagePlaneW/width;
-	float u = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
-	float v = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
-	printf("value of v and u: %f, %f \n", v, u);
-	v = v/imagePlaneH;
-	u = u/imagePlaneW;
-    Vector t1 = LL.mult(v).add(UL.mult(1-v));
-    Vector t2 = LR.mult(v).add(UR.mult(1-v));
-    Vector t3 = t1.mult(u).add(t2.mult(1-u));
-	printf("value of the 3 vectors: v1<%f, %f, %f>, v2<%f, %f, %f>, v3<%f, %f, %f> \n", t1.vector(0), t1.vector(1), t1.vector(2), t2.vector(0), t2.vector(1), t2.vector(2), t3.vector(0), t3.vector(1), t3.vector(2));
-    Point P = Point(t3.vector);
-    *ray  = Ray(lookfrom, P);
+  float imagePlaneW = (UL.sub(UR)).len;
+  float imagePlaneH = (UL.sub(LL)).len;
+  float imgToScreen = imagePlaneW/width;
+  float u = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
+  float v = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
+  printf("value of v and u: %f, %f \n", v, u);
+  v = v/imagePlaneH;
+  u = u/imagePlaneW;
+  Vector t1 = LL.mult(v).add(UL.mult(1-v));
+  Vector t2 = LR.mult(v).add(UR.mult(1-v));
+  Vector t3 = t1.mult(u).add(t2.mult(1-u));
+  printf("value of the 3 vectors: v1<%f, %f, %f>, v2<%f, %f, %f>, v3<%f, %f, %f> \n", t1.vector(0), t1.vector(1), t1.vector(2), t2.vector(0), t2.vector(1), t2.vector(2), t3.vector(0), t3.vector(1), t3.vector(2));
+  Point P = Point(t3.vector);
+  *ray  = Ray(lookfrom, P);
 }
 
 
 //***************** SAMPLER METHODS *****************//
 
 Sampler::Sampler() {
-    i, j = 0;
+  i, j = 0;
 }
 
 bool Sampler::getSample(Sample *s) {
-    //printf("getSample i = %d, j = %d \n", i , j);
-    if(i < width) {
-      if (j < height) {
-          Sample news = Sample();
-          news.x = i + 0.5;
-          news.y = j + 0.5;
-          *s = news;
-          i++;
-          //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
-          return true;
-      } else {
-          return false;
-      }
-  } else if(j <  height-1){
-      i = 0;
-      j++;
+  //printf("getSample i = %d, j = %d \n", i , j);
+  if(i < width) {
+    if (j < height) {
       Sample news = Sample();
       news.x = i + 0.5;
       news.y = j + 0.5;
@@ -874,8 +861,21 @@ bool Sampler::getSample(Sample *s) {
       i++;
       //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
       return true;
-  } else {
+    } else {
       return false;
+    }
+  } else if(j <  height-1){
+    i = 0;
+    j++;
+    Sample news = Sample();
+    news.x = i + 0.5;
+    news.y = j + 0.5;
+    *s = news;
+    i++;
+    //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+    return true;
+  } else {
+    return false;
   }
 
 }
@@ -941,30 +941,30 @@ BRDF Material::getBRDF(LocalGeo& local, BRDF* brdf) {
 //****************************************************
 
 /*void shade(Ray& ray, LocalGeo* localGeo, Color* color) {
-  // Obtain the brdf at intersection point
-  in.primitive->getBRDF(in.local, &brdf);
+// Obtain the brdf at intersection point
+in.primitive->getBRDF(in.local, &brdf);
 
-    // There is an intersection, loop through all light source
-    for (i = 0; i < #lights; i++) {
-        lights[i].generateLightRay(in.local, &lray, &lcolor);
+// There is an intersection, loop through all light source
+for (i = 0; i < #lights; i++) {
+lights[i].generateLightRay(in.local, &lray, &lcolor);
 
-        // Check if the light is blocked or not
-        if (!primitive->intersectP(lray))
-            // If not, do shading calculation for this
-                // light source
-                    *color += shading(in.local, brdf, lray, lcolor);
-    }
+// Check if the light is blocked or not
+if (!primitive->intersectP(lray))
+// If not, do shading calculation for this
+// light source
+ *color += shading(in.local, brdf, lray, lcolor);
+ }
 
-    // Handle mirror reflection
-    if (brdf.kr > 0) {
-        reflectRay = createReflectRay(in.local, ray);
+// Handle mirror reflection
+if (brdf.kr > 0) {
+reflectRay = createReflectRay(in.local, ray);
 
-        // Make a recursive call to trace the reflected ray
-        trace(reflectRay, depth+1, &tempColor);
-        *color += brdf.kr * tempColor;
-    }
+// Make a recursive call to trace the reflected ray
+trace(reflectRay, depth+1, &tempColor);
+ *color += brdf.kr * tempColor;
+ }
 
-}*/
+ }*/
 
 //****************************************************
 // Ray Tracer TRACE
@@ -983,40 +983,42 @@ void trace(Ray& ray, int depth, Color* color) {
     Shape* shapePtr = l->front();
     bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
     if(intersects) {
-      printf("hit\n");
+      printf("===== HIT =====\n");
       //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-      Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
+      //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
+      Color temp = Color(1, 0, 0);
       *color = temp;
       return;
     } else {
+      printf("===== MISS ====\n");
       Color temp = Color(0, 0, 0);
       *color = temp;
       return;
     }
   }
 
-    /*// Obtain the brdf at intersection point
+  /*// Obtain the brdf at intersection point
     in.primitive->getBRDF(in.local, &brdf);
 
-    // There is an intersection, loop through all light source
-    for (i = 0; i < #lights; i++) {
-        lights[i].generateLightRay(in.local, &lray, &lcolor);
+  // There is an intersection, loop through all light source
+  for (i = 0; i < #lights; i++) {
+  lights[i].generateLightRay(in.local, &lray, &lcolor);
 
-        // Check if the light is blocked or not
-        if (!primitive->intersectP(lray))
-            // If not, do shading calculation for this
-                // light source
-                    *color += shading(in.local, brdf, lray, lcolor);
-    }
+  // Check if the light is blocked or not
+  if (!primitive->intersectP(lray))
+  // If not, do shading calculation for this
+  // light source
+   *color += shading(in.local, brdf, lray, lcolor);
+   }
 
-    // Handle mirror reflection
-    if (brdf.kr > 0) {
-        reflectRay = createReflectRay(in.local, ray);
+  // Handle mirror reflection
+  if (brdf.kr > 0) {
+  reflectRay = createReflectRay(in.local, ray);
 
-        // Make a recursive call to trace the reflected ray
-        trace(reflectRay, depth+1, &tempColor);
-        *color += brdf.kr * tempColor;
-    }*/
+  // Make a recursive call to trace the reflected ray
+  trace(reflectRay, depth+1, &tempColor);
+   *color += brdf.kr * tempColor;
+   }*/
 
 }
 
@@ -1026,18 +1028,18 @@ void trace(Ray& ray, int depth, Color* color) {
 //****************************************************
 
 void render() {
-    Sample s = Sample();
-    Sampler mySampler = Sampler();
-    while(mySampler.getSample(&s)) {
-        printf("sample generated at: %f, %f \n", s.x, s.y);
-        Ray r;
-        eye.generateRay(s, &r);
-        printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-        Color c = Color();
-        trace(r, 0, &c);
-        printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
-        setPixel(s.x, s.y, c);
-    }
+  Sample s = Sample();
+  Sampler mySampler = Sampler();
+  while(mySampler.getSample(&s)) {
+    printf("sample generated at: %f, %f \n", s.x, s.y);
+    Ray r;
+    eye.generateRay(s, &r);
+    printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
+    Color c = Color();
+    trace(r, 0, &c);
+    printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+    setPixel(s.x, s.y, c);
+  }
 }
 
 //****************************************************
@@ -1082,31 +1084,31 @@ bool testVector(string* error) {
 }
 
 bool testNormal(string* error) {
-    Normal a = Normal(1.0, 1.0, 1.0);
-    Normal b = Normal(2.0, 2.0, 2.0);
+  Normal a = Normal(1.0, 1.0, 1.0);
+  Normal b = Normal(2.0, 2.0, 2.0);
 
-    Normal c = Normal(1.0, 0.0, 0.0);
-    Normal d = Normal(2.0, 0.0, 0.0);
-    Normal e = Normal(-1.0, 0.0, 0.0);
-    Normal zero = Normal();
+  Normal c = Normal(1.0, 0.0, 0.0);
+  Normal d = Normal(2.0, 0.0, 0.0);
+  Normal e = Normal(-1.0, 0.0, 0.0);
+  Normal zero = Normal();
 
-    Normal csubd = c.sub(d);
-    Normal eaddd = e.add(d);
-    //printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
+  Normal csubd = c.sub(d);
+  Normal eaddd = e.add(d);
+  //printf("eaddd x: %.20f, y: %.20f, z: %.20f", eaddd.x, eaddd.y, eaddd.z);
 
-    if(!a.equals(b)) {
-      *error = "normal equality failed";
-      return false;
-    } else if(!eaddd.equals(zero)) {
-      *error = "normal addition failed";
-      return false;
-    } else if(!csubd.equals(zero)) {
-      *error = "normal subraction failed";
-      return false;
-    } else {
-      *error = "passed tests";
-      return true;
-    }
+  if(!a.equals(b)) {
+    *error = "normal equality failed";
+    return false;
+  } else if(!eaddd.equals(zero)) {
+    *error = "normal addition failed";
+    return false;
+  } else if(!csubd.equals(zero)) {
+    *error = "normal subraction failed";
+    return false;
+  } else {
+    *error = "passed tests";
+    return true;
+  }
 }
 
 //****************************************************
@@ -1153,20 +1155,17 @@ void loadScene(std::string file) {
         printf("Outputting image of size: %d x %d\n", width, height);
       }
       //maxdepth depth
-      //  max # of bounces for ray (default 5)
       else if(!splitline[0].compare("maxdepth")) {
         maxdepth = atoi(splitline[1].c_str());
         printf("Raytracing with maxdepth = %d\n", maxdepth);
       }
       //output filename
-      //  output file to write image to 
       else if(!splitline[0].compare("output")) {
         filename = splitline[1];
         printf("Writing to file: %s\n", filename.c_str());
       }
 
       //camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
-      //  speciï¬es the camera in the standard way, as in homework 2.
       else if(!splitline[0].compare("camera")) {
         // lookfrom:
         float lfx  = atof(splitline[1].c_str());
@@ -1194,21 +1193,18 @@ void loadScene(std::string file) {
       }
 
       //sphere x y z radius
-      //  Deï¬nes a sphere with a given position and radius.
       else if(!splitline[0].compare("sphere")) {
         float x = atof(splitline[1].c_str());
         float y = atof(splitline[2].c_str());
         float z = atof(splitline[3].c_str());
         float r = atof(splitline[4].c_str());
         // Create new sphere:
-        //Sphere newSphere = ;
         l->push_back(new Sphere(Point(x, y, z), r));
         printf("==== Sphere Added ====\n");
         printf("center: \t %f, \t %f, \t %f\n", x, y, z);
         printf("radius: \t %f \n", r);
-        //   Store 4 numbers
-        //   Store current property values
-        //   Store current top of matrix stack
+        //TODO:   Store current property values
+        //TODO:   Store current top of matrix stack
 
       }//maxverts number
       //  Defines a maximum number of vertices for later triangle speciï¬cations. 
@@ -1224,14 +1220,14 @@ void loadScene(std::string file) {
       else if(!splitline[0].compare("maxvertnorms")) {
         // Care if you want
       }
-      
+
       //vertex x y z
       //  Defines a vertex at the given location.
       //  The vertex is put into a pile, starting to be numbered at 0.
       else if(!splitline[0].compare("vertex")) {
-        x = atof(splitline[1].c_str());
-        y = atof(splitline[2].c_str());
-        z = atof(splitline[3].c_str());
+        float x = atof(splitline[1].c_str());
+        float y = atof(splitline[2].c_str());
+        float z = atof(splitline[3].c_str());
         Point vert = Point(x, y, z);
         points.push_back(vert);
       }
@@ -1249,41 +1245,36 @@ void loadScene(std::string file) {
         // nz: atof(splitline[6].c_str()));
         // Create a new vertex+normal with these 6 values, store in some array
       }
+
       //tri v1 v2 v3
-      //  Create a triangle out of the vertices involved (which have previously been speciï¬ed with
-      //  the vertex command). The vertices are assumed to be speciï¬ed in counter-clockwise order. Your code
-      //  should internally compute a face normal for this triangle.
       else if(!splitline[0].compare("tri")) {
-        v1 = atoi(splitline[1].c_str());
-        v2 = atoi(splitline[2].c_str());
-        v3 = atoi(splitline[3].c_str());
+        int v1 = atoi(splitline[1].c_str());
+        int v2 = atoi(splitline[2].c_str());
+        int v3 = atoi(splitline[3].c_str());
 
         Triangle tri = Triangle(points[v1], points[v2], points[v3]);
-        l->push_back(tri);
-        printf("==== Triangle Added ====\n");
-        printf("center: \t %f, \t %f, \t %f\n", x, y, z);
-        printf("radius: \t %f \n", r);
-        // Create new triangle:
-        //   Store pointer to array of vertices
-        //   Store 3 integers to index into array
-        //   Store current property values
-        //   Store current top of matrix stack
+        l->push_back(new Triangle(points[v1], points[v2], points[v3]));
+        printf("==== triangle added ====\n");
+        printf("normal: \t %f, \t %f, \t %f\n", tri.norm.normal(0), tri.norm.normal(1), tri.norm.normal(2));
+        // create new triangle:
+        //todo:   store current property values
+        //todo:   store current top of matrix stack
       }
       //trinormal v1 v2 v3
-      //  Same as above but for vertices speciï¬ed with normals.
-      //  In this case, each vertex has an associated normal, 
+      //  same as above but for vertices speciï¬ed with normals.
+      //  in this case, each vertex has an associated normal, 
       //  and when doing shading, you should interpolate the normals 
-                                                                                                                                                                                                                                                                                                                                                                                        //  for intermediate points on the triangle.
-                                                                                                                                                                                                                                                                                                                                                                                              else if(!splitline[0].compare("trinormal")) {
-                                                                                                                                                                                                                                                                                                                                                                                                      // v1: atof(splitline[1].c_str())
-                                                                                                                                                                                                                                                                                                                                                                                                              // v2: atof(splitline[2].c_str())
-                                                                                                                                                                                                                                                                                                                                                                                                                      // v3: atof(splitline[3].c_str())
-                                                                                                                                                                                                                                                                                                                                                                                                                              // Create new triangle:
-                                                                                                                                                                                                                                                                                                                                                                                                                                      //   Store pointer to array of vertices (Different array than above)
-                                                                                                                                                                                                                                                                                                                                                                                                                                              //   Store 3 integers to index into array
-                                                                                                                                                                                                                                                                                                                                                                                                                                                      //   Store current property values
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              //   Store current top of matrix stack
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+      //  for intermediate points on the triangle.
+      else if(!splitline[0].compare("trinormal")) {
+        // v1: atof(splitline[1].c_str())
+        // v2: atof(splitline[2].c_str())
+        // v3: atof(splitline[3].c_str())
+        // create new triangle:
+        //   store pointer to array of vertices (different array than above)
+        //   store 3 integers to index into array
+        //   store current property values
+        //   store current top of matrix stack
+      }
     }
   }
 }
@@ -1292,16 +1283,16 @@ void loadScene(std::string file) {
 //****************************************************
 int main(int argc, char *argv[]) {
   //string error = "no error";
-  //bool vectest = testVector(&error);
+  //bool vectest = testvector(&error);
   //printf("vectest returned with message: %s \n", error.c_str());
-  //bool normaltest = testNormal(&error);
+  //bool normaltest = testnormal(&error);
   //printf("normaltest returned with message: %s \n", error.c_str());
 
   loadScene(argv[1]);
   FreeImage_Initialise();
   render();
-  //cout << "FreeImage " << FreeImage_GetVersion() << "\n";
-  //cout << FreeImage_GetCopyrightMessage() << "\n\n";
+  //cout << "freeimage " << freeimage_getversion() << "\n";
+  //cout << freeimage_getcopyrightmessage() << "\n\n";
   FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
   printf("image sucessfully saved to %s\n", filename.c_str());
   FreeImage_DeInitialise();
