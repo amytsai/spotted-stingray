@@ -726,13 +726,15 @@ void Camera::generateRay(Sample s, Ray* ray) {
     float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
     float imgToScreen = imagePlaneW/width;
-    float v = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
-    float u = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
-	v = v/imagePlaneW;
-	u = u/imagePlaneH;
+	float u = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
+	float v = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
+	printf("value of v and u: %f, %f \n", v, u);
+	v = v/imagePlaneH;
+	u = u/imagePlaneW;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
+	printf("value of the 3 vectors: %f, %f, %f \n", t1, t2, t3);
     Point P = Point(t3.vector);
     *ray  = Ray(lookfrom, P);
 }
