@@ -68,6 +68,7 @@ class Point {
     Point add(Vector);
     Point sub(Vector);
     Vector sub(Point); //Uses current point as the arrow side of vector
+	Point transform(Transformation); //Returns the transformed point
 };
 
 //***************** VECTOR *****************//
@@ -87,6 +88,7 @@ class Vector {
     Vector cross(Vector);
     void normalize();
     bool equals(Vector);
+	Vector transform(Transformation); //Returns the transformed vector
 };
 
 //***************** NORMAL *****************//
@@ -114,6 +116,7 @@ class Ray {
     Ray(Point, Point);
     Ray(Point, Vector);
     Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
+	Ray transform(Transformation); //Returns the transformed ray
 };
 
 //***************** TRANSFORMATION *****************//
@@ -191,7 +194,8 @@ class Triangle : public Shape {
   public:
    Point r, s, t;
    Normal norm;
-   Triangle(Point, Point, Point);
+   bool vertexNormal;
+   Triangle(Point, Point, Point, bool);
     bool intersect(Ray&, float* , LocalGeo* ); //Returns whether it intersects, the time it hits, and the point/normal
     bool ifIntersect(Ray& ); //Returns whether it intersects
 };
@@ -291,6 +295,12 @@ Vector Point::sub(Point p) {
     return Vector(temp);
 }
 
+Point Point::transform(Transformation trans) {
+	Point temp;
+	temp = Point(trans.matrix * point);
+	return temp;
+}
+
 
 
 //***************** VECTOR METHODS *****************//
@@ -364,6 +374,12 @@ bool Vector::equals(Vector v) {
   return size == 0;
 }
 
+Vector Vector::transform(Transformation trans){
+	Vector temp;
+	temp = Vector(trans.matrix * vector);
+	return temp;
+}
+
 
 //***************** NORMAL METHODS*****************//
 
@@ -430,6 +446,12 @@ Point Ray::getPoint(float time) {
     Point temp;
     temp = pos.add(travel);
     return temp;
+}
+
+Ray Ray::transform(Transformation trans) {
+	Point newPoint = pos.transform(trans);
+	Vector newDir = dir.transform(trans);
+	return Ray(newPoint, newDir);
 }
 
 
@@ -656,10 +678,11 @@ bool Sphere::ifIntersect(Ray& ray) {
 
 //***************** TRIANGLE METHODS *****************//
 
-Triangle::Triangle(Point first, Point second, Point third) {
+Triangle::Triangle(Point first, Point second, Point third, bool isVertexNorm) {
 	r = first;
 	s = second;
 	t = third;
+	vertexNormal = isVertexNorm;
 	Vector sr = r.sub(s);
 	Vector st = t.sub(s);
 	norm = sr.cross(st);
