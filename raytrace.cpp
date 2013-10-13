@@ -878,7 +878,7 @@ void trace(Ray& ray, int depth, Color* color) {
     bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
     if(intersects) {
       printf("hit\n");
-      Color temp = Color(1, 0, 0);
+      Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(0) + 1)/2;
       *color = temp;
       return;
     } else {
