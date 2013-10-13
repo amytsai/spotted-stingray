@@ -637,18 +637,23 @@ Sample::Sample() {
 }
 
 void Camera::generateRay(Sample s, Ray* ray) {
-    float imagePlaneW = (UL.sub(UR)).len;
+    float x = -(s.x - width/2);
+    float y = s.y - height/2;
+    theta = fov/2;
+    x = x*tan(theta/(width/2));
+    y = y*tan(theta/(height/2));
+    /*float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
     float imgToscreen = imagePlaneW/width;
-    /*float v = s.y*imgToscreen - imagePlaneH/2;
-    float u = s.x*imgToscreen - imagePlaneW/2;*/
+    float v = s.y*imgToscreen - imagePlaneH/2;
+    float u = s.x*imgToscreen - imagePlaneW/2;
     float v = s.y*imgToscreen ;
     float u = s.x*imgToscreen ;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
     Point P = Point(t3.vector);
-    *ray  = Ray(lookfrom, P);
+    *ray  = Ray(lookfrom, P);*/
 }
 //***************** SAMPLER *****************//
 class Sampler {
