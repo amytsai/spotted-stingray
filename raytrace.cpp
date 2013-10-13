@@ -670,9 +670,6 @@ bool Triangle::ifIntersect(Ray& ray) {
     return false;
 }
 
-
-
-
 //***************** LIGHT METHODS *****************//
 
 Light::Light() {
@@ -1020,6 +1017,7 @@ void loadScene(std::string file) {
   } else {
     std::string line;
     //MatrixStack mst;
+    vector<Point> points;
 
     while(inpfile.good()) {
       vector<string> splitline;
@@ -1104,12 +1102,84 @@ void loadScene(std::string file) {
         printf("==== Sphere Added ====\n");
         printf("center: \t %f, \t %f, \t %f\n", x, y, z);
         printf("radius: \t %f \n", r);
-        //cout << scene_shapes.size() << endl;
-
         //   Store 4 numbers
         //   Store current property values
         //   Store current top of matrix stack
+
+      }//maxverts number
+      //  Defines a maximum number of vertices for later triangle speciï¬cations. 
+      //  It must be set before vertices are defined.
+      else if(!splitline[0].compare("maxverts")) {
+        // Care if you want
+        // Or you can just use a STL vector, in which case you can ignore this
       }
+
+      //maxvertnorms number
+      //  Defines a maximum number of vertices with normals for later specifications.
+      //  It must be set before vertices with normals are defined.
+      else if(!splitline[0].compare("maxvertnorms")) {
+        // Care if you want
+      }
+      
+      //vertex x y z
+      //  Defines a vertex at the given location.
+      //  The vertex is put into a pile, starting to be numbered at 0.
+      else if(!splitline[0].compare("vertex")) {
+        x = atof(splitline[1].c_str());
+        y = atof(splitline[2].c_str());
+        z = atof(splitline[3].c_str());
+        Point vert = Point(x, y, z);
+        points.push_back(vert);
+      }
+
+      //vertexnormal x y z nx ny nz
+      //  Similar to the above, but deï¬ne a surface normal with each vertex.
+      //  The vertex and vertexnormal set of vertices are completely independent
+      //  (as are maxverts and maxvertnorms).
+      else if(!splitline[0].compare("vertexnormal")) {
+        // x: atof(splitline[1].c_str()),
+        // y: atof(splitline[2].c_str()),
+        // z: atof(splitline[3].c_str()));
+        // nx: atof(splitline[4].c_str()),
+        // ny: atof(splitline[5].c_str()),
+        // nz: atof(splitline[6].c_str()));
+        // Create a new vertex+normal with these 6 values, store in some array
+      }
+      //tri v1 v2 v3
+      //  Create a triangle out of the vertices involved (which have previously been speciï¬ed with
+      //  the vertex command). The vertices are assumed to be speciï¬ed in counter-clockwise order. Your code
+      //  should internally compute a face normal for this triangle.
+      else if(!splitline[0].compare("tri")) {
+        v1 = atoi(splitline[1].c_str());
+        v2 = atoi(splitline[2].c_str());
+        v3 = atoi(splitline[3].c_str());
+
+        Triangle tri = Triangle(points[v1], points[v2], points[v3]);
+        l->push_back(tri);
+        printf("==== Triangle Added ====\n");
+        printf("center: \t %f, \t %f, \t %f\n", x, y, z);
+        printf("radius: \t %f \n", r);
+        // Create new triangle:
+        //   Store pointer to array of vertices
+        //   Store 3 integers to index into array
+        //   Store current property values
+        //   Store current top of matrix stack
+      }
+      //trinormal v1 v2 v3
+      //  Same as above but for vertices speciï¬ed with normals.
+      //  In this case, each vertex has an associated normal, 
+      //  and when doing shading, you should interpolate the normals 
+                                                                                                                                                                                                                                                                                                                                                                                        //  for intermediate points on the triangle.
+                                                                                                                                                                                                                                                                                                                                                                                              else if(!splitline[0].compare("trinormal")) {
+                                                                                                                                                                                                                                                                                                                                                                                                      // v1: atof(splitline[1].c_str())
+                                                                                                                                                                                                                                                                                                                                                                                                              // v2: atof(splitline[2].c_str())
+                                                                                                                                                                                                                                                                                                                                                                                                                      // v3: atof(splitline[3].c_str())
+                                                                                                                                                                                                                                                                                                                                                                                                                              // Create new triangle:
+                                                                                                                                                                                                                                                                                                                                                                                                                                      //   Store pointer to array of vertices (Different array than above)
+                                                                                                                                                                                                                                                                                                                                                                                                                                              //   Store 3 integers to index into array
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      //   Store current property values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              //   Store current top of matrix stack
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
     }
   }
 }
