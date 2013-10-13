@@ -748,15 +748,10 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	printf("Value of g, h, i: %f, %f, %f \n", g, h, i);
 	printf("Value of j, k, l: %f, %f, %f \n", j, k, l);
 	printf("Value of M: %f \n", M);
-	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	hittime = (-1)*(f*(a*k - j*b) + e*(j*c - a*l) + d*(b*l - k*c))/M;
 	//if(hittime < ray.t_min || hittime > ray.t_max) {
 	if(hittime < 0) {
 		printf("Fail on hittime check: %f \n", hittime);
-		return false;
-	}
-	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-	if(beta < 0 || beta > 1) {
-		printf("Fail on beta check: %f \n", beta);
 		return false;
 	}
 	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
@@ -764,6 +759,12 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		printf("Fail on gamma check: %f \n", gamma);
 		return false;
 	}
+	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
+	if(beta < 0 || beta > (1- gamma)) {
+		printf("Fail on beta check: %f \n", beta);
+		return false;
+	}
+	
 	else {
 		*thit = hittime;
 		Vector temp = Vector(norm.normal);
