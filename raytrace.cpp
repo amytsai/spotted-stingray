@@ -651,13 +651,13 @@ void Camera::generateRay(Sample s, Ray* ray) {
     //float u = s.x*imgToscreen - imagePlaneW/2;
     //float v = s.y*imgToscreen ;
     //float u = s.x*imgToscreen ;
-	float u = ((s.x - width/2)*imgToScreen/* + imagePlaneW/2*/);
-	float v = -((s.y - height/2)*imgToScreen/* + imagePlaneH/2*/);
+	float v = ((s.x - width/2)*imgToScreen + imagePlaneW/2);
+	float u = (-((s.y - height/2)*imgToScreen)) + imagePlaneH/2;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
     Vector t2 = LR.mult(v).add(UR.mult(1-v));
     Vector t3 = t1.mult(u).add(t2.mult(1-u));
-    //Point P = Point(t3.vector);
-	Point P = Point(x, y, 2);
+    Point P = Point(t3.vector);
+	//Point P = Point(x, y, 2);
 	printf("difference between scale and computed values: %f, %f \n", P.point(0) - x, P.point(1) - y);
     *ray  = Ray(lookfrom, P);
 }
