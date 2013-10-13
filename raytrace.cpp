@@ -718,6 +718,9 @@ Triangle::Triangle(Point first, Point second, Point third) {
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
+	cout << "r =" << endl << r.point << endl;
+	cout << "s =" << endl << s.point << endl;
+	cout << "t =" << endl << t.point << endl;
 	Point rayStart = ray.pos;
 	Vector rayDirection = ray.dir;
 	Vector4f av = r.point;
@@ -740,6 +743,11 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	k = av(1) - ev(1);
 	l = av(2) - ev(2);
 	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
+	printf("Value of a, b, c: %f, %f, %f \n", a, b, c);
+	printf("Value of d, e, f: %f, %f, %f \n", d, e, f);
+	printf("Value of g, h, i: %f, %f, %f \n", g, h, i);
+	printf("Value of j, k, l: %f, %f, %f \n", j, k, l);
+	printf("Value of M: %f \n", M);
 	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
 	//if(hittime < ray.t_min || hittime > ray.t_max) {
 	if(hittime < 0) {
