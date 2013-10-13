@@ -639,6 +639,7 @@ Sample::Sample() {
 void Camera::generateRay(Sample s, Ray* ray) {
     float x = -(s.x - width/2);
     float y = s.y - height/2;
+	printf("original value at: %f, %f \n", x, y);
     float theta = fov/2;
     x = x*tan(theta)/(width/2);
     y = y*tan(theta)/(height/2);
