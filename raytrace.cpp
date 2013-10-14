@@ -105,7 +105,7 @@ class Normal {
     Normal add(Normal);
     Normal sub(Normal);
     bool equals(Normal);
-	Normal transform(Transformation); //Returns the transformed normal vector, only use this with normals, not with vectors
+	Normal transform(Transformation); //Returns the transformed normal vector. Only use this with normals, not with vectors!
 };
 
 //***************** RAY *****************//
@@ -131,6 +131,7 @@ class Transformation {
 	Transformation multOnRightSide(Transformation); //returns Transformation matrix of other * this
 	Transformation multOnLeftSide(Transformation); //returns Transformation matrix of this * other
 	//Remember, for combining transformations, the first transformation should be on the right side. Transformation RS applies S first, R second
+	Transformation generateInverse();
 };
 
 //***************** MATRIX *****************//
@@ -142,6 +143,7 @@ class MatrixGenerator {
     Transformation generateRotationy(float); //Rotation around y axis matrix, pass in degrees
     Transformation generateRotationz(float); //Rotation around z axis matrix, pass in degrees
     Transformation generateScale(float, float, float); //Scale transform matrix, pass in the x, y, z scaling triplet
+	Transformation generateIdentity();
 };
 
 //***************** COLOR *****************//
@@ -176,6 +178,7 @@ class LocalGeo {
     Normal n;
     LocalGeo();
     LocalGeo(Point, Normal);
+	LocalGeo transform(Transformation); //Applies the transformation matrix on the Local Geo, transforming both the point and the normal
 };
 
 //***************** SHAPE *****************//
@@ -223,11 +226,13 @@ public:
 };
 
 //***************** GEOMETRIC PRIMITIVE *****************//
-class GeomPrimitive : public Primitive {
+class GeometricPrimitive : public Primitive {
 public:
     Transformation objToWorld, worldToObj;
     Shape* shape;
     Material* mat;
+	GeometricPrimitive(Shape*, Material*, Transformation); 
+	GeometricPrimitive(Shape*, Material*); 
     bool intersect(Ray&, float*, Intersection*);
     bool ifIntersect(Ray&);
     void getBRDF(LocalGeo&, BRDF*);
@@ -282,7 +287,7 @@ class Material {
     BRDF constantBRDF;
     Material();
     Material(BRDF);
-    BRDF getBRDF(LocalGeo& local, BRDF* brdf);
+    void getBRDF(LocalGeo& local, BRDF* brdf);
 };
 
 //****************************************************
@@ -477,6 +482,8 @@ Ray::Ray(Point a, Vector v) {
 Ray::Ray() {
   pos = Point();
   dir = Vector();
+  t_min = 0;
+  t_max = 99999999;
 }
 
 Point Ray::getPoint(float time) {
@@ -509,6 +516,11 @@ Transformation Transformation::multOnRightSide(Transformation other) {
 
 Transformation Transformation::multOnLeftSide(Transformation other) {
 	Transformation temp = Transformation(matrix * other.matrix);
+	return temp;
+}
+
+Transformation Transformation::generateInverse() {
+	Transformation temp = Transformation(matrixinv);
 	return temp;
 }
 
@@ -552,18 +564,27 @@ Transformation MatrixGenerator::generateRotationz(float angle) {
   float rad = angle * PI/180;
   Matrix4f temp;
   temp << cos(rad), -sin(rad), 0, 0,
-       sin(rad), cos(rad), 0, 0,
-       0, 0, 1, 0,
-       0, 0, 0, 1;
+          sin(rad), cos(rad), 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1;
   return temp;
 }
 
 Transformation MatrixGenerator::generateScale(float x, float y, float z) {
   Matrix4f temp;
   temp << x, 0, 0, 0,
-       0, y, 0, 0,
-       0, 0, z, 0,
-       0, 0, 0, 1;
+          0, y, 0, 0,
+          0, 0, z, 0,
+          0, 0, 0, 1;
+  return temp;
+}
+
+Transformation MatrixGenerator::generateIdentity() {
+	Matrix4f temp;
+  temp << 1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1;
   return temp;
 }
 
@@ -673,6 +694,12 @@ LocalGeo::LocalGeo(Point p, Normal norm) {
   n = norm;
 }
 
+LocalGeo LocalGeo::transform(Transformation trans) {
+	Point temppoint = pos.transform(trans);
+	Normal tempnorm = n.transform(trans);
+	return LocalGeo(temppoint, tempnorm);
+}
+
 
 
 //***************** SPHERE METHODS *****************//
@@ -700,6 +727,9 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
     float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
     float hittime = min(hittime1, hittime2);
     *thit = hittime;
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		return false;
+	}
     Point hitPoint = ray.getPoint(hittime);
     Normal norm = Normal((hitPoint.sub(center)));
     *local = LocalGeo(hitPoint, norm);
@@ -715,10 +745,17 @@ bool Sphere::ifIntersect(Ray& ray) {
   e << raystart.point(0), raystart.point(1), raystart.point(2);
   d << direction.vector(0), direction.vector(1), direction.vector(2);
   c << center.point(0), center.point(1), center.point(2);
+  float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
   if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
     return false;
   }
   else {
+	float hittime1 = (-d.dot(e - c) + sqrt(determinant))/(d.dot(d));
+    float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
+    float hittime = min(hittime1, hittime2);
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		return false;
+	}
     return true;
   }
 }
@@ -763,25 +800,25 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	k = av(1) - ev(1);
 	l = av(2) - ev(2);
 	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-	printf("Value of a, b, c: %f, %f, %f \n", a, b, c);
-	printf("Value of d, e, f: %f, %f, %f \n", d, e, f);
-	printf("Value of g, h, i: %f, %f, %f \n", g, h, i);
-	printf("Value of j, k, l: %f, %f, %f \n", j, k, l);
-	printf("Value of M: %f \n", M);
+	//printf("Value of a, b, c: %f, %f, %f \n", a, b, c);
+	//printf("Value of d, e, f: %f, %f, %f \n", d, e, f);
+	//printf("Value of g, h, i: %f, %f, %f \n", g, h, i);
+	//printf("Value of j, k, l: %f, %f, %f \n", j, k, l);
+	//printf("Value of M: %f \n", M);
 	hittime = (-1)*(f*(a*k - j*b) + e*(j*c - a*l) + d*(b*l - k*c))/M;
 	//if(hittime < ray.t_min || hittime > ray.t_max) {
-	if(hittime < 0) {
-		printf("Fail on hittime check: %f \n", hittime);
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		//printf("Fail on hittime check: %f \n", hittime);
 		return false;
 	}
 	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c))/M;
 	if(gamma < 0 || gamma > 1) {
-		printf("Fail on gamma check: %f \n", gamma);
+		//printf("Fail on gamma check: %f \n", gamma);
 		return false;
 	}
 	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
 	if(beta < 0 || beta > (1- gamma)) {
-		printf("Fail on beta check: %f \n", beta);
+		//printf("Fail on beta check: %f \n", beta);
 		return false;
 	}
 	
@@ -819,17 +856,20 @@ bool Triangle::ifIntersect(Ray& ray) {
 	k = av(1) - ev(1);
 	l = av(2) - ev(2);
 	M = a*(e*i - h*f) + b*(g*f - d*i) + c*(d*h - e*g);
-	hittime = (f*(a*k - j*b) +e*(j*c - a*l) + d*(b*l - k*c))/M;
+	hittime = (-1)*(f*(a*k - j*b) + e*(j*c - a*l) + d*(b*l - k*c))/M;
 	//if(hittime < ray.t_min || hittime > ray.t_max) {
-	if(hittime < 0) {
+	if(hittime < ray.t_min || hittime > ray.t_max) {
+		//printf("Fail on hittime check: %f \n", hittime);
+		return false;
+	}
+	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + g*(b*l - k*c))/M;
+	if(gamma < 0 || gamma > 1) {
+		//printf("Fail on gamma check: %f \n", gamma);
 		return false;
 	}
 	beta = (j*(e*i - h*f) + k*(g*f - d*i) + l*(d*h - e*g))/M;
-	if(beta < 0 || beta > 1) {
-		return false;
-	}
-	gamma = (i*(a*k - j*b) + h*(j*c - a*l) + d*(b*l - k*c))/M;
-	if(gamma < 0 || gamma > 1) {
+	if(beta < 0 || beta > (1- gamma)) {
+		//printf("Fail on beta check: %f \n", beta);
 		return false;
 	}
 	else {
@@ -994,8 +1034,47 @@ Material::Material(BRDF mat) {
   constantBRDF = mat;
 }
 
-BRDF Material::getBRDF(LocalGeo& local, BRDF* brdf) {
-  return constantBRDF;
+void Material::getBRDF(LocalGeo& local, BRDF* brdf) {
+  *brdf = constantBRDF;
+}
+
+//***************** GEOMETRICPRIMITIVE METHODS *****************//
+
+GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat, Transformation trans) {
+	shape = objshape;
+	mat = objmat;
+	worldToObj = trans;
+	objToWorld = worldToObj.generateInverse();
+}
+
+GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat) {
+	MatrixGenerator temp = MatrixGenerator();
+	shape = objshape;
+	mat = objmat;
+	worldToObj = temp.generateIdentity();
+	objToWorld = worldToObj.generateInverse();
+}
+
+bool GeometricPrimitive::intersect(Ray& ray, float* thit, Intersection* in) {
+	Ray objectRay = ray.transform(worldToObj);
+	LocalGeo objectLocalGeo;   
+	if((*shape).intersect(objectRay, thit, &objectLocalGeo)) {
+		(*in).primitive = this;
+		(*in).localGeo = objectLocalGeo.transform(objToWorld);
+		return true;    
+	}
+	else {
+		return false;
+	}         
+}
+
+bool GeometricPrimitive::ifIntersect(Ray& ray) {
+	Ray objectRay = ray.transform(worldToObj);
+	return (*shape).ifIntersect(objectRay);
+}
+
+void GeometricPrimitive::getBRDF(LocalGeo& local, BRDF* brdf) {
+	(*mat).getBRDF(local, brdf);
 }
 
 
