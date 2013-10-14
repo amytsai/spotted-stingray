@@ -105,6 +105,7 @@ class Normal {
     Normal add(Normal);
     Normal sub(Normal);
     bool equals(Normal);
+	Normal transform(Transformation); //Returns the transformed normal vector, only use this with normals, not with vectors
 };
 
 //***************** RAY *****************//
@@ -125,19 +126,22 @@ class Ray {
 //***************** TRANSFORMATION *****************//
 class Transformation {
   public: 
-    Matrix4f matrix, matrixinv; //matrix and inverse matrix
+    Matrix4f matrix, matrixinv, matrixinvtrans; //matrix, inverse matrix, and inverse transposed matrix
     Transformation(Matrix4f);
+	Transformation multOnRightSide(Transformation); //returns Transformation matrix of other * this
+	Transformation multOnLeftSide(Transformation); //returns Transformation matrix of this * other
+	//Remember, for combining transformations, the first transformation should be on the right side. Transformation RS applies S first, R second
 };
 
 //***************** MATRIX *****************//
 class MatrixGenerator {
   public:
     MatrixGenerator();
-    Transformation generateTranslation(float, float, float); //Translation transform matrix
-    Transformation generateRotationx(float); //Rotation around x axis matrix
-    Transformation generateRotationy(float); //Rotation around y axis matrix
-    Transformation generateRotationz(float); //Rotation around z axis matrix
-    Transformation generateScale(float, float, float); //Scale transform matrix
+    Transformation generateTranslation(float, float, float); //Translation transform matrix, pass in the x, y, z translation triplet
+    Transformation generateRotationx(float); //Rotation around x axis matrix, pass in degrees
+    Transformation generateRotationy(float); //Rotation around y axis matrix, pass in degrees
+    Transformation generateRotationz(float); //Rotation around z axis matrix, pass in degrees
+    Transformation generateScale(float, float, float); //Scale transform matrix, pass in the x, y, z scaling triplet
 };
 
 //***************** COLOR *****************//
@@ -448,6 +452,11 @@ bool Normal::equals(Normal n) {
   return size == 0;
 }
 
+Normal Normal::transform(Transformation trans) {
+	Normal temp = Normal(trans.matrixinvtrans * normal);
+	return temp;
+}
+
 
 //***************** RAY METHODS*****************//
 
@@ -490,6 +499,17 @@ Ray Ray::transform(Transformation trans) {
 Transformation::Transformation(Matrix4f mat) {
   matrix = mat;
   matrixinv = mat.inverse();
+  matrixinvtrans = matrixinv.transpose();
+}
+
+Transformation Transformation::multOnRightSide(Transformation other) {
+	Transformation temp = Transformation(other.matrix * matrix);
+	return temp;
+}
+
+Transformation Transformation::multOnLeftSide(Transformation other) {
+	Transformation temp = Transformation(matrix * other.matrix);
+	return temp;
 }
 
 
