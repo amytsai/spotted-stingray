@@ -226,13 +226,16 @@ public:
 };
 
 //***************** GEOMETRIC PRIMITIVE *****************//
+
+//POTENTIAL ERROR: We made need to reverse objToWorld and worldToObj
 class GeometricPrimitive : public Primitive {
 public:
     Transformation objToWorld, worldToObj;
     Shape* shape;
     Material* mat;
 	GeometricPrimitive(Shape*, Material*, Transformation); 
-	GeometricPrimitive(Shape*, Material*); 
+	//We combine all the transformations together first using the transformation multiplication functions before inputting
+	GeometricPrimitive(Shape*, Material*);  //Defaults to identity transformation matrix
     bool intersect(Ray&, float*, Intersection*);
     bool ifIntersect(Ray&);
     void getBRDF(LocalGeo&, BRDF*);
@@ -246,9 +249,9 @@ class Light {
     Color rgb;
     bool isPL;
     Light();
-    Light(float, float, float, Color, bool);
-    Light(float, float, float, Color, bool, Vector);
-    void generateLightRay(LocalGeo&, Ray*, Color*);
+    Light(float, float, float, Color, bool); //Point light constructor
+    Light(float, float, float, Color, bool, Vector); //Directional light constructor
+    void generateLightRay(LocalGeo&, Ray*, Color*); 
 };
 
 //***************** SAMPLE *****************//
@@ -919,7 +922,6 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     *lcolor = rgb;
     return;
   }
-
 }
 
 
@@ -1114,8 +1116,10 @@ trace(reflectRay, depth+1, &tempColor);
 
 void trace(Ray& ray, int depth, Color* color) {
   float thit = 0.0f;
+  float minTime = 0.0f;
   printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
   LocalGeo localGeo = LocalGeo();
+  LocalGeo minTimeGeo = LocalGeo();
   if (depth > maxdepth) {
     Color temp = Color(0, 0, 0);
     *color = temp;
