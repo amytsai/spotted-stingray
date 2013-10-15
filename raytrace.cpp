@@ -650,13 +650,19 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     up = v;
     up.normalize();
     fov = f;
-    Vector y  = up.mult(tan(fov/2));
+    //Vector y  = up.mult(tan(fov/2));
 
     Vector z = Vector(from, at);
     z.normalize();
+
     Vector x = up.cross(z);
     x.normalize();
-    x = x.mult((width/height)*y.len);
+
+    Vector y = z.cross(x);
+    y.normalize();
+
+    y = y.mult(tan(fov/2));
+    x = x.mult((width/height) * y.len);
     Vector zminusx = z.sub(x);
     Vector zplusx = z.add(x);
 
@@ -769,9 +775,13 @@ Triangle::Triangle(Point first, Point second, Point third) {
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
-    cout << "r =" << endl << r.point << endl;
-    cout << "s =" << endl << s.point << endl;
-    cout << "t =" << endl << t.point << endl;
+    //cout << "r =" << endl << r.point << endl;
+    //cout << "s =" << endl << s.point << endl;
+    //cout << "t =" << endl << t.point << endl;
+    printf("raystart \n");
+    cout << ray.pos.point << endl;
+    printf("ray direction \n");
+    cout << ray.dir.vector << endl;
     Point rayStart = ray.pos;
     Vector rayDirection = ray.dir;
     Vector4f av = r.point;
@@ -1069,11 +1079,15 @@ GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat) {
 }
 
 bool GeometricPrimitive::intersect(Ray& ray, float* thit, Intersection* in) {
+    /*printf("world to Obj\n");
+    cout << worldToObj.matrix << endl;
+    printf("Obj to world\n");
+    cout << objToWorld.matrix << endl;*/
     Ray objectRay = ray.transform(worldToObj);
     LocalGeo objectLocalGeo;   
-    if((*shape).intersect(objectRay, thit, &objectLocalGeo)) {
-        (*in).primitive = this;
-        (*in).localGeo = objectLocalGeo.transform(objToWorld);
+    if(shape->intersect(objectRay, thit, &objectLocalGeo)) {
+        in->primitive = this;
+        in->localGeo = objectLocalGeo.transform(objToWorld);
         return true;    
     }
     else {
@@ -1195,15 +1209,15 @@ void trace(Ray& ray, int depth, Color* color) {
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
           Primitive* primitive = (*l)[i];
-          Intersection intersect;
-          bool intersects = (*primitive).intersect(ray, &thit, &intersect);
+          Intersection inter;
+          bool intersects = primitive->intersect(ray, &thit, &inter);
           if(intersects) {
             printf("===== HIT =====\n");
             //LocalGeo localgeo = intersect.localGeo;
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-            Color temp = Color(0, 0,(intersect.localGeo.pos.point(2) + 1)/2);
+            //Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
-            //Color temp = Color(1, 0, 0);
+            Color temp = Color(1, 0, 0);
             *color = temp;
             return;
           } 
