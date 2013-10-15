@@ -27,6 +27,7 @@ using namespace Eigen;
 
 
 #define PI 3.14159265  // Should be used from mathlib
+#define EPSILON .0001f
 inline float sqr(float x) { return x*x; }
 
 using namespace std;
@@ -255,6 +256,7 @@ public:
     Light(float, float, float, Color, bool); //Point light constructor
     Light(float, float, float, Color, bool, Vector); //Directional light constructor
     void generateLightRay(LocalGeo&, Ray*, Color*); 
+	Light Transform(Transformation);
 };
 
 //***************** SAMPLE *****************//
@@ -1117,7 +1119,8 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
     Vector4f d = ray.dir.vector;
     Vector4f n = localGeo.n.normal;
     Vector4f temp = d - 2*(d.dot(n))*n;
-    Ray reflectRay = Ray(localGeo.pos, Vector(temp));
+	//Move the start point a bit ahead to avoid float errors
+	Ray reflectRay = Ray((localGeo.pos).add(Vector(temp * EPSILON)), Vector(temp));
     return reflectRay;
 }
 
