@@ -256,7 +256,7 @@ public:
     Light(float, float, float, Color, bool); //Point light constructor
     Light(float, float, float, Color, bool, Vector); //Directional light constructor
     void generateLightRay(LocalGeo&, Ray*, Color*); 
-	Light Transform(Transformation);
+	Light transform(Transformation);
 };
 
 //***************** SAMPLE *****************//
@@ -917,6 +917,11 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     }
 }
 
+Light Light::transform(Transformation trans) {
+	Point tempPoint = Point(x, y, z);
+	tempPoint = tempPoint.transform(trans);
+	return Light(tempPoint.point(0), tempPoint.point(1), tempPoint.point(2), rgb, isPL, direction.transform(trans));
+}
 
 //***************** SAMPLE METHODS *****************//
 
@@ -1140,7 +1145,6 @@ void trace(Ray& ray, int depth, Color* color) {
     Intersection minIntersect = Intersection();
     float thit = 0.0f;
     //Intersection curIntersect = Intersection();
-    LocalGeo localGeo = LocalGeo();
     BRDF brdf = BRDF();
     printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
     if (depth > maxdepth) {
@@ -1196,7 +1200,7 @@ void trace(Ray& ray, int depth, Color* color) {
           if(intersects) {
             printf("===== HIT =====\n");
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-            Color temp = Color(0, 0,(localGeo.pos.point(2) + 1)/2);
+            Color temp = Color(0, 0,(intersect.localGeo.pos.point(2) + 1)/2);
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
             //Color temp = Color(1, 0, 0);
             *color = temp;
