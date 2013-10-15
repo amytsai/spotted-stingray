@@ -1192,9 +1192,10 @@ void trace(Ray& ray, int depth, Color* color) {
           bool intersects = (*primitive).intersect(ray, &thit, &intersect);
           if(intersects) {
             printf("===== HIT =====\n");
+            LocalGeo localgeo = intersect.localGeo;
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-            Color temp = Color(0, 0,(localGeo.pos.point(2) + 1)/2);
-            //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
+            //Color temp = Color(0, 0,(localGeo.pos.point(2) + 1)/2);
+            Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
             //Color temp = Color(1, 0, 0);
             *color = temp;
             return;
@@ -1333,9 +1334,7 @@ void loadScene(std::string file) {
                 continue;
             }
 
-            //Valid commands:
             //size width height
-            //  must be first command of file, controls image size
             else if(!splitline[0].compare("size")) {
                 width = atoi(splitline[1].c_str());
                 height = atoi(splitline[2].c_str());
@@ -1399,22 +1398,17 @@ void loadScene(std::string file) {
             }
             
             //maxverts number
-            //  Defines a maximum number of vertices for later triangle speciï¬cations. 
-            //  It must be set before vertices are defined.
             else if(!splitline[0].compare("maxverts")) {
                 // Care if you want
                 // Or you can just use a STL vector, in which case you can ignore this
             }
 
             //maxvertnorms number
-            //  Defines a maximum number of vertices with normals for later specifications.
-            //  It must be set before vertices with normals are defined.
             else if(!splitline[0].compare("maxvertnorms")) {
                 // Care if you want
             }
 
             //vertex x y z
-            //  Defines a vertex at the given location.
             //  The vertex is put into a pile, starting to be numbered at 0.
             else if(!splitline[0].compare("vertex")) {
                 float x = atof(splitline[1].c_str());
@@ -1524,6 +1518,29 @@ void loadScene(std::string file) {
             else if(!splitline[0].compare("popTransform")) {
                 transformationStack.pop();
             }
+
+            //directional x y z r g b
+            //  The direction to the light source, and the color, as in OpenGL.
+            else if(!splitline[0].compare("directional")) {
+               float x = atof(splitline[1].c_str());
+               float y = atof(splitline[2].c_str());
+               float z = atof(splitline[3].c_str());
+               float r = atof(splitline[4].c_str());
+               float g = atof(splitline[5].c_str());
+               float b = atof(splitline[6].c_str());
+              //TODO: add light to scene...
+            }
+            //point x y z r g b
+            //  The location of a point source and the color, as in OpenGL.
+            else if(!splitline[0].compare("point")) {
+              float x = atof(splitline[1].c_str());
+              float y = atof(splitline[2].c_str());
+              float z = atof(splitline[3].c_str());
+              float r = atof(splitline[4].c_str());
+              float g = atof(splitline[5].c_str());
+              float b = atof(splitline[6].c_str());
+              // add light to scene...
+            }
         }
     }
 }
@@ -1535,16 +1552,16 @@ int main(int argc, char *argv[]) {
   //bool vectest = testvector(&error);
   //printf("vectest returned with message: %s \n", error.c_str());
   //bool normaltest = testnormal(&error);
-    //printf("normaltest returned with message: %s \n", error.c_str());
+  //printf("normaltest returned with message: %s \n", error.c_str());
 
-    loadScene(argv[1]);
-    FreeImage_Initialise();
-    render();
-    //cout << "freeimage " << freeimage_getversion() << "\n";
-    //cout << freeimage_getcopyrightmessage() << "\n\n";
-    FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
-    printf("image sucessfully saved to %s\n", filename.c_str());
-    FreeImage_DeInitialise();
+  loadScene(argv[1]);
+  FreeImage_Initialise();
+  render();
+  //cout << "freeimage " << freeimage_getversion() << "\n";
+  //cout << freeimage_getcopyrightmessage() << "\n\n";
+  FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
+  printf("image sucessfully saved to %s\n", filename.c_str());
+  FreeImage_DeInitialise();
 }
 
 //asdfasdfasfasdfasdfsdafsafsadfsadfsadf
