@@ -1,7 +1,7 @@
 # Test Scene 1 
 # A simple quad viewed from different camera positions
 
-size 5 5
+size 200 200
 maxdepth 5
 output test.png
 
@@ -30,9 +30,11 @@ camera 0 0 3 0 0 0 0 1 0 45
 # parts of the assignment.
 
 maxverts 3
-
-vertex 0 1 0
-vertex .866025 -.5 0
-vertex .866025 .5 0
+#(1, 0, 0)
+#(-1, 0, 0)
+#(0, .5, -2)
+vertex 1 0 0
+vertex -1 0 0
+vertex 0 .5 -2
 
 tri 0 1 2

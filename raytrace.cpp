@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <stack>
 #include <math.h>
 
 #ifdef _WIN32
@@ -215,7 +216,7 @@ class Primitive {
 public:
     virtual bool intersect(Ray&, float*, Intersection* ) = 0;
     virtual bool ifIntersect(Ray& ) = 0;
-    virtual void getBRDF(LocalGeo& local, BRDF* brdf);
+    virtual void getBRDF(LocalGeo&, BRDF*) = 0;
 };
 
 //***************** INTERSECTION *****************//
@@ -332,8 +333,6 @@ Point Point::transform(Transformation trans) {
     temp = Point(trans.matrix * point);
     return temp;
 }
-
-
 
 //***************** VECTOR METHODS *****************//
 
@@ -493,8 +492,6 @@ Ray Ray::transform(Transformation trans) {
     return Ray(newPoint, newDir);
 }
 
-
-
 //***************** TRANSFORMATION METHODS*****************//
 
 Transformation::Transformation(Matrix4f mat) {
@@ -634,7 +631,6 @@ Color Color::div(float k) {
 }
 
 
-
 //***************** CAMERA METHODS *****************//
 
 Camera::Camera() {
@@ -699,7 +695,6 @@ LocalGeo LocalGeo::transform(Transformation trans) {
 }
 
 
-
 //***************** SPHERE METHODS *****************//
 
 
@@ -757,7 +752,6 @@ bool Sphere::ifIntersect(Ray& ray) {
         return true;
     }
 }
-
 
 
 //***************** TRIANGLE METHODS *****************//
@@ -987,9 +981,10 @@ bool Sampler::getSample(Sample *s) {
 string filename;
 Camera eye;
 FIBITMAP * bitmap;
-vector<Light> scene_lights;
-typedef vector<Shape*> shape_list;
+typedef vector<Primitive*> shape_list;
 shape_list* l = new shape_list();
+typedef vector<Light*> light_list;
+light_list* lightsList = new light_list();
 
 //****************************************************
 // Image Writing
@@ -1104,7 +1099,7 @@ void findIntersection(Ray& ray, float* minTime, Intersection* minIntersect, bool
     for(int x = 0; x < l->size(); x++) {
         //This loop finds the object hit first, then returns the hittime and intersection object
         //GET THE PRIMITIVE FROM THE VECTOR LINE GOES HERE
-        primitivePtr = l[x];
+        primitivePtr = (*l)[x];
         bool intersects = (*primitivePtr).intersect(ray, &thit, &curIntersect);
         if(intersects) {
             *isHit = true;
@@ -1151,9 +1146,8 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
-        /*
         //BEGIN NEW CODE
-        findIntersection(ray, &minTime, &minIntersect, &isHit);
+        /*findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
             Color temp = Color(0, 0, 0);
             *color = temp;
@@ -1170,7 +1164,7 @@ void trace(Ray& ray, int depth, Color* color) {
         Intersection lminIntersect = Intersection();
         //POTENTIAL BUG HERE WITH POINTERS TO LIGHT SOURCES SINCE WE HAVEN'T IMPLEMENTED LIGHTS LIST
         for (int i = 0; i < lightsList->size(); i++) {
-            lightsList[i].generateLightRay(minIntersect.localGeo, &lray, &lcolor);
+            (*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
             //GET INTERSECTION FOR THE TWO TYPES OF LIGHT SOURCES
             findIntersection(lray, &lminTime, &lminIntersect, &isHit);
             //Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
@@ -1188,26 +1182,29 @@ void trace(Ray& ray, int depth, Color* color) {
             Color tempColor = Color();
             trace(reflectRay, depth+1, &tempColor);
             (*color).add(tempColor.mult(brdf.kr));
-        }
+        }*/
         //END NEW CODE
-        */
+
         //OLD CODE
-        Shape* shapePtr = l->front();
-        bool intersects = (*shapePtr).intersect(ray, &thit, &localGeo);
-        if(intersects) {
+        for (int i = 0; i < l->size(); i++ ) {
+          Primitive* primitive = (*l)[i];
+          Intersection intersect;
+          bool intersects = (*primitive).intersect(ray, &thit, &intersect);
+          if(intersects) {
             printf("===== HIT =====\n");
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-            //Color temp = Color(0, 0,(localGeo.pos.point(2) + 1)/2);
+            Color temp = Color(0, 0,(localGeo.pos.point(2) + 1)/2);
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
-            Color temp = Color(1, 0, 0);
+            //Color temp = Color(1, 0, 0);
             *color = temp;
             return;
-        } else {
-            printf("===== MISS ====\n");
-            Color temp = Color(0, 0, 0);
-            *color = temp;
-            return;
+          } 
         }
+        printf("===== MISS ====\n");
+        Color temp = Color(0, 0, 0);
+        *color = temp;
+        return;
+
         //END OLD CODE
     }
 }
@@ -1312,7 +1309,8 @@ void loadScene(std::string file) {
         std::cout << "Unable to open file" << std::endl;
     } else {
         std::string line;
-        //MatrixStack mst;
+        stack<Transformation> transformationStack;
+        MatrixGenerator m = MatrixGenerator();
         vector<Point> points;
 
         while(inpfile.good()) {
@@ -1376,6 +1374,7 @@ void loadScene(std::string file) {
                 Point lookat = Point(lax, lay, laz);
                 Vector up = Vector(upx, upy, upz);
                 eye = Camera(lookfrom, lookat, up, fov);
+                transformationStack.push(m.generateIdentity()); // push identity matrix
                 printf("==== Camera Added ====\n");
                 printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
                 printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
@@ -1389,14 +1388,17 @@ void loadScene(std::string file) {
                 float z = atof(splitline[3].c_str());
                 float r = atof(splitline[4].c_str());
                 // Create new sphere:
-                l->push_back(new Sphere(Point(x, y, z), r));
+                Transformation* curTransform = new Transformation(transformationStack.top().matrix);
+                Shape* sphere;
+                sphere = new Sphere(Point(x, y, z), r);
+                l->push_back(new GeometricPrimitive(sphere, new Material(), *curTransform));
                 printf("==== Sphere Added ====\n");
                 printf("center: \t %f, \t %f, \t %f\n", x, y, z);
                 printf("radius: \t %f \n", r);
                 //TODO:   Store current property values
-                //TODO:   Store current top of matrix stack
-
-            }//maxverts number
+            }
+            
+            //maxverts number
             //  Defines a maximum number of vertices for later triangle speciï¬cations. 
             //  It must be set before vertices are defined.
             else if(!splitline[0].compare("maxverts")) {
@@ -1441,15 +1443,17 @@ void loadScene(std::string file) {
                 int v1 = atoi(splitline[1].c_str());
                 int v2 = atoi(splitline[2].c_str());
                 int v3 = atoi(splitline[3].c_str());
-
-                Triangle tri = Triangle(points[v1], points[v2], points[v3]);
-                l->push_back(new Triangle(points[v1], points[v2], points[v3]));
+                Shape* triangle;
+                triangle = new Triangle(points[v1], points[v2], points[v3]);
+                Transformation* trans = new Transformation(transformationStack.top().matrix);
+                l->push_back(new GeometricPrimitive(triangle, new Material(), *trans));
                 printf("==== triangle added ====\n");
-                printf("normal: \t %f, \t %f, \t %f\n", tri.norm.normal(0), tri.norm.normal(1), tri.norm.normal(2));
+                //printf("normal: \t %f, \t %f, \t %f\n", *triangle.norm.normal(0), *triangle.norm.normal(1), *triangle.norm.normal(2));
                 // create new triangle:
                 //todo:   store current property values
                 //todo:   store current top of matrix stack
             }
+
             //trinormal v1 v2 v3
             //  same as above but for vertices speciï¬ed with normals.
             //  in this case, each vertex has an associated normal, 
@@ -1465,6 +1469,61 @@ void loadScene(std::string file) {
                 //   store current property values
                 //   store current top of matrix stack
             }
+
+            //translate x y z
+            //  A translation 3-vector
+            else if(!splitline[0].compare("translate")) {
+              float x = atof(splitline[1].c_str());
+              float y = atof(splitline[2].c_str());
+              float z = atof(splitline[3].c_str());
+              Transformation trans = m.generateTranslation(x, y, z);
+              transformationStack.top().multOnRightSide(trans);
+            }
+
+            //rotate x y z angle
+            //  Rotate by angle (in degrees) about the given axis as in OpenGL.
+            else if(!splitline[0].compare("rotate")) {
+              float x = atof(splitline[1].c_str());
+              float y = atof(splitline[2].c_str());
+              float z = atof(splitline[3].c_str());
+              float angle = atof(splitline[4].c_str());
+              Transformation trans = m.generateIdentity();
+              if(x == 1) {
+                trans = m.generateRotationx(angle);
+              } else if (y == 1) {
+                trans = m.generateRotationy(angle);
+              } else if (z == 1) {
+                trans = m.generateRotationz(angle);
+              }
+              transformationStack.top().multOnRightSide(trans);
+            }
+
+            //scale x y z
+            //  Scale by the corresponding amount in each axis (a non-uniform scaling).
+            else if(!splitline[0].compare("scale")) {
+              float x = atof(splitline[1].c_str());
+              float y = atof(splitline[2].c_str());
+              float z = atof(splitline[3].c_str());
+              Transformation trans = m.generateScale(x, y, z);
+              transformationStack.top().multOnRightSide(trans);
+            }
+
+            //pushTransform
+            //  Push the current modeling transform on the stack as in OpenGL. 
+            else if(!splitline[0].compare("pushTransform")) {
+              Transformation top = Transformation(transformationStack.top().matrix);
+              transformationStack.push(top);
+            }
+
+            //popTransform
+            //  Pop the current transform from the stack as in OpenGL. 
+            //  The sequence of popTransform and pushTransform can be used if 
+            //  desired before every primitive to reset the transformation 
+            //  (assuming the initial camera transformation is on the stack as 
+            //  discussed above).
+            else if(!splitline[0].compare("popTransform")) {
+                transformationStack.pop();
+            }
         }
     }
 }
@@ -1472,10 +1531,10 @@ void loadScene(std::string file) {
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
-    //string error = "no error";
-    //bool vectest = testvector(&error);
-    //printf("vectest returned with message: %s \n", error.c_str());
-    //bool normaltest = testnormal(&error);
+  //string error = "no error";
+  //bool vectest = testvector(&error);
+  //printf("vectest returned with message: %s \n", error.c_str());
+  //bool normaltest = testnormal(&error);
     //printf("normaltest returned with message: %s \n", error.c_str());
 
     loadScene(argv[1]);
