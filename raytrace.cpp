@@ -121,6 +121,7 @@ public:
     Ray();
     Ray(Point, Point);
     Ray(Point, Vector);
+	Ray(Point, Vector, float);
     Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
     Ray transform(Transformation); //Returns the transformed ray
 };
@@ -259,6 +260,7 @@ public:
     Light(float, float, float, Color, bool); //Point light constructor
     Light(float, float, float, Color, bool, Vector); //Directional light constructor
     void generateLightRay(LocalGeo&, Ray*, Color*); 
+	void generateShadowRay(LocalGeo&, Ray*, Color*); 
 	Light transform(Transformation);
 };
 
@@ -479,6 +481,12 @@ Ray::Ray(Point a, Vector v) {
     t_max = 99999999;
 }
 
+Ray::Ray(Point a, Vector v, float t) {
+	pos = Point(a.point);
+    dir = Vector(v.vector);
+    t_min = t;
+    t_max = 99999999;
+}
 Ray::Ray() {
     pos = Point();
     dir = Vector();
@@ -947,6 +955,24 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     }
 }
 
+void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
+    if(isPL) {
+        Point origin = Point(x, y, z);
+		Vector dir = Vector(local.pos, origin);
+        *lray = Ray(origin, dir, EPSILON);
+        *lcolor = rgb;
+        return;
+    }
+    else {		
+        Vector dir = Vector(x, y, z);
+		dir = dir.mult(-1);
+        Point origin = local.pos;
+		*lray = Ray(origin, dir, EPSILON);
+        *lcolor = rgb;
+        return;
+    }
+}
+
 Light Light::transform(Transformation trans) {
 	Point tempPoint = Point(x, y, z);
 	tempPoint = tempPoint.transform(trans);
@@ -1156,6 +1182,27 @@ void findIntersection(Ray& ray, float* minTime, Intersection* minIntersect, bool
     }
 }
 
+bool isShadowIntersection(Ray& ray, float* minTime, Intersection* minIntersect, bool* isHit) {
+    float thit = 0.0f;
+    Intersection curIntersect = Intersection();
+    Primitive* primitivePtr;
+    for(int x = 0; x < l->size(); x++) {
+        //This loop finds the object hit first, then returns the hittime and intersection object
+        //GET THE PRIMITIVE FROM THE VECTOR LINE GOES HERE
+        primitivePtr = (*l)[x];
+        bool intersects = (*primitivePtr).intersect(ray, &thit, &curIntersect);
+        if(intersects) {
+            *isHit = true;
+            if(thit < *minTime) {
+                *minTime = thit;
+                (*minIntersect) = Intersection(curIntersect.localGeo, curIntersect.primitive);
+            }
+        }
+    }
+	return *isHit;
+}
+
+
 
 //Generates the reflected ray from a surface given the incoming ray and the surface. Probably going to need the add the epsilon fuzz factor
 Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
@@ -1163,7 +1210,7 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
     Vector4f n = localGeo.n.normal;
     Vector4f temp = d - 2*(d.dot(n))*n;
 	//Move the start point a bit ahead to avoid float errors
-	Ray reflectRay = Ray((localGeo.pos).add(Vector(temp * EPSILON)), Vector(temp));
+	Ray reflectRay = Ray(localGeo.pos, Vector(temp), EPSILON);
     return reflectRay;
 }
 
@@ -1176,23 +1223,19 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	float kr = brdf.kr.r;
 	Color returnColor = Color(); //Begins at (0,0,0)
 	Color I = lcolor;
-	Color kd, ks, ka;
+	Color kd, ks;
 	kd = brdf.kd;
 	ks = brdf.ks;
-	ka = brdf.ka;
 	Normal n = localGeo.n;
 	Normal l = Normal(lray.dir);
 	Normal v = Normal(ray.dir.mult(-1));
     //Diffuse shading
 	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
 	returnColor = returnColor.add(diffuse);
-	//Specular shading NO PHONG CONSTANT
+	//Specular shading YES PHONG CONSTANT
 	Normal h = v.add(l);
 	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 	returnColor = returnColor.add(specular);
-	//Ambient shading, is there some sort of global ambient intensity term?
-	Color ambient = ka;
-	returnColor = returnColor.add(ambient);
 	returnColor.clamp();
     return returnColor;
 }
@@ -1211,7 +1254,7 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
-		
+		/*
         //BEGIN NEW CODE
         findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
@@ -1224,17 +1267,25 @@ void trace(Ray& ray, int depth, Color* color) {
         //SHADING BEGINS HERE
         // There is an intersection, loop through all light source
         Ray lray = Ray();
+		Ray shadowRay = Ray();
         Color lcolor = Color();
+		Color shadowColor = Color();
         bool lisHit = false;
         float lminTime = 99999999;
         Intersection lminIntersect = Intersection();
         //POTENTIAL BUG HERE WITH POINTERS TO LIGHT SOURCES SINCE WE HAVEN'T IMPLEMENTED LIGHTS LIST
+		//We do ambient and emissive shading here
+		Color ka = brdf.ka;
+		Color ke = brdf.ke;
+		(*color) = (*color).add(ka);
+		(*color) = (*color).add(ke);
         for (int i = 0; i < lightsList->size(); i++) {
             (*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
             //GET INTERSECTION FOR THE TWO TYPES OF LIGHT SOURCES
-            findIntersection(lray, &lminTime, &lminIntersect, &isHit);
+			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
+            bool isShadow = isShadowIntersection(lray, &lminTime, &lminIntersect, &lisHit);
             //Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
-            if(minIntersect.primitive == lminIntersect.primitive) {
+            if(!isShadow) {
                 //NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
                 (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
             }						
@@ -1251,7 +1302,7 @@ void trace(Ray& ray, int depth, Color* color) {
             (*color).add(tempColor.mult(brdf.kr));
         }
         //END NEW CODE
-		
+		*/
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
           Primitive* primitive = (*l)[i];
