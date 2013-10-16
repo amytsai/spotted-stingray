@@ -645,7 +645,7 @@ Camera::Camera() {
 Camera::Camera(Point from, Point at, Vector v, float f) {
     lookfrom = from;
     lookat = at;
-    Vector offset = Vector(from, at);
+    Vector offset = Vector(from, Point(0, 0, 0));
 
     up = v;
     up.normalize();
@@ -660,9 +660,14 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 
     Vector y = z.cross(x);
     y.normalize();
-
     y = y.mult(tan(fov/2));
-    x = x.mult((width/height) * y.len);
+    float w = (float) width;
+    float h = (float) height;
+    x = x.mult((w/h) * y.len);
+    printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
+    printf("x <%f, %f, %f> \n", x.vector(0), x.vector(1), x.vector(2));
+    printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
+    printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
     Vector zminusx = z.sub(x);
     Vector zplusx = z.add(x);
 

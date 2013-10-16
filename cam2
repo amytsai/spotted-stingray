@@ -1,0 +1,266 @@
+loading Scene .. 
+
+Outputting image of size: 10 x 5
+Writing to file: scene1.png
+UL <0.535898, -2.024944, 2.292893> 
+LL <0.535898, -2.560842, 2.292893> 
+UR <-0.535898, -2.024944, 2.292893> 
+LR <-0.535898, -2.560842, 2.292893> 
+==== Camera Added ====
+lookfrom: 	 0.000000, 	 -3.000000, 	 3.000000 
+lookat: 	 0.000000, 	 0.000000, 	 0.000000 
+up vector: 	 0.000000, 	 1.000000, 	 0.000000 
+
+==== triangle added ====
+==== triangle added ====
+sample generated at: 0.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.492748, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.492748, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 5.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.492748, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 6.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.492748, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 7.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 8.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 9.500000, 0.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.492748, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.492748, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.599927, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.599927, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 5.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.599927, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 6.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.599927, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 7.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 8.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 9.500000, 1.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.599927, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.599927, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.707107, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.707107, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 5.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.707107, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 6.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.707107, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 7.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 8.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 9.500000, 2.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.707107, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.707107, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.814287, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.814287, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 5.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.814287, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 6.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.814287, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 7.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 8.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 9.500000, 3.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.814287, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.814287, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 0.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.482309, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 1.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.375129, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 2.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.267949, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 3.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.160769, 0.921466, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 4.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <-0.053590, 0.921466, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 5.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.053590, 0.921466, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 6.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.160769, 0.921466, -0.707107>
+===== HIT =====
+color returned: 1.000000, 0.000000, 0.000000
+sample generated at: 7.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.267949, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 8.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.375129, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+sample generated at: 9.500000, 4.500000 
+ray generated with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.921466, -0.707107>
+tracing ray with pos (0.000000, -3.000000, 3.000000) and dir <0.482309, 0.921466, -0.707107>
+===== MISS ====
+color returned: 0.000000, 0.000000, 0.000000
+image sucessfully saved to scene1.png

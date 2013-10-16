@@ -8,8 +8,8 @@ output test.png
 # Now specify the camera.  This is what you should implement.
 # This file has 4 camera positions.  Render your scene for all 4.
 
-camera 0 0 4 0 0 0 0 1 0 30
-#camera 0 -3 3 0 0 0 0 1 0 30
+#camera 0 0 4 0 0 0 0 1 0 30
+camera 0 -3 3 0 0 0 0 1 0 30
 #camera -4 0 1 0 0 1 0 0 1 45
 #camera 0 0 3 0 0 0 0 1 0 45
 
@@ -28,5 +28,12 @@ camera 0 0 4 0 0 0 0 1 0 30
 # ray-plane intersection routine, instead of reading this fully.
 # Though it's probably simpler you just implement this, for later 
 # parts of the assignment.
-scale 2 1 1
-sphere 0 0 0 1
+maxverts 3
+#(1, 0, 0)
+#(-1, 0, 0)
+#(0, .5, -1)
+vertex 0 1 0
+vertex .833 -.5 0
+vertex -.833 -.5 0
+
+tri 0 1 2
