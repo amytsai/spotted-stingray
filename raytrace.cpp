@@ -1287,9 +1287,12 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	returnColor = returnColor.add(diffuse);
 
 	//Specular shading YES PHONG CONSTANT
+	Vector temp1 = Vector(l.normal * - 1);
+	Vector temp2 = Vector(n.normal * (2 * l.dot(n)) );
+	Normal r = Normal(temp1.add(temp2));
+	Color specular = ks.mult(I.mult(pow(max(0.0f, v.dot(r)), kr)));
 	Normal h = v.add(l);
-	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
-	(*cumSpecular) = (*cumSpecular).add(specular);
+	//Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 
 	returnColor = returnColor.add(specular);
 	returnColor.clamp();
