@@ -1229,6 +1229,9 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal n = localGeo.n;
 	Normal l = Normal(lray.dir);
 	Normal v = Normal(ray.dir.mult(-1));
+	cout << "n =" << endl << n.normal << endl;
+	cout << "l =" << endl << l.normal << endl;
+	cout << "v =" << endl << v.normal << endl;
 	//Diffuse shading
 	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
 	returnColor = returnColor.add(diffuse);
@@ -1338,7 +1341,7 @@ void trace(Ray& ray, int depth, Color* color) {
 					bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 					if(!isShadow) {
 						printf("WE'RE ACTUALLY SHADING\n");
-						(*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
+						(*color) = (*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
 					}						
 				}
 				//End test shading code
