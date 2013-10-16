@@ -1229,9 +1229,11 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal n = localGeo.n;
 	Normal l = Normal(lray.dir);
 	Normal v = Normal(ray.dir.mult(-1));
+	cout << "point = " << endl << localGeo.pos.point << endl;
 	cout << "n =" << endl << n.normal << endl;
 	cout << "l =" << endl << l.normal << endl;
 	cout << "v =" << endl << v.normal << endl;
+
 	//Diffuse shading
 	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
 	returnColor = returnColor.add(diffuse);
@@ -1286,11 +1288,11 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
 			//GET INTERSECTION FOR THE TWO TYPES OF LIGHT SOURCES
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
-			bool isShadow = isShadowIntersection(lray, &lminTime, &lminIntersect, &lisHit);
+			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
 			if(!isShadow) {
 				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
-				(*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
+				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
 		}
 
