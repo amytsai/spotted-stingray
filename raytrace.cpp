@@ -1259,7 +1259,7 @@ void trace(Ray& ray, int depth, Color* color) {
 		return;
 	}
 	else {
-		/*
+		
 		//BEGIN NEW CODE
 		findIntersection(ray, &minTime, &minIntersect, &isHit);
 		if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
@@ -1290,7 +1290,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
 			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
-			if(!isShadow) {
+			if(true) {
 				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
 				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
@@ -1307,7 +1307,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*color).add(tempColor.mult(brdf.kr));
 		}
 		//END NEW CODE
-		*/
+		/*
 		//OLD CODE
 		for (int i = 0; i < l->size(); i++ ) {
 			Primitive* primitive = (*l)[i];
@@ -1357,7 +1357,7 @@ void trace(Ray& ray, int depth, Color* color) {
 		Color temp = Color(0, 0, 0);
 		*color = temp;
 		return;
-
+		*/
 		//END OLD CODE
 	}
 }
