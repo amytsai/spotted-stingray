@@ -874,9 +874,9 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	else {
 		*thit = hittime;
 		Vector temp = Vector(norm.normal);
-		if(temp.dot(rayDirection) > 0) {
+		/*if(temp.dot(rayDirection) > 0) {
 			temp = temp.mult(-1);
-		}
+		}*/
 		Vector rs= s.sub(r);
 		Vector rt = t.sub(r);
 		Point intersectionPoint = r.add(rs.mult(beta));
