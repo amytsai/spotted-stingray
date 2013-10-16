@@ -487,14 +487,14 @@ Normal Normal::transform(Transformation trans) {
 Ray::Ray(Point a, Point b) {
 	pos = Point(a.point);
 	dir = Vector(a, b);
-	t_min = 0;
+	t_min = EPSILON;
 	t_max = 99999999;
 }
 
 Ray::Ray(Point a, Vector v) {
 	pos = Point(a.point);
 	dir = Vector(v.vector);
-	t_min = 0;
+	t_min = EPSILON;
 	t_max = 99999999;
 }
 
@@ -507,7 +507,7 @@ Ray::Ray(Point a, Vector v, float t) {
 Ray::Ray() {
 	pos = Point();
 	dir = Vector();
-	t_min = 0;
+	t_min = EPSILON;
 	t_max = 99999999;
 }
 
