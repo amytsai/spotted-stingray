@@ -948,7 +948,6 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 		Vector dir = Vector(x, y, z);
 		dir = dir.mult(-1);
 		Point origin = local.pos;
-		//Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
 		return;
@@ -1241,7 +1240,6 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal h = v.add(l);
 	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 	returnColor = returnColor.add(specular);
-	returnColor.clamp();
 	return returnColor;
 }
 
