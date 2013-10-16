@@ -55,6 +55,7 @@ class Sample;
 class Sampler;
 class BRDF; //Stores the coefficients for specular, ambient, diffuse, reflection
 class Material; //I have no clue, but it's in the design document
+class MTS; //Matrix Transformation Stack
 
 //****************************************************
 //  Global Variables
@@ -292,7 +293,7 @@ public:
 };
 
 //****************************************************
-// Material
+// MATERIAL
 //****************************************************
 
 class Material {
@@ -303,6 +304,20 @@ public:
 	void getBRDF(LocalGeo& local, BRDF* brdf);
 };
 
+
+//****************************************************
+// MTS
+//****************************************************
+class MTS {
+    public:
+        stack<Transformation> tStack;
+        MTS();
+        MTS(Transformation);
+        void push(Transformation);
+        void pop();
+        Transformation top();
+        Transformation evaluateStack();
+};
 
 //***************** POINT METHODS *****************//
 Point::Point() {
@@ -1054,12 +1069,11 @@ light_list* lightsList = new light_list();
 
 void setPixel(int x, int y, Color rgb) {
 	RGBQUAD color;
-	color.rgbRed = min(rgb.r*255, 255.0f);
-	color.rgbGreen = min(rgb.g*255, 255.0f);
-	color.rgbBlue = min(rgb.b*255, 255.0f);
+	color.rgbRed = max(min(rgb.r*255, 255.0f), 0.0f);
+	color.rgbGreen = max(min(rgb.g*255, 255.0f), 0.0f);
+	color.rgbBlue = max(min(rgb.b*255, 255.0f), 0.0f);
 	FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
-
 
 //***************** BRDF METHODS *****************//
 
@@ -1153,6 +1167,40 @@ void GeometricPrimitive::getBRDF(LocalGeo& local, BRDF* brdf) {
 	(*mat).getBRDF(local, brdf);
 }
 
+
+//***************** MTS METHODS  *****************//
+MTS::MTS() {
+    MatrixGenerator m = MatrixGenerator();
+    tStack.push(m.generateIdentity());
+}
+
+MTS::MTS(Transformation t) {
+    tStack.push(t);
+}
+
+void MTS::push(Transformation t) {
+    tStack.push(t);
+}
+
+void MTS::pop() {
+    tStack.pop();
+}
+
+Transformation MTS::top() {
+    return tStack.top();
+}
+
+Transformation MTS::evaluateStack() {
+    printf("evaluateStack()\n");
+    MatrixGenerator m = MatrixGenerator();
+    Transformation curTransformation = m.generateIdentity();
+    while(!tStack.empty()) {
+        curTransformation = curTransformation.multOnRightSide(tStack.top());
+        tStack.pop();
+    }
+    tStack.push(curTransformation);
+    return curTransformation;
+}
 
 //****************************************************
 // Ray Tracer TRACE
@@ -1455,13 +1503,15 @@ bool testNormal(string* error) {
 //****************************************************
 
 void loadScene(std::string file) {
-	cout << "loading Scene .. \n"<< endl;
+	cout << "loading Scene .. "<< endl;
 	ifstream inpfile(file.c_str());
 	if(!inpfile.is_open()) {
 		std::cout << "Unable to open file" << std::endl;
 	} else {
 		std::string line;
-		stack<Transformation> transformationStack;
+		MTS tStack;
+        MTS tBuffer;
+        printf("hwllo world \n");
 		MatrixGenerator m = MatrixGenerator();
 		vector<Point> points;
 		BRDF * curBRDF = new BRDF();
@@ -1525,7 +1575,7 @@ void loadScene(std::string file) {
 				Point lookat = Point(lax, lay, laz);
 				Vector up = Vector(upx, upy, upz);
 				eye = Camera(lookfrom, lookat, up, fov);
-				transformationStack.push(m.generateIdentity()); // push identity matrix
+				tStack = MTS(); // push identity matrix
 				printf("==== Camera Added ====\n");
 				printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
 				printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
@@ -1539,7 +1589,9 @@ void loadScene(std::string file) {
 				float z = atof(splitline[3].c_str());
 				float r = atof(splitline[4].c_str());
 				// Create new sphere:
-				Transformation* curTransform = new Transformation(transformationStack.top().matrix);
+                Transformation *curTransform;
+                Transformation buffer = tBuffer.evaluateStack();
+                curTransform = new Transformation (buffer.multOnRightSide(tStack.top()));
 				Shape* sphere;
 				sphere = new Sphere(Point(x, y, z), r);
 				l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
@@ -1571,7 +1623,7 @@ void loadScene(std::string file) {
 			}
 
 			//vertexnormal x y z nx ny nz
-			//  Similar to the above, but deï¬ne a surface normal with each vertex.
+			//  Similar to the above, but define a surface normal with each vertex.
 			//  The vertex and vertexnormal set of vertices are completely independent
 			//  (as are maxverts and maxvertnorms).
 			else if(!splitline[0].compare("vertexnormal")) {
@@ -1589,9 +1641,14 @@ void loadScene(std::string file) {
 				int v1 = atoi(splitline[1].c_str());
 				int v2 = atoi(splitline[2].c_str());
 				int v3 = atoi(splitline[3].c_str());
+                printf("blah\n");
 				Shape* triangle;
 				triangle = new Triangle(points[v1], points[v2], points[v3]);
-				Transformation* trans = new Transformation(transformationStack.top().matrix);
+                Transformation* trans;
+                Transformation buffer = tBuffer.evaluateStack();
+                printf("before creating new Transformation\n");
+				trans = new Transformation(buffer.multOnRightSide(tStack.top()));
+                printf("before add triangle\n");
 				l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
 				printf("==== triangle added ====\n");
 				//printf("normal: \t %f, \t %f, \t %f\n", *triangle.norm.normal(0), *triangle.norm.normal(1), *triangle.norm.normal(2));
@@ -1601,7 +1658,7 @@ void loadScene(std::string file) {
 			}
 
 			//trinormal v1 v2 v3
-			//  same as above but for vertices speciï¬ed with normals.
+			//  same as above but for vertices specified with normals.
 			//  in this case, each vertex has an associated normal, 
 			//  and when doing shading, you should interpolate the normals 
 			//  for intermediate points on the triangle.
@@ -1623,12 +1680,10 @@ void loadScene(std::string file) {
 				float y = atof(splitline[2].c_str());
 				float z = atof(splitline[3].c_str());
 				Transformation trans = m.generateTranslation(x, y, z);
+                tBuffer.push(trans);
 				printf("====== ADDED TRANSLATE ======\n");
-				Transformation top = transformationStack.top();
-				transformationStack.pop();
-				transformationStack.push(top.multOnRightSide(trans));
 				printf("TOP OF TRANSFORMATION STACK: \n");
-				cout << transformationStack.top().matrix << endl;
+				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
 			//rotate x y z angle
@@ -1652,11 +1707,9 @@ void loadScene(std::string file) {
 					printf("====== ADDED ROTATION ======\n");
 					printf("%f degrees about the z axis\n", angle);
 				}
-				Transformation top = transformationStack.top();
-				transformationStack.pop();
-				transformationStack.push(top.multOnRightSide(trans));
+                tBuffer.push(trans);
 				printf("TOP OF TRANSFORMATION STACK: \n");
-				cout << transformationStack.top().matrix << endl;
+				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
 			//scale x y z
@@ -1667,21 +1720,23 @@ void loadScene(std::string file) {
 				float z = atof(splitline[3].c_str());
 				printf("====== ADDED SCALE ======\n");
 				Transformation trans = m.generateScale(x, y, z);
-				Transformation top = transformationStack.top();
-				transformationStack.pop();
-				transformationStack.push(top.multOnRightSide(trans));
+                tBuffer.push(trans);
 				printf("TOP OF TRANSFORMATION STACK: \n");
-				cout << transformationStack.top().matrix << endl;
+				//cout << transformationStack.top().top().matrix << endl;
+                printf("reached here\n");
 			}
 
 			//pushTransform
 			//  Push the current modeling transform on the stack as in OpenGL. 
 			else if(!splitline[0].compare("pushTransform")) {
-				Transformation top = Transformation(transformationStack.top().matrix);
-				transformationStack.push(top);
+                printf("beginning of pushTransform()\n");
+				Transformation buffer = tBuffer.evaluateStack();
+                tBuffer = MTS();
+                tStack.push(buffer.multOnRightSide(tStack.top()));
 				printf("====== PUSH TRANSFORM ======\n");
 				printf("TOP OF TRANSFORMATION STACK: \n");
-				cout << transformationStack.top().matrix << endl;
+				//cout << transformationStack.back()->top().matrix << endl;
+                printf("reached end of PushTransform\n");
 			}
 
 			//popTransform
@@ -1691,10 +1746,11 @@ void loadScene(std::string file) {
 			//  (assuming the initial camera transformation is on the stack as 
 			//  discussed above).
 			else if(!splitline[0].compare("popTransform")) {
-				transformationStack.pop();
+                tBuffer = MTS();
+                tStack.pop();
 				printf("====== POP TRANSFORM ======\n");
 				printf("TOP OF TRANSFORMATION STACK: \n");
-				cout << transformationStack.top().matrix << endl;
+				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
 			//directional x y z r g b
