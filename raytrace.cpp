@@ -874,13 +874,13 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	else {
 		*thit = hittime;
 		Vector temp = Vector(norm.normal);
-		if(temp.dot(rayDirection) < 0) {
+		Point intersectionPoint = Point(ray.getPoint(hittime));
+		Point source = ray.pos;
+		Vector lightDirection = source.sub(intersectionPoint);
+		if(temp.dot(lightDirection) < 0) {
 			temp = temp.mult(-1);
 		}
-		Vector rs= s.sub(r);
-		Vector rt = t.sub(r);
-		Point intersectionPoint = r.add(rs.mult(beta));
-		intersectionPoint = intersectionPoint.add(rt.mult(gamma));
+		
 		//*local = LocalGeo(intersectionPoint, Normal(temp));
 		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
 		printf("The point of intersection: (%f, %f, %f) \n", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
