@@ -1079,16 +1079,20 @@ Intersection::Intersection(LocalGeo loc, Primitive* prim) {
 GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat, Transformation trans) {
     shape = objshape;
     mat = objmat;
-    worldToObj = trans;
-    objToWorld = worldToObj.generateInverse();
+    //worldToObj = trans;
+    //objToWorld = worldToObj.generateInverse();
+	objToWorld = trans;
+	worldToObj = worldToObj.generateInverse();
 }
 
 GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat) {
     MatrixGenerator temp = MatrixGenerator();
     shape = objshape;
     mat = objmat;
-    worldToObj = temp.generateIdentity();
-    objToWorld = worldToObj.generateInverse();
+    //worldToObj = temp.generateIdentity();
+    //objToWorld = worldToObj.generateInverse();
+	objToWorld = temp.generateIdentity();
+    worldToObj = worldToObj.generateInverse();
 }
 
 bool GeometricPrimitive::intersect(Ray& ray, float* thit, Intersection* in) {
@@ -1198,7 +1202,7 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
-		/*
+		
         //BEGIN NEW CODE
         findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
@@ -1238,7 +1242,7 @@ void trace(Ray& ray, int depth, Color* color) {
             (*color).add(tempColor.mult(brdf.kr));
         }
         //END NEW CODE
-		*/
+		
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
           Primitive* primitive = (*l)[i];
