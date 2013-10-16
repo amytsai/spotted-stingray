@@ -1055,9 +1055,9 @@ light_list* lightsList = new light_list();
 
 void setPixel(int x, int y, Color rgb) {
 	RGBQUAD color;
-	color.rgbRed = rgb.r*255;
-	color.rgbGreen = rgb.g*255;
-	color.rgbBlue = rgb.b*255;
+	color.rgbRed = min(rgb.r*255, 255.0f);
+	color.rgbGreen = min(rgb.g*255, 255.0f);
+	color.rgbBlue = min(rgb.b*255, 255.0f);
 	FreeImage_SetPixelColor(bitmap, x, y, &color);
 }
 
