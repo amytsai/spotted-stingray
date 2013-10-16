@@ -27,7 +27,7 @@ using namespace Eigen;
 
 
 #define PI 3.14159265  // Should be used from mathlib
-#define EPSILON .0001f
+#define EPSILON .01f
 #define airRefractIndex 1.0f
 inline float sqr(float x) { return x*x; }
 
