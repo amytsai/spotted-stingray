@@ -814,9 +814,9 @@ Triangle::Triangle(Point first, Point second, Point third) {
 	s = second;
 	t = third;
 	vertexNormal = false;
-	Vector sr = r.sub(s);
-	Vector st = t.sub(s);
-	norm = sr.cross(st);
+	Vector rs= s.sub(r);
+	Vector rt = t.sub(r);
+	norm = rs.cross(rt);
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
@@ -877,7 +877,12 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		if(temp.dot(rayDirection) > 0) {
 			temp = temp.mult(-1);
 		}
-		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+		Vector rs= s.sub(r);
+		Vector rt = t.sub(r);
+		Point intersectionPoint = r.add(rs.mult(beta));
+		intersectionPoint = intersectionPoint.add(rt.mult(gamma));
+		*local = LocalGeo(intersectionPoint, Normal(temp));
+		//*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
 		return true;
 	}
 }
