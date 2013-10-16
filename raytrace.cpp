@@ -946,6 +946,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 	}
 	else {		
 		Vector dir = Vector(x, y, z);
+		dir = dir.mult(-1);
 		Point origin = local.pos;
 		//Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
 		*lray = Ray(origin, dir);
