@@ -1286,10 +1286,12 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	//Diffuse shading
 	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
 	returnColor = returnColor.add(diffuse);
+
 	//Specular shading YES PHONG CONSTANT
 	Normal h = v.add(l);
 	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 	(*cumSpecular) = (*cumSpecular).add(specular);
+
 	returnColor = returnColor.add(specular);
 	returnColor.clamp();
 	return returnColor;
@@ -1353,11 +1355,12 @@ void trace(Ray& ray, int depth, Color* color) {
 		}
 
 		/*
-		// Handles refraction, index of refraction of air is called airRefractIndex
+		// Handles refraction, index of refraction of air is called airRefractIndex, we might need to pass in index of refraction each time
+		// Also might need to rewrite sphere to support normals that point inward
 		float refr = brdf.refr;
 		if (refr > 0) {
 			float rindex = brdf.refrIndex;
-			float n = airRefractIndex/rindex;
+			float n = currentIndex/rindex;
 			Normal N = Normal(minIntersect.localGeo.n.normal);
 			Normal normRay = Normal(ray.dir);
 			float cosI = (-1)* N.dot(normRay);
@@ -1374,7 +1377,7 @@ void trace(Ray& ray, int depth, Color* color) {
 				float dist;
 				Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
 				trace(refractRay, depth+1, &tempColor);
-				*color = (*color).add(tempColor.mult(brdf.kr));
+				*color = (*color).add(tempColor);
 			}
 		}
 		*/
