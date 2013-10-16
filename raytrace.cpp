@@ -105,6 +105,7 @@ public:
     Normal(Vector4f);
     Normal add(Normal);
     Normal sub(Normal);
+	float dot(Normal);
     bool equals(Normal);
     Normal transform(Transformation); //Returns the transformed normal vector. Only use this with normals, not with vectors!
 };
@@ -157,6 +158,7 @@ public:
     Color add(Color);
     Color sub(Color);
     Color mult(float);
+	Color mult(Color); //Used only for multiple shading constants with a color
     Color div(float);
 };
 
@@ -281,9 +283,9 @@ public:
 
 class BRDF {
 public:
-    float kd, ks, ka, kr; //All the constants for shading
+    Color kd, ks, ka, kr; //All the constants for shading
     BRDF();
-    BRDF(float, float, float, float);
+    BRDF(Color, Color, Color, Color);
 };
 
 //****************************************************
@@ -311,8 +313,7 @@ Point::Point(float a, float b, float c) {
 }
 
 Point::Point(Vector4f vec) {
-    point = vec;
-    point(3) = 1;
+    point = Vector4f(vec(0), vec(1), vec(2), 1);
 }
 
 Point Point::add(Vector v) {
@@ -351,14 +352,13 @@ Vector::Vector(float a, float b, float c) {
 }
 
 Vector::Vector(Vector4f vec) {
-    vector = vec;
-    vector(3) = 0;
+    vector = Vector4f(vec(0), vec(1), vec(2), 0);
     len = vector.norm();
 }
 
 Vector::Vector(Point start, Point end) {
     vector = end.point - start.point;
-    vector(3) = 0;
+	vector = Vector4f(vector(0), vector(1), vector(2), 0);
     len = vector.norm();
 }
 
@@ -428,11 +428,11 @@ Normal::Normal(float a, float b, float c) {
 }
 
 Normal::Normal(Vector v) {
-    normal = v.vector;
+    normal = Vector4f(v.vector(0), v.vector(1), v.vector(2), 0);
     normal.normalize();
 }
 Normal::Normal(Vector4f vec) {
-    normal = vec;
+    normal = Vector4f(vec(0), vec(1), vec(2), 0);
     normal.normalize();
 }
 
@@ -444,6 +444,10 @@ Normal Normal::add(Normal v) {
 Normal Normal::sub(Normal v) {
     Vector4f temp = normal - v.normal;
     return Normal(temp);
+}
+
+float Normal::dot(Normal v) {
+	return normal.dot(v.normal);
 }
 
 bool Normal::equals(Normal n) {
@@ -461,15 +465,15 @@ Normal Normal::transform(Transformation trans) {
 //***************** RAY METHODS*****************//
 
 Ray::Ray(Point a, Point b) {
-    pos = a;
+    pos = Point(a.point);
     dir = Vector(a, b);
     t_min = 0;
     t_max = 99999999;
 }
 
 Ray::Ray(Point a, Vector v) {
-    pos = a;
-    dir = v;
+    pos = Point(a.point);
+    dir = Vector(v.vector);
     t_min = 0;
     t_max = 99999999;
 }
@@ -602,34 +606,38 @@ Color::Color(float red, float green, float blue) {
 
 Color Color::add(Color v) {
     float a = r + v.r;
-    float b = g + v.g;
+    float s = g + v.g;
     float c = b + v.b;
 
-    return Color(a,b,c);
+    return Color(a,s,c);
 }
 
 Color Color::sub(Color v) {
     float a = r - v.r;
-    float b = g - v.g;
+    float s = g - v.g;
     float c = b - v.b;
 
-    return Color(a,b,c);
+    return Color(a,s,c);
 }
 
 Color Color::mult(float k) {
     float a = k*r;
-    float b = k*g;
+    float s = k*g;
     float c = k*b;
 
-    return Color(a,b,c);
+    return Color(a,s,c);
+}
+
+Color Color::mult(Color col) {
+	return Color(r * col.r, g * col.g, b * col.b);
 }
 
 Color Color::div(float k) {
     float a = r/k;
-    float b = g/k;
+    float s = g/k;
     float c = b/k;
 
-    return Color(a,b,c);
+    return Color(a,s,c);
 }
 
 
@@ -697,8 +705,8 @@ LocalGeo::LocalGeo() {
     n = Normal();
 }
 LocalGeo::LocalGeo(Point p, Normal norm) {
-    pos = p;
-    n = norm;
+    pos = Point(p.point);
+    n = Normal(norm.normal);
 }
 
 LocalGeo LocalGeo::transform(Transformation trans) {
@@ -1025,13 +1033,13 @@ void setPixel(int x, int y, Color rgb) {
 
 
 BRDF::BRDF() {
-    kd = 0;
-    ks = 0;
-    ka = 0;
-    kr = 0;
+    kd = Color();
+    ks = Color();
+    ka = Color();
+    kr = Color();
 }
 
-BRDF::BRDF(float d, float s, float a, float r) {
+BRDF::BRDF(Color d, Color s, Color a, Color r) {
     kd = d;
     ks = s;
     ka = a;
@@ -1153,8 +1161,26 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
 //brdf = all the relevant variables (kd, ks, ka, kr)
 //lray = the ray of light
 //lcolor = color of the light
-Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Color& lcolor) {
-    Color returnColor = Color();
+Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor) {
+	Color returnColor = Color(); //Begins at (0,0,0)
+	Color I = lcolor;
+	Color kd, ks, ka;
+	kd = brdf.kd;
+	ks = brdf.ks;
+	ka = brdf.ka;
+	Normal n = localGeo.n;
+	Normal l = Normal(lray.dir);
+	Normal v = Normal(ray.dir.mult(-1));
+    //Diffuse shading
+	Color diffuse = kd.mult(I.mult(max(0, n.dot(l))));
+	returnColor = returnColor.add(diffuse);
+	//Specular shading NO PHONG CONSTANT
+	Normal h = v.add(l);
+	Color specular = ks.mult(I.mult(max(0, n.dot(h))));
+	returnColor = returnColor.add(specular);
+	//Ambient shading, is there some sort of global ambient intensity term?
+	Color ambient = ka;
+	returnColor = returnColor.add(ambient);
     return returnColor;
 }
 
@@ -1172,8 +1198,9 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
+		/*
         //BEGIN NEW CODE
-        /*findIntersection(ray, &minTime, &minIntersect, &isHit);
+        findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
             Color temp = Color(0, 0, 0);
             *color = temp;
@@ -1196,21 +1223,22 @@ void trace(Ray& ray, int depth, Color* color) {
             //Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
             if(minIntersect.primitive == lminIntersect.primitive) {
                 //NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
-                (*color).add(shading(minIntersect.localGeo, brdf, lray, lcolor));
+                (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
             }						
         }
 
         // Handle mirror reflection
-        if (brdf.kr > 0) {
+		//Checks to make sure that the reflection constant isn't (0, 0, 0)
+        if (brdf.kr.r + brdf.kr.g + brdf.kr.b > 0) {
             Ray reflectRay = createReflectRay(minIntersect.localGeo, ray);
 
             // Make a recursive call to trace the reflected ray
             Color tempColor = Color();
             trace(reflectRay, depth+1, &tempColor);
             (*color).add(tempColor.mult(brdf.kr));
-        }*/
+        }
         //END NEW CODE
-
+		*/
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
           Primitive* primitive = (*l)[i];
