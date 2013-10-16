@@ -816,7 +816,7 @@ Triangle::Triangle(Point first, Point second, Point third) {
 	vertexNormal = false;
 	Vector rs= s.sub(r);
 	Vector rt = t.sub(r);
-	norm = rs.cross(rt);
+	norm = Normal(rs.cross(rt));
 }
 
 bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
