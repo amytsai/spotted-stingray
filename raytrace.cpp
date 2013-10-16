@@ -283,7 +283,7 @@ public:
 
 class BRDF {
 public:
-    Color kd, ks, ka, kr; //All the constants for shading
+    Color kd, ks, ka, kr, ke; //All the constants for shading
     BRDF();
     BRDF(Color, Color, Color, Color);
 };
@@ -1253,7 +1253,7 @@ void trace(Ray& ray, int depth, Color* color) {
             //LocalGeo localgeo = intersect.localGeo;
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
             //Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
-            Color temp = Color((inter.localGeo.pos.point(0) + 1)/2, 0,0);
+            Color temp = Color((inter.localGeo.pos.point(0) + 1)/5, 0,0);
             //Color temp = Color(1, 0, 0);
             *color = temp;
             return;
@@ -1371,6 +1371,7 @@ void loadScene(std::string file) {
         stack<Transformation> transformationStack;
         MatrixGenerator m = MatrixGenerator();
         vector<Point> points;
+        BRDF * curBRDF = new BRDF();
 
         while(inpfile.good()) {
             vector<string> splitline;
@@ -1448,7 +1449,7 @@ void loadScene(std::string file) {
                 Transformation* curTransform = new Transformation(transformationStack.top().matrix);
                 Shape* sphere;
                 sphere = new Sphere(Point(x, y, z), r);
-                l->push_back(new GeometricPrimitive(sphere, new Material(), *curTransform));
+                l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
                 printf("==== Sphere Added ====\n");
                 printf("center: \t %f, \t %f, \t %f\n", x, y, z);
                 printf("radius: \t %f \n", r);
@@ -1498,7 +1499,7 @@ void loadScene(std::string file) {
                 Shape* triangle;
                 triangle = new Triangle(points[v1], points[v2], points[v3]);
                 Transformation* trans = new Transformation(transformationStack.top().matrix);
-                l->push_back(new GeometricPrimitive(triangle, new Material(), *trans));
+                l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
                 printf("==== triangle added ====\n");
                 //printf("normal: \t %f, \t %f, \t %f\n", *triangle.norm.normal(0), *triangle.norm.normal(1), *triangle.norm.normal(2));
                 // create new triangle:
@@ -1606,7 +1607,7 @@ void loadScene(std::string file) {
                float r = atof(splitline[4].c_str());
                float g = atof(splitline[5].c_str());
                float b = atof(splitline[6].c_str());
-              //TODO: add light to scene...
+               lightsList->push_back(new Light(x, y, z, Color(r, g, b), false));
             }
             //point x y z r g b
             //  The location of a point source and the color, as in OpenGL.
@@ -1617,7 +1618,60 @@ void loadScene(std::string file) {
               float r = atof(splitline[4].c_str());
               float g = atof(splitline[5].c_str());
               float b = atof(splitline[6].c_str());
-              // add light to scene...
+              lightsList->push_back(new Light(x, y, z, Color(r, g, b), true));
+            } 
+            
+            //attenuation const linear quadratic
+            //  Sets the constant, linear and quadratic attenuations 
+            //  (default 1,0,0) as in OpenGL.
+            else if(!splitline[0].compare("attenuation")) {
+              // const: atof(splitline[1].c_str())
+              // linear: atof(splitline[2].c_str())
+              // quadratic: atof(splitline[3].c_str())
+            }
+
+            //ambient r g b
+            //  The global ambient color to be added for each object 
+            //  (default is .2,.2,.2)
+            else if(!splitline[0].compare("ambient")) {
+               float r = atof(splitline[1].c_str());
+               float g = atof(splitline[2].c_str());
+               float b = atof(splitline[3].c_str());
+               curBRDF->ka = Color(r, g, b);
+            }
+
+            //diï¬€use r g b
+            //  speciï¬es the diï¬€use color of the surface.
+            else if(!splitline[0].compare("diffuse")) {
+               float r = atof(splitline[1].c_str());
+               float g = atof(splitline[2].c_str());
+               float b = atof(splitline[3].c_str());
+               curBRDF->kd = Color(r, g, b);
+            }
+            //specular r g b 
+            //  speciï¬es the specular color of the surface.
+            else if(!splitline[0].compare("specular")) {
+               float r = atof(splitline[1].c_str());
+               float g = atof(splitline[2].c_str());
+               float b = atof(splitline[3].c_str());
+               curBRDF->ks = Color(r, g, b);
+            }
+            //shininess s
+            //  speciï¬es the shininess of the surface.
+            else if(!splitline[0].compare("shininess")) {
+              float shininess = atof(splitline[1].c_str());
+              curBRDF->kr = Color(shininess, shininess, shininess);
+            }
+            //emission r g b
+            //  gives the emissive color of the surface.
+            else if(!splitline[0].compare("emission")) {
+               float r = atof(splitline[1].c_str());
+               float g = atof(splitline[2].c_str());
+               float b = atof(splitline[3].c_str());
+               curBRDF->ke = Color(r, g, b);
+              // Update current properties
+            } else {
+              std::cerr << "Unknown command: " << splitline[0] << std::endl;
             }
         }
     }
