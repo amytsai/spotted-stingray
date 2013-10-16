@@ -704,10 +704,10 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
 	float w = (float) width;
 	float h = (float) height;
 	x = x.mult((w/h) * y.len);
-	printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
+	/*printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
 	printf("x <%f, %f, %f> \n", x.vector(0), x.vector(1), x.vector(2));
 	printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
-	printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
+	printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));*/
 	Vector zminusx = z.sub(x);
 	Vector zplusx = z.add(x);
 
@@ -823,10 +823,10 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 	//cout << "r =" << endl << r.point << endl;
 	//cout << "s =" << endl << s.point << endl;
 	//cout << "t =" << endl << t.point << endl;
-	printf("raystart \n");
+	/*printf("raystart \n");
 	cout << ray.pos.point << endl;
 	printf("ray direction \n");
-	cout << ray.dir.vector << endl;
+	cout << ray.dir.vector << endl;*/
 	Point rayStart = ray.pos;
 	Vector rayDirection = ray.dir;
 	Vector4f av = r.point;
@@ -1058,7 +1058,7 @@ bool Sampler::getSample(Sample *s) {
 // More Global Variables
 //****************************************************
 string filename;
-Camera eye;
+Camera eye = Camera();
 FIBITMAP * bitmap;
 typedef vector<Primitive*> shape_list;
 shape_list* l = new shape_list();
@@ -1193,7 +1193,6 @@ Transformation MTS::top() {
 }
 
 Transformation MTS::evaluateStack() {
-	printf("evaluateStack()\n");
 	MatrixGenerator m = MatrixGenerator();
 	Transformation curTransformation = m.generateIdentity();
 	while(!tStack.empty()) {
@@ -1278,10 +1277,10 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal n = localGeo.n;
 	Normal l = Normal(lray.dir);
 	Normal v = Normal(ray.dir.mult(-1));
-	cout << "point = " << endl << localGeo.pos.point << endl;
+	/*cout << "point = " << endl << localGeo.pos.point << endl;
 	cout << "n =" << endl << n.normal << endl;
 	cout << "l =" << endl << l.normal << endl;
-	cout << "v =" << endl << v.normal << endl;
+	cout << "v =" << endl << v.normal << endl;*/
 
 	//Diffuse shading
 	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
@@ -1347,12 +1346,13 @@ void trace(Ray& ray, int depth, Color* color) {
 
 		// Handle mirror reflection
 		//Checks to make sure that the reflection constant isn't (0, 0, 0)
-		if (brdf.kr.r > 0) {
+		if (brdf.ks.r > 0 || brdf.ks.g > 0 || brdf.ks.b > 0) {
 			Ray reflectRay = createReflectRay(minIntersect.localGeo, ray);
 			// Make a recursive call to trace the reflected ray
 			Color tempColor = Color();
 			trace(reflectRay, depth+1, &tempColor);
-			*color = (*color).add(tempColor.mult(cumSpecular));
+			//*color = (*color).add(tempColor.mult(cumSpecular));
+			*color = (*color).add(tempColor.mult(brdf.ks)); // Amy's fix
 		}
 
 		/*
@@ -1456,7 +1456,7 @@ void render() {
 		printf("sample generated at: %f, %f \n", s.x, s.y);
 		Ray r;
 		eye.generateRay(s, &r);
-		printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
+		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
 		Color c = Color();
 		trace(r, 0, &c);
 		printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
@@ -1546,8 +1546,8 @@ void loadScene(std::string file) {
 		std::string line;
 		MTS tStack;
 		MTS tBuffer;
-		printf("hwllo world \n");
 		MatrixGenerator m = MatrixGenerator();
+        tBuffer.push(m.generateIdentity());
 		vector<Point> points;
 		BRDF * curBRDF = new BRDF();
 
@@ -1609,6 +1609,10 @@ void loadScene(std::string file) {
 				Point lookfrom = Point(lfx, lfy, lfz);
 				Point lookat = Point(lax, lay, laz);
 				Vector up = Vector(upx, upy, upz);
+                if(up.len == 0) {
+                    printf("invalid up vector for camera\n");
+                    exit(EXIT_FAILURE);
+                }
 				eye = Camera(lookfrom, lookat, up, fov);
 				tStack = MTS(); // push identity matrix
 				printf("==== Camera Added ====\n");
@@ -1676,12 +1680,10 @@ void loadScene(std::string file) {
 				int v1 = atoi(splitline[1].c_str());
 				int v2 = atoi(splitline[2].c_str());
 				int v3 = atoi(splitline[3].c_str());
-				printf("blah\n");
 				Shape* triangle;
 				triangle = new Triangle(points[v1], points[v2], points[v3]);
 				Transformation* trans;
 				Transformation buffer = tBuffer.evaluateStack();
-				printf("before creating new Transformation\n");
 				trans = new Transformation(buffer.multOnRightSide(tStack.top()));
 				printf("before add triangle\n");
 				l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
@@ -1753,6 +1755,10 @@ void loadScene(std::string file) {
 				float x = atof(splitline[1].c_str());
 				float y = atof(splitline[2].c_str());
 				float z = atof(splitline[3].c_str());
+                if(x == 0.0 || y == 0.0 || z == 0.0) {
+                    printf("invalid scaling argument\n");
+                    exit(EXIT_FAILURE);
+                }
 				printf("====== ADDED SCALE ======\n");
 				Transformation trans = m.generateScale(x, y, z);
 				tBuffer.push(trans);
@@ -1879,11 +1885,7 @@ int main(int argc, char *argv[]) {
 	loadScene(argv[1]);
 	FreeImage_Initialise();
 	render();
-	//cout << "freeimage " << freeimage_getversion() << "\n";
-	//cout << freeimage_getcopyrightmessage() << "\n\n";
 	FreeImage_Save(FIF_PNG, bitmap, filename.c_str(), 0);
 	printf("image sucessfully saved to %s\n", filename.c_str());
 	FreeImage_DeInitialise();
 }
-
-//asdfasdfasfasdfasdfsdafsafsadfsadfsadf
