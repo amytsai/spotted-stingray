@@ -1079,20 +1079,20 @@ Intersection::Intersection(LocalGeo loc, Primitive* prim) {
 GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat, Transformation trans) {
     shape = objshape;
     mat = objmat;
-    worldToObj = trans;
-    objToWorld = worldToObj.generateInverse();
-	//objToWorld = trans;
-	//worldToObj = worldToObj.generateInverse();
+    //worldToObj = trans;
+    //objToWorld = worldToObj.generateInverse();
+	objToWorld = trans;
+	worldToObj = objToWorld.generateInverse();
 }
 
 GeometricPrimitive::GeometricPrimitive(Shape* objshape, Material* objmat) {
     MatrixGenerator temp = MatrixGenerator();
     shape = objshape;
     mat = objmat;
-    worldToObj = temp.generateIdentity();
-    objToWorld = worldToObj.generateInverse();
-	//objToWorld = temp.generateIdentity();
-    //worldToObj = worldToObj.generateInverse();
+    //worldToObj = temp.generateIdentity();
+    //objToWorld = worldToObj.generateInverse();
+	objToWorld = temp.generateIdentity();
+    worldToObj = objToWorld.generateInverse();
 }
 
 bool GeometricPrimitive::intersect(Ray& ray, float* thit, Intersection* in) {
