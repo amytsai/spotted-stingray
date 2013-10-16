@@ -1172,11 +1172,11 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal l = Normal(lray.dir);
 	Normal v = Normal(ray.dir.mult(-1));
     //Diffuse shading
-	Color diffuse = kd.mult(I.mult(max(0, n.dot(l))));
+	Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
 	returnColor = returnColor.add(diffuse);
 	//Specular shading NO PHONG CONSTANT
 	Normal h = v.add(l);
-	Color specular = ks.mult(I.mult(max(0, n.dot(h))));
+	Color specular = ks.mult(I.mult(max(0.0f, n.dot(h))));
 	returnColor = returnColor.add(specular);
 	//Ambient shading, is there some sort of global ambient intensity term?
 	Color ambient = ka;
@@ -1249,8 +1249,8 @@ void trace(Ray& ray, int depth, Color* color) {
             //LocalGeo localgeo = intersect.localGeo;
             //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
             //Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
-            //Color temp = Color((localGeo.pos.point(0) + 1)/2, 0,0);
-            Color temp = Color(1, 0, 0);
+            Color temp = Color((inter.localGeo.pos.point(0) + 1)/2, 0,0);
+            //Color temp = Color(1, 0, 0);
             *color = temp;
             return;
           } 
@@ -1525,7 +1525,9 @@ void loadScene(std::string file) {
               float y = atof(splitline[2].c_str());
               float z = atof(splitline[3].c_str());
               Transformation trans = m.generateTranslation(x, y, z);
-              transformationStack.top().multOnRightSide(trans);
+              Transformation top = transformationStack.top();
+              transformationStack.pop();
+              transformationStack.push(top.multOnRightSide(trans));
             }
 
             //rotate x y z angle
@@ -1536,14 +1538,24 @@ void loadScene(std::string file) {
               float z = atof(splitline[3].c_str());
               float angle = atof(splitline[4].c_str());
               Transformation trans = m.generateIdentity();
-              if(x == 1) {
+              if(x == 1.0f) {
                 trans = m.generateRotationx(angle);
-              } else if (y == 1) {
+                printf("====== ADDED ROTATION ======\n");
+                printf("%f degrees about the x axis\n", angle);
+              } else if (y == 1.0f) {
                 trans = m.generateRotationy(angle);
-              } else if (z == 1) {
+                printf("====== ADDED ROTATION ======\n");
+                printf("%f degrees about the y axis]\n", angle);
+              } else if (z == 1.0f) {
                 trans = m.generateRotationz(angle);
+                printf("====== ADDED ROTATION ======\n");
+                printf("%f degrees about the z axis\n", angle);
               }
-              transformationStack.top().multOnRightSide(trans);
+              Transformation top = transformationStack.top();
+              transformationStack.pop();
+              transformationStack.push(top.multOnRightSide(trans));
+              printf("TOP OF TRANSFORMATION STACK: \n");
+              cout << transformationStack.top().matrix << endl;
             }
 
             //scale x y z
@@ -1553,7 +1565,9 @@ void loadScene(std::string file) {
               float y = atof(splitline[2].c_str());
               float z = atof(splitline[3].c_str());
               Transformation trans = m.generateScale(x, y, z);
-              transformationStack.top().multOnRightSide(trans);
+              Transformation top = transformationStack.top();
+              transformationStack.pop();
+              transformationStack.push(top.multOnRightSide(trans));
             }
 
             //pushTransform
