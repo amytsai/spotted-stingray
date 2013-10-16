@@ -1297,7 +1297,6 @@ void trace(Ray& ray, int depth, Color* color) {
 	float minTime = 99999999;
 	Intersection minIntersect = Intersection();
 	float thit = 0.0f;
-	//Intersection curIntersect = Intersection();
 	BRDF brdf = BRDF();
 	printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
 	if (depth > maxdepth) {
@@ -1306,7 +1305,6 @@ void trace(Ray& ray, int depth, Color* color) {
 		return;
 	}
 	else {
-		
 		//BEGIN NEW CODE
 		findIntersection(ray, &minTime, &minIntersect, &isHit);
 		if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
@@ -1315,9 +1313,8 @@ void trace(Ray& ray, int depth, Color* color) {
 			return;
 		}
 		minIntersect.primitive->getBRDF(minIntersect.localGeo, &brdf);
-		//By the end of this, we have BRDF of intersection point in brdf, and the intersection object in minIntersect
+
 		//SHADING BEGINS HERE
-		// There is an intersection, loop through all light source
 		Ray lray = Ray();
 		Ray shadowRay = Ray();
 		Color lcolor = Color();
@@ -1325,34 +1322,32 @@ void trace(Ray& ray, int depth, Color* color) {
 		bool lisHit = false;
 		float lminTime = 99999999;
 		Intersection lminIntersect = Intersection();
-		//POTENTIAL BUG HERE WITH POINTERS TO LIGHT SOURCES SINCE WE HAVEN'T IMPLEMENTED LIGHTS LIST
+
 		//We do ambient and emissive shading here
 		Color ka = brdf.ka;
 		Color ke = brdf.ke;
 		(*color) = (*color).add(ka);
 		(*color) = (*color).add(ke);
+
 		for (int i = 0; i < lightsList->size(); i++) {
 			(*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
-			//GET INTERSECTION FOR THE TWO TYPES OF LIGHT SOURCES
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
 			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
-			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
 			if(!isShadow) {
-				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
 				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
 		}
-
+		
 		// Handle mirror reflection
 		//Checks to make sure that the reflection constant isn't (0, 0, 0)
-		if (brdf.kr.r + brdf.kr.g + brdf.kr.b > 0) {
+		if (brdf.kr.r > 0) {
 			Ray reflectRay = createReflectRay(minIntersect.localGeo, ray);
-
 			// Make a recursive call to trace the reflected ray
 			Color tempColor = Color();
 			trace(reflectRay, depth+1, &tempColor);
 			*color = (*color).add(tempColor.mult(brdf.kr));
 		}
+
 		//END NEW CODE
 		/*
 		//OLD CODE
