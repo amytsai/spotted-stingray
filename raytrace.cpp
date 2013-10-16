@@ -948,7 +948,6 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 		Vector dir = Vector(x, y, z);
 		dir = dir.mult(-1);
 		Point origin = local.pos;
-		//Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
 		return;
@@ -1290,7 +1289,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
 			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
-			if(true) {
+			if(!isShadow) {
 				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
 				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
