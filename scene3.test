@@ -53,9 +53,9 @@ pushTransform
 
 emission .7 .7 .4
 
-scale 0.15 0.15 2.0 
 translate -1.75 -.8 -.25 
 translate 0 0 -2.0 
+scale 0.15 0.15 2.0 
 tri 0 1 5 
 tri 0 5 4 
 tri 3 7 6
@@ -73,9 +73,9 @@ tri 4 6 7
 
 popTransform
 pushTransform 
-scale 0.15 0.15 2.0 
 translate +1.75 -.8 -.25
 translate 0 0 -2.0 
+scale 0.15 0.15 2.0 
 tri 0 1 5 
 tri 0 5 4 
 tri 3 7 6
@@ -93,9 +93,9 @@ tri 4 6 7
 
 popTransform
 pushTransform 
-scale 0.15 0.15 2.0 
 translate +1.75 +.8 -.25
 translate 0 0 -2.0 
+scale 0.15 0.15 2.0 
 tri 0 1 5 
 tri 0 5 4 
 tri 3 7 6
@@ -113,9 +113,9 @@ tri 4 6 7
 
 popTransform
 pushTransform 
-scale 0.15 0.15 2.0 
 translate -1.75 +.8 -.25
 translate 0 0 -2.0 
+scale 0.15 0.15 2.0 
 tri 0 1 5 
 tri 0 5 4 
 tri 3 7 6
@@ -135,45 +135,45 @@ tri 4 6 7
 emission 0 1 0 
 popTransform
 pushTransform 
+translate  0 0 0.5
 rotate 0 0 1 45
 scale 1.0 0.25 0.25 
-translate  0 0 0.5
 sphere 0 0 0 1
 
 emission 1 0 0
 popTransform
 pushTransform 
+translate  0 0 0.5
 rotate 0 0 1 -45
 scale 1.0 0.25 0.25 
-translate  0 0 0.5
 sphere 0 0 0 1
 
 emission 0 1 1 
 popTransform
 pushTransform
-scale 0.4 0.4 0.4
-sphere 0 0 0 1
 translate -1.5 -.8 0.65
+scale 0.4 0.4 0.4
+sphere 0 0 0 1
 
 emission 0 1 1 
 popTransform
 pushTransform
-scale 0.4 0.4 0.4
 translate 1.5 -.8 0.65
+scale 0.4 0.4 0.4
 sphere 0 0 0 1
 
 emission 0 1 1 
 popTransform
 pushTransform
-scale 0.4 0.4 0.4
 translate 1.5 .8 0.65
+scale 0.4 0.4 0.4
 sphere 0 0 0 1
 
 emission 0 1 1 
 popTransform
 pushTransform
-scale 0.4 0.4 0.4
 translate -1.5 .8 0.65
+scale 0.4 0.4 0.4
 sphere 0 0 0 1
 
 
