@@ -1337,6 +1337,7 @@ void trace(Ray& ray, int depth, Color* color) {
 					(*lightsList)[i]->generateShadowRay(inter.localGeo, &shadowRay, &shadowColor);
 					bool isShadow = isShadowIntersection(lray, &lminTime, &lminIntersect, &lisHit);
 					if(!isShadow) {
+						printf("WE'RE ACTUALLY SHADING");
 						(*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 					}						
 				}
