@@ -1529,9 +1529,12 @@ void loadScene(std::string file) {
               float y = atof(splitline[2].c_str());
               float z = atof(splitline[3].c_str());
               Transformation trans = m.generateTranslation(x, y, z);
+              printf("====== ADDED TRANSLATE ======\n");
               Transformation top = transformationStack.top();
               transformationStack.pop();
               transformationStack.push(top.multOnRightSide(trans));
+              printf("TOP OF TRANSFORMATION STACK: \n");
+              cout << transformationStack.top().matrix << endl;
             }
 
             //rotate x y z angle
@@ -1568,10 +1571,13 @@ void loadScene(std::string file) {
               float x = atof(splitline[1].c_str());
               float y = atof(splitline[2].c_str());
               float z = atof(splitline[3].c_str());
+              printf("====== ADDED SCALE ======\n");
               Transformation trans = m.generateScale(x, y, z);
               Transformation top = transformationStack.top();
               transformationStack.pop();
               transformationStack.push(top.multOnRightSide(trans));
+              printf("TOP OF TRANSFORMATION STACK: \n");
+              cout << transformationStack.top().matrix << endl;
             }
 
             //pushTransform
