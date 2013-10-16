@@ -883,8 +883,8 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		intersectionPoint = intersectionPoint.add(rt.mult(gamma));
 		//*local = LocalGeo(intersectionPoint, Normal(temp));
 		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
-		printf("The point of intersection", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
-		printf("The normal of intersection", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
+		printf("The point of intersection: (%f, %f, %f) \n", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
+		printf("The normal of intersection: <%f, %f, %f> \n", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
 		return true;
 	}
 }
