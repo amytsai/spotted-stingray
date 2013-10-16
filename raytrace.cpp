@@ -253,10 +253,12 @@ public:
 class Light {
 public:
 	float x, y, z;
+	Vector direction;
 	Color rgb;
 	bool isPL;
 	Light();
 	Light(float, float, float, Color, bool); //Point light constructor
+	Light(float, float, float, Color, bool, Vector); //Directional light constructor
 	void generateLightRay(LocalGeo&, Ray*, Color*); 
 	void generateShadowRay(LocalGeo&, Ray*, Color*); 
 	Light transform(Transformation);
@@ -925,6 +927,15 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
 	isPL = PL;
 }
 
+Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
+	x = a;
+	y = b;
+	z = c;
+	rgb = color;
+	isPL = PL;
+	direction = dir;
+}
+
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 	if(isPL) {
 		Point origin = Point(x, y, z);
@@ -937,6 +948,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 		Vector dir = Vector(x, y, z);
 		dir = dir.mult(-1);
 		Point origin = local.pos;
+		//Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
 		return;
@@ -962,17 +974,9 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 }
 
 Light Light::transform(Transformation trans) {
-	if(isPL) {
-		Point tempPoint = Point(x, y, z);
-		tempPoint = tempPoint.transform(trans);
-		return Light(tempPoint.point(0), tempPoint.point(1), tempPoint.point(2), rgb, isPL);
-	}
-	else {		
-		Vector tempPoint = Vector(x, y, z);
-		tempPoint = tempPoint.transform(trans);
-		return Light(tempPoint.vector(0), tempPoint.vector(1), tempPoint.vector(2), rgb, isPL);
-	}
-	
+	Point tempPoint = Point(x, y, z);
+	tempPoint = tempPoint.transform(trans);
+	return Light(tempPoint.point(0), tempPoint.point(1), tempPoint.point(2), rgb, isPL, direction.transform(trans));
 }
 
 //***************** SAMPLE METHODS *****************//
@@ -1237,6 +1241,7 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	Normal h = v.add(l);
 	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 	returnColor = returnColor.add(specular);
+	returnColor.clamp();
 	return returnColor;
 }
 
@@ -1287,8 +1292,6 @@ void trace(Ray& ray, int depth, Color* color) {
 			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
 			if(true) {
 				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
-				//Ray transformlray = lray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
-				//Ray transformray = ray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
 				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
 		}
@@ -1677,6 +1680,9 @@ void loadScene(std::string file) {
 			else if(!splitline[0].compare("pushTransform")) {
 				Transformation top = Transformation(transformationStack.top().matrix);
 				transformationStack.push(top);
+				printf("====== PUSH TRANSFORM ======\n");
+				printf("TOP OF TRANSFORMATION STACK: \n");
+				cout << transformationStack.top().matrix << endl;
 			}
 
 			//popTransform
@@ -1687,6 +1693,9 @@ void loadScene(std::string file) {
 			//  discussed above).
 			else if(!splitline[0].compare("popTransform")) {
 				transformationStack.pop();
+				printf("====== POP TRANSFORM ======\n");
+				printf("TOP OF TRANSFORMATION STACK: \n");
+				cout << transformationStack.top().matrix << endl;
 			}
 
 			//directional x y z r g b
