@@ -939,7 +939,7 @@ Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 	if(isPL) {
 		Point origin = Point(x, y, z);
-		Vector dir = Vector(origin, local.pos);
+		Vector dir = Vector(local.pos, origin);
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
 		return;
@@ -948,7 +948,6 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 		Vector dir = Vector(x, y, z);
 		Point origin = local.pos;
 		//Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
-		origin = origin.add(dir.mult(-500));
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
 		return;
