@@ -1287,9 +1287,9 @@ void trace(Ray& ray, int depth, Color* color) {
 			//Checks whether the intersection shape returned from the light source is the same as the one our eye ray hits
 			if(true) {
 				//NEED A SHADING FUNCTION FIGURE OUT HOW TO SPLIT AMBIENT DIFFUSE AND SPECULAR
-				Ray transformlray = lray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
-				Ray transformray = ray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
-				*color = (*color).add(shading(minIntersect.localGeo, brdf, transformlray, transformray, lcolor));
+				//Ray transformlray = lray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
+				//Ray transformray = ray.transform(((GeometricPrimitive*) (minIntersect.primitive))->worldToObj);
+				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
 		}
 
