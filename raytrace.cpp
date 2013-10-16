@@ -311,14 +311,14 @@ public:
 // MTS
 //****************************************************
 class MTS {
-    public:
-        stack<Transformation> tStack;
-        MTS();
-        MTS(Transformation);
-        void push(Transformation);
-        void pop();
-        Transformation top();
-        Transformation evaluateStack();
+public:
+	stack<Transformation> tStack;
+	MTS();
+	MTS(Transformation);
+	void push(Transformation);
+	void pop();
+	Transformation top();
+	Transformation evaluateStack();
 };
 
 //***************** POINT METHODS *****************//
@@ -1172,36 +1172,36 @@ void GeometricPrimitive::getBRDF(LocalGeo& local, BRDF* brdf) {
 
 //***************** MTS METHODS  *****************//
 MTS::MTS() {
-    MatrixGenerator m = MatrixGenerator();
-    tStack.push(m.generateIdentity());
+	MatrixGenerator m = MatrixGenerator();
+	tStack.push(m.generateIdentity());
 }
 
 MTS::MTS(Transformation t) {
-    tStack.push(t);
+	tStack.push(t);
 }
 
 void MTS::push(Transformation t) {
-    tStack.push(t);
+	tStack.push(t);
 }
 
 void MTS::pop() {
-    tStack.pop();
+	tStack.pop();
 }
 
 Transformation MTS::top() {
-    return tStack.top();
+	return tStack.top();
 }
 
 Transformation MTS::evaluateStack() {
-    printf("evaluateStack()\n");
-    MatrixGenerator m = MatrixGenerator();
-    Transformation curTransformation = m.generateIdentity();
-    while(!tStack.empty()) {
-        curTransformation = curTransformation.multOnRightSide(tStack.top());
-        tStack.pop();
-    }
-    tStack.push(curTransformation);
-    return curTransformation;
+	printf("evaluateStack()\n");
+	MatrixGenerator m = MatrixGenerator();
+	Transformation curTransformation = m.generateIdentity();
+	while(!tStack.empty()) {
+		curTransformation = curTransformation.multOnRightSide(tStack.top());
+		tStack.pop();
+	}
+	tStack.push(curTransformation);
+	return curTransformation;
 }
 
 //****************************************************
@@ -1335,6 +1335,7 @@ void trace(Ray& ray, int depth, Color* color) {
 		(*color) = (*color).add(ka);
 		(*color) = (*color).add(ke);
 
+		//We do diffuse, specular, and shadows here
 		for (int i = 0; i < lightsList->size(); i++) {
 			(*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
@@ -1374,9 +1375,15 @@ void trace(Ray& ray, int depth, Color* color) {
 				temp = temp.mult((n * cosI - sqrtf( cosT2 )));
 				T = T.add(temp);
 				Color tempColor = Color();
-				float dist;
 				Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
 				trace(refractRay, depth+1, &tempColor);
+				//Need the color of the material, not sure what it is, distance = distance traveled through object
+				float dist = ray.dir.mult(minTime).len;
+				Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
+				Color transparency = Color( expf( absorbance.r ), 
+					expf( absorbance.g ), 
+					expf( absorbance.b ) );
+				//multiply by transparency like everything else
 				*color = (*color).add(tempColor);
 			}
 		}
@@ -1538,8 +1545,8 @@ void loadScene(std::string file) {
 	} else {
 		std::string line;
 		MTS tStack;
-        MTS tBuffer;
-        printf("hwllo world \n");
+		MTS tBuffer;
+		printf("hwllo world \n");
 		MatrixGenerator m = MatrixGenerator();
 		vector<Point> points;
 		BRDF * curBRDF = new BRDF();
@@ -1617,9 +1624,9 @@ void loadScene(std::string file) {
 				float z = atof(splitline[3].c_str());
 				float r = atof(splitline[4].c_str());
 				// Create new sphere:
-                Transformation *curTransform;
-                Transformation buffer = tBuffer.evaluateStack();
-                curTransform = new Transformation (buffer.multOnRightSide(tStack.top()));
+				Transformation *curTransform;
+				Transformation buffer = tBuffer.evaluateStack();
+				curTransform = new Transformation (buffer.multOnRightSide(tStack.top()));
 				Shape* sphere;
 				sphere = new Sphere(Point(x, y, z), r);
 				l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
@@ -1669,14 +1676,14 @@ void loadScene(std::string file) {
 				int v1 = atoi(splitline[1].c_str());
 				int v2 = atoi(splitline[2].c_str());
 				int v3 = atoi(splitline[3].c_str());
-                printf("blah\n");
+				printf("blah\n");
 				Shape* triangle;
 				triangle = new Triangle(points[v1], points[v2], points[v3]);
-                Transformation* trans;
-                Transformation buffer = tBuffer.evaluateStack();
-                printf("before creating new Transformation\n");
+				Transformation* trans;
+				Transformation buffer = tBuffer.evaluateStack();
+				printf("before creating new Transformation\n");
 				trans = new Transformation(buffer.multOnRightSide(tStack.top()));
-                printf("before add triangle\n");
+				printf("before add triangle\n");
 				l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
 				printf("==== triangle added ====\n");
 				//printf("normal: \t %f, \t %f, \t %f\n", *triangle.norm.normal(0), *triangle.norm.normal(1), *triangle.norm.normal(2));
@@ -1708,7 +1715,7 @@ void loadScene(std::string file) {
 				float y = atof(splitline[2].c_str());
 				float z = atof(splitline[3].c_str());
 				Transformation trans = m.generateTranslation(x, y, z);
-                tBuffer.push(trans);
+				tBuffer.push(trans);
 				printf("====== ADDED TRANSLATE ======\n");
 				printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
@@ -1735,7 +1742,7 @@ void loadScene(std::string file) {
 					printf("====== ADDED ROTATION ======\n");
 					printf("%f degrees about the z axis\n", angle);
 				}
-                tBuffer.push(trans);
+				tBuffer.push(trans);
 				printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
 			}
@@ -1748,23 +1755,23 @@ void loadScene(std::string file) {
 				float z = atof(splitline[3].c_str());
 				printf("====== ADDED SCALE ======\n");
 				Transformation trans = m.generateScale(x, y, z);
-                tBuffer.push(trans);
+				tBuffer.push(trans);
 				printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack.top().top().matrix << endl;
-                printf("reached here\n");
+				printf("reached here\n");
 			}
 
 			//pushTransform
 			//  Push the current modeling transform on the stack as in OpenGL. 
 			else if(!splitline[0].compare("pushTransform")) {
-                printf("beginning of pushTransform()\n");
+				printf("beginning of pushTransform()\n");
 				Transformation buffer = tBuffer.evaluateStack();
-                tBuffer = MTS();
-                tStack.push(buffer.multOnRightSide(tStack.top()));
+				tBuffer = MTS();
+				tStack.push(buffer.multOnRightSide(tStack.top()));
 				printf("====== PUSH TRANSFORM ======\n");
 				printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack.back()->top().matrix << endl;
-                printf("reached end of PushTransform\n");
+				printf("reached end of PushTransform\n");
 			}
 
 			//popTransform
@@ -1774,8 +1781,8 @@ void loadScene(std::string file) {
 			//  (assuming the initial camera transformation is on the stack as 
 			//  discussed above).
 			else if(!splitline[0].compare("popTransform")) {
-                tBuffer = MTS();
-                tStack.pop();
+				tBuffer = MTS();
+				tStack.pop();
 				printf("====== POP TRANSFORM ======\n");
 				printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
