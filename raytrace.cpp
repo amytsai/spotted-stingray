@@ -1333,13 +1333,12 @@ void trace(Ray& ray, int depth, Color* color) {
 				(*color) = (*color).add(ka);
 				(*color) = (*color).add(ke);
 				for (int i = 0; i < lightsList->size(); i++) {
-					printf("WE REACHED THE LOOP");
 					(*lightsList)[i]->generateLightRay(inter.localGeo, &lray, &lcolor);
 					(*lightsList)[i]->generateShadowRay(inter.localGeo, &shadowRay, &shadowColor);
 					bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 					if(!isShadow) {
-						printf("WE'RE ACTUALLY SHADING");
-						(*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
+						printf("WE'RE ACTUALLY SHADING\n");
+						(*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
 					}						
 				}
 				//End test shading code
