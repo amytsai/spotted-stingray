@@ -160,6 +160,7 @@ public:
     Color mult(float);
 	Color mult(Color); //Used only for multiple shading constants with a color
     Color div(float);
+	void clamp();
 };
 
 //***************** CAMERA *****************//
@@ -640,6 +641,12 @@ Color Color::div(float k) {
     return Color(a,s,c);
 }
 
+void Color::clamp() {
+	r = min(r, 1.0f);
+	g = min(g, 1.0f);
+	b = min(b, 1.0f);
+}
+
 
 //***************** CAMERA METHODS *****************//
 
@@ -930,7 +937,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
         return;
     }
     else {		
-        Vector dir = direction;
+        Vector dir = Vector(x, y, z);
         Point origin = local.pos;
         //Arbitrary multiplication of -500 just in case. To reverse direction and make sure the ray origin is far enough away
         origin = origin.add(dir.mult(-500));
@@ -1166,6 +1173,7 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
 //lray = the ray of light
 //lcolor = color of the light
 Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor) {
+	float kr = brdf.kr.r;
 	Color returnColor = Color(); //Begins at (0,0,0)
 	Color I = lcolor;
 	Color kd, ks, ka;
@@ -1180,11 +1188,12 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	returnColor = returnColor.add(diffuse);
 	//Specular shading NO PHONG CONSTANT
 	Normal h = v.add(l);
-	Color specular = ks.mult(I.mult(max(0.0f, n.dot(h))));
+	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 	returnColor = returnColor.add(specular);
 	//Ambient shading, is there some sort of global ambient intensity term?
 	Color ambient = ka;
 	returnColor = returnColor.add(ambient);
+	returnColor.clamp();
     return returnColor;
 }
 
