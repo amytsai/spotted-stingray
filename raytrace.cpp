@@ -1304,7 +1304,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			// Make a recursive call to trace the reflected ray
 			Color tempColor = Color();
 			trace(reflectRay, depth+1, &tempColor);
-			(*color).add(tempColor.mult(brdf.kr));
+			*color = (*color).add(tempColor.mult(brdf.kr));
 		}
 		//END NEW CODE
 		/*
