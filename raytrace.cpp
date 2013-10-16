@@ -881,8 +881,10 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		Vector rt = t.sub(r);
 		Point intersectionPoint = r.add(rs.mult(beta));
 		intersectionPoint = intersectionPoint.add(rt.mult(gamma));
-		*local = LocalGeo(intersectionPoint, Normal(temp));
-		//*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+		//*local = LocalGeo(intersectionPoint, Normal(temp));
+		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+		printf("The point of intersection", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
+		printf("The normal of intersection", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
 		return true;
 	}
 }
