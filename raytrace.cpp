@@ -28,6 +28,7 @@ using namespace Eigen;
 
 #define PI 3.14159265  // Should be used from mathlib
 #define EPSILON .0001f
+#define airRefractIndex 1.0f
 inline float sqr(float x) { return x*x; }
 
 using namespace std;
@@ -288,6 +289,7 @@ public:
 class BRDF {
 public:
 	Color kd, ks, ka, kr, ke; //All the constants for shading
+	float refr, refrIndex; //Refraction constant
 	BRDF();
 	BRDF(Color, Color, Color, Color);
 };
@@ -1266,7 +1268,7 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
 //brdf = all the relevant variables (kd, ks, ka, kr)
 //lray = the ray of light
 //lcolor = color of the light
-Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor) {
+Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor, Color* cumSpecular) {
 	float kr = brdf.kr.r;
 	Color returnColor = Color(); //Begins at (0,0,0)
 	Color I = lcolor;
@@ -1287,6 +1289,7 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
 	//Specular shading YES PHONG CONSTANT
 	Normal h = v.add(l);
 	Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
+	(*cumSpecular) = (*cumSpecular).add(specular);
 	returnColor = returnColor.add(specular);
 	returnColor.clamp();
 	return returnColor;
@@ -1319,6 +1322,7 @@ void trace(Ray& ray, int depth, Color* color) {
 		Ray shadowRay = Ray();
 		Color lcolor = Color();
 		Color shadowColor = Color();
+		Color cumSpecular = Color();
 		bool lisHit = false;
 		float lminTime = 99999999;
 		Intersection lminIntersect = Intersection();
@@ -1334,10 +1338,10 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
 			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			if(!isShadow) {
-				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
+				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor, &cumSpecular));
 			}						
 		}
-		
+
 		// Handle mirror reflection
 		//Checks to make sure that the reflection constant isn't (0, 0, 0)
 		if (brdf.kr.r > 0) {
@@ -1345,55 +1349,81 @@ void trace(Ray& ray, int depth, Color* color) {
 			// Make a recursive call to trace the reflected ray
 			Color tempColor = Color();
 			trace(reflectRay, depth+1, &tempColor);
-			*color = (*color).add(tempColor.mult(brdf.kr));
+			*color = (*color).add(tempColor.mult(cumSpecular));
 		}
 
+		/*
+		// Handles refraction, index of refraction of air is called airRefractIndex
+		float refr = brdf.refr;
+		if (refr > 0) {
+			float rindex = brdf.refrIndex;
+			float n = airRefractIndex/rindex;
+			Normal N = Normal(minIntersect.localGeo.n.normal);
+			Normal normRay = Normal(ray.dir);
+			float cosI = (-1)* N.dot(normRay);
+			float cosT2 = 1.0f - n * n * (1.0f - cosI * cosI);
+			if (cosT2 > 0.0f)
+			{
+				Vector T = Vector(ray.dir);
+				T.normalize();
+				T = T.mult(n);
+				Vector temp = Vector(N.normal);
+				temp = temp.mult((n * cosI - sqrtf( cosT2 )));
+				T = T.add(temp);
+				Color tempColor = Color();
+				float dist;
+				Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
+				trace(refractRay, depth+1, &tempColor);
+				*color = (*color).add(tempColor.mult(brdf.kr));
+			}
+		}
+		*/
 		//END NEW CODE
 		/*
 		//OLD CODE
 		for (int i = 0; i < l->size(); i++ ) {
-			Primitive* primitive = (*l)[i];
-			Intersection inter;
-			bool intersects = primitive->intersect(ray, &thit, &inter);
-			if(intersects) {
-				printf("===== HIT =====\n");
-				//LocalGeo localgeo = intersect.localGeo;
-				//Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-				//Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
-				Color temp = Color((inter.localGeo.pos.point(0) + 1)/5, 0,0);
-				//Color temp = Color(1, 0, 0);
-				//*color = temp;
+		Primitive* primitive = (*l)[i];
+		Intersection inter;
+		bool intersects = primitive->intersect(ray, &thit, &inter);
+		if(intersects) {
+		printf("===== HIT =====\n");
+		//LocalGeo localgeo = intersect.localGeo;
+		//Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
+		//Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
+		Color temp = Color((inter.localGeo.pos.point(0) + 1)/5, 0,0);
+		//Color temp = Color(1, 0, 0);
+		//*color = temp;
 
 
-				//Test shading code
-				inter.primitive->getBRDF(inter.localGeo, &brdf);
-				Ray lray = Ray();
-				Ray shadowRay = Ray();
-				Color lcolor = Color();
-				Color shadowColor = Color();
-				bool lisHit = false;
-				float lminTime = 99999999;
-				Intersection lminIntersect = Intersection();
-				//We do ambient and emissive shading here
-				Color ka = brdf.ka;
-				Color ke = brdf.ke;
-				(*color) = (*color).add(ka);
-				(*color) = (*color).add(ke);
-				for (int i = 0; i < lightsList->size(); i++) {
-					(*lightsList)[i]->generateLightRay(inter.localGeo, &lray, &lcolor);
-					(*lightsList)[i]->generateShadowRay(inter.localGeo, &shadowRay, &shadowColor);
-					bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
-					if(true) {
-						printf("WE'RE ACTUALLY SHADING\n");
-						(*color) = (*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
-					}						
-				}
-				//End test shading code
+		//Test shading code
+		inter.primitive->getBRDF(inter.localGeo, &brdf);
+		Ray lray = Ray();
+		Ray shadowRay = Ray();
+		Color lcolor = Color();
+		Color shadowColor = Color();
+		bool lisHit = false;
+		float lminTime = 99999999;
+		Intersection lminIntersect = Intersection();
+		//We do ambient and emissive shading here
+		Color ka = brdf.ka;
+		Color ke = brdf.ke;
+		(*color) = (*color).add(ka);
+		(*color) = (*color).add(ke);
+		for (int i = 0; i < lightsList->size(); i++) {
+		(*lightsList)[i]->generateLightRay(inter.localGeo, &lray, &lcolor);
+		(*lightsList)[i]->generateShadowRay(inter.localGeo, &shadowRay, &shadowColor);
+		bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
+		if(true) {
+		printf("WE'RE ACTUALLY SHADING\n");
+		(*color) = (*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
+		}						
+		}
+		//End test shading code
 
 
-				
-				return;
-			} 
+
+		return;
+		} 
 		}
 		printf("===== MISS ====\n");
 		Color temp = Color(0, 0, 0);
