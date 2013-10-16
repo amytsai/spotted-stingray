@@ -1193,6 +1193,7 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
+		/*
         //BEGIN NEW CODE
         findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
@@ -1232,7 +1233,7 @@ void trace(Ray& ray, int depth, Color* color) {
             (*color).add(tempColor.mult(brdf.kr));
         }
         //END NEW CODE
-
+		*/
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
           Primitive* primitive = (*l)[i];
