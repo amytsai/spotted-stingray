@@ -255,12 +255,14 @@ public:
 class Light {
 public:
     float x, y, z;
+	float constAtten, linAtten, quadAtten;
     Vector direction;
     Color rgb;
     bool isPL;
     Light();
     Light(float, float, float, Color, bool); //Point light constructor
     Light(float, float, float, Color, bool, Vector); //Directional light constructor
+	Light(float, float, float, Color, bool, float, float, float); //Attentuation constructor
     void generateLightRay(LocalGeo&, Ray*, Color*); 
     void generateShadowRay(LocalGeo&, Ray*, Color*); 
     Light transform(Transformation);
@@ -945,6 +947,9 @@ Light::Light() {
     z = 0.0f;
     rgb = Color ();
     isPL = false;
+	constAtten = 1.0f;
+	linAtten = 0.0f;
+	quadAtten = 0.0f;
 }
 
 Light::Light(float a, float b, float c, Color color, bool PL) {
@@ -953,6 +958,9 @@ Light::Light(float a, float b, float c, Color color, bool PL) {
     z = c;
     rgb = color;
     isPL = PL;
+	constAtten = 1.0f;
+	linAtten = 0.0f;
+	quadAtten = 0.0f;
 }
 
 Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
@@ -962,6 +970,20 @@ Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
     rgb = color;
     isPL = PL;
     direction = dir;
+	constAtten = 1.0f;
+	linAtten = 0.0f;
+	quadAtten = 0.0f;
+}
+
+Light::Light(float a, float b, float c, Color color, bool PL, float con, float lin, float quad) {
+    x = a;
+    y = b;
+    z = c;
+    rgb = color;
+    isPL = PL;
+	constAtten = con;
+	linAtten = lin;
+	quadAtten = quad;
 }
 
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
@@ -1320,7 +1342,7 @@ void trace(Ray& ray, int depth, Color* color) {
             return;
         }
         minIntersect.primitive->getBRDF(minIntersect.localGeo, &brdf);
-
+		float dist = ray.dir.mult(minTime).len;
         //SHADING BEGINS HERE
         Ray lray = Ray();
         Ray shadowRay = Ray();
@@ -1338,11 +1360,18 @@ void trace(Ray& ray, int depth, Color* color) {
 
         //We do diffuse, specular, and shadows here
         for (int i = 0; i < lightsList->size(); i++) {
-            (*lightsList)[i]->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
-            (*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
+			Light* currLight = (*lightsList)[i];
+            currLight->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
+            currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
             bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
             if(!isShadow) {
-                *color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
+				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
+				if(currLight->isPL) { //Attenuation
+					Vector3f attenVec = Vector3f(currLight->constAtten, currLight->linAtten, currLight->quadAtten);
+					Vector3f distVec = Vector3f(1, dist, dist * dist);
+					DSColor = DSColor.div(distVec.dot(attenVec));
+				}
+                *color = (*color).add(DSColor);
             }						
         }
 
@@ -1379,7 +1408,6 @@ void trace(Ray& ray, int depth, Color* color) {
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
                 trace(refractRay, depth+1, &tempColor);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
-                float dist = ray.dir.mult(minTime).len;
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
                 Color transparency = Color( expf( absorbance.r ), 
                     expf( absorbance.g ), 
