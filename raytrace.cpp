@@ -1631,10 +1631,6 @@ void loadScene(std::string file) {
                 }
 				eye = Camera(lookfrom, lookat, up, fov);
 				tStack = MTS(); // push identity matrix
-				printf("==== Camera Added ====\n");
-				printf("lookfrom: \t %f, \t %f, \t %f \n", lfx, lfy, lfz);
-				printf("lookat: \t %f, \t %f, \t %f \n", lax, lay, laz);
-				printf("up vector: \t %f, \t %f, \t %f \n\n", upx, upy, upz);
 			}
 
 			//sphere x y z radius
@@ -1650,10 +1646,6 @@ void loadScene(std::string file) {
 				Shape* sphere;
 				sphere = new Sphere(Point(x, y, z), r);
 				l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
-				printf("==== Sphere Added ====\n");
-				printf("center: \t %f, \t %f, \t %f\n", x, y, z);
-				printf("radius: \t %f \n", r);
-				//TODO:   Store current property values
 			}
 
 			//maxverts number
@@ -1701,13 +1693,7 @@ void loadScene(std::string file) {
 				Transformation* trans;
 				Transformation buffer = tBuffer.evaluateStack();
 				trans = new Transformation(buffer.multOnRightSide(tStack.top()));
-				printf("before add triangle\n");
 				l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
-				printf("==== triangle added ====\n");
-				//printf("normal: \t %f, \t %f, \t %f\n", *triangle.norm.normal(0), *triangle.norm.normal(1), *triangle.norm.normal(2));
-				// create new triangle:
-				//todo:   store current property values
-				//todo:   store current top of matrix stack
 			}
 
 			//trinormal v1 v2 v3
@@ -1734,8 +1720,7 @@ void loadScene(std::string file) {
 				float z = atof(splitline[3].c_str());
 				Transformation trans = m.generateTranslation(x, y, z);
 				tBuffer.push(trans);
-				printf("====== ADDED TRANSLATE ======\n");
-				printf("TOP OF TRANSFORMATION STACK: \n");
+				//printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
@@ -1749,19 +1734,13 @@ void loadScene(std::string file) {
 				Transformation trans = m.generateIdentity();
 				if(x == 1.0f) {
 					trans = m.generateRotationx(angle);
-					printf("====== ADDED ROTATION ======\n");
-					printf("%f degrees about the x axis\n", angle);
 				} else if (y == 1.0f) {
 					trans = m.generateRotationy(angle);
-					printf("====== ADDED ROTATION ======\n");
-					printf("%f degrees about the y axis]\n", angle);
 				} else if (z == 1.0f) {
 					trans = m.generateRotationz(angle);
-					printf("====== ADDED ROTATION ======\n");
-					printf("%f degrees about the z axis\n", angle);
 				}
 				tBuffer.push(trans);
-				printf("TOP OF TRANSFORMATION STACK: \n");
+				//printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
@@ -1775,25 +1754,20 @@ void loadScene(std::string file) {
                     printf("invalid scaling argument\n");
                     exit(EXIT_FAILURE);
                 }
-				printf("====== ADDED SCALE ======\n");
 				Transformation trans = m.generateScale(x, y, z);
 				tBuffer.push(trans);
-				printf("TOP OF TRANSFORMATION STACK: \n");
+				//printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack.top().top().matrix << endl;
-				printf("reached here\n");
 			}
 
 			//pushTransform
 			//  Push the current modeling transform on the stack as in OpenGL. 
 			else if(!splitline[0].compare("pushTransform")) {
-				printf("beginning of pushTransform()\n");
 				Transformation buffer = tBuffer.evaluateStack();
 				tBuffer = MTS();
 				tStack.push(buffer.multOnRightSide(tStack.top()));
-				printf("====== PUSH TRANSFORM ======\n");
-				printf("TOP OF TRANSFORMATION STACK: \n");
+				//printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack.back()->top().matrix << endl;
-				printf("reached end of PushTransform\n");
 			}
 
 			//popTransform
@@ -1805,8 +1779,7 @@ void loadScene(std::string file) {
 			else if(!splitline[0].compare("popTransform")) {
 				tBuffer = MTS();
 				tStack.pop();
-				printf("====== POP TRANSFORM ======\n");
-				printf("TOP OF TRANSFORMATION STACK: \n");
+				//printf("TOP OF TRANSFORMATION STACK: \n");
 				//cout << transformationStack->back()->top().matrix << endl;
 			}
 
@@ -1892,12 +1865,6 @@ void loadScene(std::string file) {
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
-	//string error = "no error";
-	//bool vectest = testvector(&error);
-	//printf("vectest returned with message: %s \n", error.c_str());
-	//bool normaltest = testnormal(&error);
-	//printf("normaltest returned with message: %s \n", error.c_str());
-
 	loadScene(argv[1]);
 	FreeImage_Initialise();
 	render();
