@@ -778,7 +778,13 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         }
         Point hitPoint = ray.getPoint(hittime);
         Normal norm = Normal((hitPoint.sub(center)));
-        *local = LocalGeo(hitPoint, norm);
+		Vector temp = Vector(norm.normal);
+        Point source = ray.pos;
+        Vector lightDirection = source.sub(hitPoint);
+        if(temp.dot(lightDirection) < 0) {
+            temp = temp.mult(-1);
+        }
+        *local = LocalGeo(hitPoint, Normal(temp));
         return true;
     }
 }
@@ -792,7 +798,7 @@ bool Sphere::ifIntersect(Ray& ray) {
     d << direction.vector(0), direction.vector(1), direction.vector(2);
     c << center.point(0), center.point(1), center.point(2);
     float determinant = pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r);
-    if(pow(d.dot(e - c), 2) - (d.dot(d))*((e - c).dot(e - c) - r*r) < 0) {
+    if(determinant < 0) {
         return false;
     }
     else {
@@ -880,9 +886,7 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
         if(temp.dot(lightDirection) < 0) {
             temp = temp.mult(-1);
         }
-        
-        //*local = LocalGeo(intersectionPoint, Normal(temp));
-        *local = LocalGeo(ray.getPoint(hittime), Normal(temp));
+        *local = LocalGeo(intersectionPoint, Normal(temp));
         //printf("The point of intersection: (%f, %f, %f) \n", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
         //printf("The normal of intersection: <%f, %f, %f> \n", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
         return true;
@@ -1214,8 +1218,6 @@ Transformation MTS::evaluateStack() {
 // Ray Tracer TRACE
 //****************************************************
 
-//THE VECTOR OF LIGHTS NEEDS TO BE CALLED lightsList
-
 
 //For a ray, returns the time, Intersection object, and whether it actually hits anything for the scene
 void findIntersection(Ray& ray, float* minTime, Intersection* minIntersect, bool* isHit) {
@@ -1224,7 +1226,6 @@ void findIntersection(Ray& ray, float* minTime, Intersection* minIntersect, bool
     Primitive* primitivePtr;
     for(int x = 0; x < l->size(); x++) {
         //This loop finds the object hit first, then returns the hittime and intersection object
-        //GET THE PRIMITIVE FROM THE VECTOR LINE GOES HERE
         primitivePtr = (*l)[x];
         bool intersects = (*primitivePtr).intersect(ray, &thit, &curIntersect);
         if(intersects) {
@@ -1243,7 +1244,6 @@ bool isShadowIntersection(Ray& ray, float* minTime, Intersection* minIntersect, 
     Primitive* primitivePtr;
     for(int x = 0; x < l->size(); x++) {
         //This loop finds the object hit first, then returns the hittime and intersection object
-        //GET THE PRIMITIVE FROM THE VECTOR LINE GOES HERE
         primitivePtr = (*l)[x];
         bool intersects = (*primitivePtr).intersect(ray, &thit, &curIntersect);
         if(intersects) {
@@ -1264,16 +1264,11 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
     Vector4f d = ray.dir.vector;
     Vector4f n = localGeo.n.normal;
     Vector4f temp = d - 2*(d.dot(n))*n;
-    //Move the start point a bit ahead to avoid float errors
     Ray reflectRay = Ray(localGeo.pos, Vector(temp), EPSILON);
     return reflectRay;
 }
 
-//THE SHADING FUNCTIONS FOR AMBIENT SPECULAR AND DIFFUSE GO HERE, WE MIGHT HAVE TO SPLIT THE FUNCTION FOR DIFFUSE AND SPECULAR
-//localGeo = the point and the normal of the relevant location
-//brdf = all the relevant variables (kd, ks, ka, kr)
-//lray = the ray of light
-//lcolor = color of the light
+//Function for diffuse and specular shading
 Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor) {
     float kr = brdf.kr.r;
     Color returnColor = Color(); //Begins at (0,0,0)
@@ -1293,13 +1288,12 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
     Color diffuse = kd.mult(I.mult(max(0.0f, n.dot(l))));
     returnColor = returnColor.add(diffuse);
 
-    //Specular shading YES PHONG CONSTANT
+    //Specular shading
     Vector temp1 = Vector(l.normal * - 1);
     Vector temp2 = Vector(n.normal * (2 * l.dot(n)) );
     Normal r = Normal(temp1.add(temp2));
     Color specular = ks.mult(I.mult(pow(max(0.0f, v.dot(r)), kr)));
     Normal h = v.add(l);
-    //Color specular = ks.mult(I.mult(pow(max(0.0f, n.dot(h)), kr)));
 
     returnColor = returnColor.add(specular);
     returnColor.clamp();
@@ -1319,7 +1313,6 @@ void trace(Ray& ray, int depth, Color* color) {
         return;
     }
     else {
-        //BEGIN NEW CODE
         findIntersection(ray, &minTime, &minIntersect, &isHit);
         if(!isHit) { //Checks if we actually hit any objects, if we didn't then we return black
             Color temp = Color(0, 0, 0);
@@ -1360,7 +1353,6 @@ void trace(Ray& ray, int depth, Color* color) {
             // Make a recursive call to trace the reflected ray
             Color tempColor = Color();
             trace(reflectRay, depth+1, &tempColor);
-            //*color = (*color).add(tempColor.mult(cumSpecular));
             *color = (*color).add(tempColor.mult(brdf.ks)); // Amy's fix
         }
 
@@ -1397,8 +1389,8 @@ void trace(Ray& ray, int depth, Color* color) {
             }
         }
         */
-        //END NEW CODE
-        /*
+
+		/*
         //OLD CODE
         for (int i = 0; i < l->size(); i++ ) {
         Primitive* primitive = (*l)[i];
