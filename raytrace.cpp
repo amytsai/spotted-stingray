@@ -291,9 +291,10 @@ public:
 class BRDF {
 public:
     Color kd, ks, ka, kr, ke; //All the constants for shading
-    float refr, refrIndex; //Refraction constant
+    float refr, refrIndex; //Refraction constant. refr > 0 implies we have refraction, refrIndex works like how it does in physics
     BRDF();
     BRDF(Color, Color, Color, Color);
+	BRDF(Color, Color, Color, Color, float, float);
 };
 
 //****************************************************
@@ -1118,6 +1119,8 @@ BRDF::BRDF() {
     ks = Color();
     ka = Color();
     kr = Color();
+	refr = 1.0f;
+	refrIndex = airRefractIndex;
 }
 
 BRDF::BRDF(Color d, Color s, Color a, Color r) {
@@ -1125,6 +1128,17 @@ BRDF::BRDF(Color d, Color s, Color a, Color r) {
     ks = s;
     ka = a;
     kr = r;
+	refr = 1.0f;
+	refrIndex = airRefractIndex;
+}
+
+BRDF::BRDF(Color d, Color s, Color a, Color r, float ref, float refIndex) {
+    kd = d;
+    ks = s;
+    ka = a;
+    kr = r;
+	refr = ref;
+	refrIndex = refIndex;
 }
 
 
