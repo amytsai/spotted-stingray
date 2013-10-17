@@ -1389,59 +1389,6 @@ void trace(Ray& ray, int depth, Color* color) {
             }
         }
         */
-
-		/*
-        //OLD CODE
-        for (int i = 0; i < l->size(); i++ ) {
-        Primitive* primitive = (*l)[i];
-        Intersection inter;
-        bool intersects = primitive->intersect(ray, &thit, &inter);
-        if(intersects) {
-        printf("===== HIT =====\n");
-        //LocalGeo localgeo = intersect.localGeo;
-        //Color temp = Color((localGeo.pos.point(0) + 1)/2, (localGeo.pos.point(1) + 1)/2, (localGeo.pos.point(2) + 1)/2);
-        //Color temp = Color(0, 0,(inter.localGeo.pos.point(2) + 1)/2);
-        Color temp = Color((inter.localGeo.pos.point(0) + 1)/5, 0,0);
-        //Color temp = Color(1, 0, 0);
-        //*color = temp;
-
-
-        //Test shading code
-        inter.primitive->getBRDF(inter.localGeo, &brdf);
-        Ray lray = Ray();
-        Ray shadowRay = Ray();
-        Color lcolor = Color();
-        Color shadowColor = Color();
-        bool lisHit = false;
-        float lminTime = 99999999;
-        Intersection lminIntersect = Intersection();
-        //We do ambient and emissive shading here
-        Color ka = brdf.ka;
-        Color ke = brdf.ke;
-        (*color) = (*color).add(ka);
-        (*color) = (*color).add(ke);
-        for (int i = 0; i < lightsList->size(); i++) {
-        (*lightsList)[i]->generateLightRay(inter.localGeo, &lray, &lcolor);
-        (*lightsList)[i]->generateShadowRay(inter.localGeo, &shadowRay, &shadowColor);
-        bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
-        if(true) {
-        printf("WE'RE ACTUALLY SHADING\n");
-        (*color) = (*color).add(shading(inter.localGeo, brdf, lray, ray, lcolor));
-        }						
-        }
-        //End test shading code
-
-
-
-        return;
-        } 
-        }
-        printf("===== MISS ====\n");
-        Color temp = Color(0, 0, 0);
-        *color = temp;
-        return;
-        */
-        //END OLD CODE
     }
 }
 
