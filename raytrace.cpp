@@ -1322,7 +1322,7 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
     return returnColor;
 }
 
-void trace(Ray& ray, int depth, Color* color) {
+void trace(Ray& ray, int depth, Color* color, float currentIndex) {
     bool isHit = false;
     float minTime = 99999999;
     Intersection minIntersect = Intersection();
@@ -1343,6 +1343,11 @@ void trace(Ray& ray, int depth, Color* color) {
         }
         minIntersect.primitive->getBRDF(minIntersect.localGeo, &brdf);
 		float dist = ray.dir.mult(minTime).len;
+		float nextIndex = brdf.refrIndex;	
+		if(currentIndex != airRefractIndex) {
+			nextIndex = airRefractIndex;
+		}
+		float n = currentIndex/nextIndex;
         //SHADING BEGINS HERE
         Ray lray = Ray();
         Ray shadowRay = Ray();
@@ -1381,7 +1386,7 @@ void trace(Ray& ray, int depth, Color* color) {
             Ray reflectRay = createReflectRay(minIntersect.localGeo, ray);
             // Make a recursive call to trace the reflected ray
             Color tempColor = Color();
-            trace(reflectRay, depth+1, &tempColor);
+            trace(reflectRay, depth+1, &tempColor, nextIndex);
             *color = (*color).add(tempColor.mult(brdf.ks)); // Amy's fix
         }
 
@@ -1390,8 +1395,7 @@ void trace(Ray& ray, int depth, Color* color) {
         // Also might need to rewrite sphere to support normals that point inward
         float refr = brdf.refr;
         if (refr > 0) {
-            float rindex = brdf.refrIndex;
-            float n = currentIndex/rindex;
+            
             Normal N = Normal(minIntersect.localGeo.n.normal);
             Normal normRay = Normal(ray.dir);
             float cosI = (-1)* N.dot(normRay);
@@ -1406,7 +1410,7 @@ void trace(Ray& ray, int depth, Color* color) {
                 T = T.add(temp);
                 Color tempColor = Color();
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
-                trace(refractRay, depth+1, &tempColor);
+                trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
                 Color transparency = Color( expf( absorbance.r ), 
@@ -1438,7 +1442,7 @@ void render() {
         eye.generateRay(s, &r);
         //printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
         Color c = Color();
-        trace(r, 0, &c);
+		trace(r, 0, &c, airRefractIndex);
         //printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
         setPixel(s.x, s.y, c);
         if(cur % step == 0) {
