@@ -1385,7 +1385,7 @@ void trace(Ray& ray, int depth, Color* color) {
             *color = (*color).add(tempColor.mult(brdf.ks)); // Amy's fix
         }
 
-        /*
+        
         // Handles refraction, index of refraction of air is called airRefractIndex, we might need to pass in index of refraction each time
         // Also might need to rewrite sphere to support normals that point inward
         float refr = brdf.refr;
@@ -1416,7 +1416,7 @@ void trace(Ray& ray, int depth, Color* color) {
                 *color = (*color).add(tempColor);
             }
         }
-        */
+        
     }
 }
 
