@@ -962,7 +962,7 @@ Light::Light(float a, float b, float c, Color color, bool PL, Vector dir) {
 
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 	if(isPL) {
-		Point origin = Point(x, y, z);
+		Point origin = local.pos;
 		Vector dir = Vector(local.pos, origin);
 		*lray = Ray(origin, dir);
 		*lcolor = rgb;
@@ -980,7 +980,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 
 void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 	if(isPL) {
-		Point origin = Point(x, y, z);
+		Point origin = local.pos;
 		Vector dir = Vector(local.pos, origin);
 		*lray = Ray(local.pos, dir, EPSILON);
 		*lcolor = rgb;
