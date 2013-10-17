@@ -883,8 +883,8 @@ bool Triangle::intersect(Ray& ray, float* thit, LocalGeo* local) {
 		
 		//*local = LocalGeo(intersectionPoint, Normal(temp));
 		*local = LocalGeo(ray.getPoint(hittime), Normal(temp));
-		printf("The point of intersection: (%f, %f, %f) \n", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
-		printf("The normal of intersection: <%f, %f, %f> \n", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
+		//printf("The point of intersection: (%f, %f, %f) \n", (*local).pos.point(0), (*local).pos.point(1), (*local).pos.point(2));
+		//printf("The normal of intersection: <%f, %f, %f> \n", (*local).n.normal(0), (*local).n.normal(1), (*local).n.normal(2));
 		return true;
 	}
 }
@@ -1312,7 +1312,7 @@ void trace(Ray& ray, int depth, Color* color) {
 	Intersection minIntersect = Intersection();
 	float thit = 0.0f;
 	BRDF brdf = BRDF();
-	printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
+	//printf("tracing ray with pos (%f, %f, %f) and dir <%f, %f, %f>\n", ray.pos.point(0), ray.pos.point(1), ray.pos.point(2), ray.dir.vector(0), ray.dir.vector(1), ray.dir.vector(2));
 	if (depth > maxdepth) {
 		Color temp = Color(0, 0, 0);
 		*color = temp;
@@ -1462,15 +1462,22 @@ void trace(Ray& ray, int depth, Color* color) {
 void render() {
 	Sample s = Sample();
 	Sampler mySampler = Sampler();
+    float total = (float) width * height;
+    int step = (int) total/100;
+    int cur = 0;
 	while(mySampler.getSample(&s)) {
-		printf("sample generated at: %f, %f \n", s.x, s.y);
+        cur += 1;
+		//printf("sample generated at: %f, %f \n", s.x, s.y);
 		Ray r;
 		eye.generateRay(s, &r);
 		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
 		Color c = Color();
 		trace(r, 0, &c);
-		printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+		//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
 		setPixel(s.x, s.y, c);
+        if(cur % step == 0) {
+            printf("%d %% done\n", cur / step);
+        }
 	}
 }
 
