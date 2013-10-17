@@ -1274,7 +1274,7 @@ Ray createReflectRay(LocalGeo& localGeo, Ray& ray) {
 //brdf = all the relevant variables (kd, ks, ka, kr)
 //lray = the ray of light
 //lcolor = color of the light
-Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor, Color* cumSpecular) {
+Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor) {
 	float kr = brdf.kr.r;
 	Color returnColor = Color(); //Begins at (0,0,0)
 	Color I = lcolor;
@@ -1333,7 +1333,6 @@ void trace(Ray& ray, int depth, Color* color) {
 		Ray shadowRay = Ray();
 		Color lcolor = Color();
 		Color shadowColor = Color();
-		Color cumSpecular = Color();
 		bool lisHit = false;
 		float lminTime = 99999999;
 		Intersection lminIntersect = Intersection();
@@ -1350,7 +1349,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			(*lightsList)[i]->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
 			bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			if(!isShadow) {
-				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor, &cumSpecular));
+				*color = (*color).add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
 			}						
 		}
 
