@@ -1132,7 +1132,7 @@ BRDF::BRDF() {
     ks = Color();
     ka = Color();
     kr = Color();
-	refr = 1.0f;
+	refr = 0.0f;
 	refrIndex = airRefractIndex;
 }
 
@@ -1141,7 +1141,7 @@ BRDF::BRDF(Color d, Color s, Color a, Color r) {
     ks = s;
     ka = a;
     kr = r;
-	refr = 1.0f;
+	refr = 0.0f;
 	refrIndex = airRefractIndex;
 }
 
@@ -1452,10 +1452,9 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                 trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
-                Color transparency = Color( expf( absorbance.r ), 
-                    expf( absorbance.g ), 
-                    expf( absorbance.b ) );
+                Color transparency = Color( expf( absorbance.r ), expf( absorbance.g ), expf( absorbance.b ));
                 //multiply by transparency like everything else
+				//*color = (*color).add(tempColor.mult(transparency));
                 *color = (*color).add(tempColor);
             }
         }
@@ -1864,6 +1863,18 @@ void loadScene(std::string file) {
             else if(!splitline[0].compare("shininess")) {
                 float shininess = atof(splitline[1].c_str());
                 curBRDF->kr = Color(shininess, shininess, shininess);
+            }
+			//shininess s
+            //  speciï¬es the shininess of the surface.
+            else if(!splitline[0].compare("refraction")) {
+                float refraction = atof(splitline[1].c_str());
+				curBRDF->refr = refraction;
+            }
+			//shininess s
+            //  speciï¬es the shininess of the surface.
+            else if(!splitline[0].compare("refractionIndex")) {
+                float refractionIndex = atof(splitline[1].c_str());
+				curBRDF->refrIndex = refractionIndex;
             }
             //emission r g b
             //  gives the emissive color of the surface.
