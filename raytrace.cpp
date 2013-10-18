@@ -1437,18 +1437,24 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
             
             Normal N = Normal(minIntersect.localGeo.n.normal);
             Normal normRay = Normal(ray.dir);
+			Vector3f d = normRay.normal;
+			Vector3f m = N.normal;
+			float det = 1 - n * n * (1 - pow(d.dot(m), 2));
             float cosI = (-1)* N.dot(normRay);
             float cosT2 = 1.0f - n * n * (1.0f - cosI * cosI);
             if (cosT2 > 0.0f)
             {
-                Vector T = Vector(ray.dir);
-                T.normalize();
+				Vector3f final = n * (d - m * (d.dot(m))) - m * sqrt(det);
+                Vector T = Vector(normRay.normal);
+                //T.normalize();
                 T = T.mult(n);
                 Vector temp = Vector(N.normal);
                 temp = temp.mult((n * cosI - sqrtf( cosT2 )));
                 T = T.add(temp);
                 Color tempColor = Color();
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
+				printf("Refraction vector 1: (%f, %f, %f)\n", final(0), final(1), final(2));
+				printf("Refraction vector 1: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
                 trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
