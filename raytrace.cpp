@@ -421,7 +421,7 @@ Vector Vector::cross(Vector v) {
 
 void Vector::normalize() {
     vector.normalize();
-    len = 1.0;
+    len = 1.0f;
 }
 
 bool Vector::equals(Vector v) {
