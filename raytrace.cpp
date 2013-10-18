@@ -786,10 +786,10 @@ bool Sphere::intersect(Ray& ray, float* thit, LocalGeo* local) {
         float hittime1 = (-d.dot(e - c) + sqrt(determinant))/(d.dot(d));
         float hittime2 = (-d.dot(e - c) - sqrt(determinant))/(d.dot(d));
         float hittime = min(hittime1, hittime2);
-        *thit = hittime;
-        if(hittime < ray.t_min || hittime > ray.t_max) {
+		if(hittime < ray.t_min || hittime > ray.t_max) {
             return false;
         }
+        *thit = hittime;
         Point hitPoint = ray.getPoint(hittime);
         Normal norm = Normal((hitPoint.sub(center)));
 		Vector temp = Vector(norm.normal);
@@ -1384,6 +1384,9 @@ void trace(Ray& ray, int depth, Color* color) {
             currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
             bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			if(isShadow && currLight->isPL) {
+				if(lminTime > 1.0f) {
+					isShadow = false;
+				}
 				//printf("Time and position of hit: %f and (%f, %f, %f)\n", lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}
             if(!isShadow) {
