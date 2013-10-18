@@ -1,0 +1,128 @@
+size 600 600
+maxdepth 5
+output stela.png
+camera 0 1 6 0 0 0 0 1 0 45
+directional -2 1 1 .7 .7 .7
+point -10 4 0 .1 .1 .2
+point 0 1 11 .7 .7 .7
+
+
+
+# START DODECAHEDRON
+
+diffuse .70 .13 .67
+specular .4 .4 .4
+shininess 20
+
+vertex 0 0 0
+vertex   0.   0.   -0.951057
+vertex   0.   0.   0.951057
+vertex   -0.425325   -1.30902   1.80171
+vertex   -0.425325   1.30902   1.80171
+vertex   0.425325   -1.30902   -1.80171
+vertex   0.425325   1.30902   -1.80171
+vertex   -0.688191   -0.5   0.425325
+vertex   -0.688191   0.5   0.425325
+vertex   -0.688191   -2.11803   0.425325
+vertex   -0.688191   2.11803   0.425325
+vertex   0.688191   -0.5   -0.425325
+vertex   0.688191   0.5   -0.425325
+vertex   0.688191   -2.11803   -0.425325
+vertex   0.688191   2.11803   -0.425325
+vertex   -0.850651   0.   -0.425325
+vertex   0.850651   0.   0.425325
+vertex   -1.11352   -0.809017   -1.80171
+vertex   -1.11352   0.809017   -1.80171
+vertex   1.11352   -0.809017   1.80171
+vertex   1.11352   0.809017   1.80171
+vertex   -1.80171   -1.30902   -0.425325
+vertex   -1.80171   1.30902   -0.425325
+vertex   1.80171   -1.30902   0.425325
+vertex   1.80171   1.30902   0.425325
+vertex   -2.22703   0.   0.425325
+vertex   2.22703   0.   -0.425325
+vertex   -0.262866   -0.809017   -0.425325
+vertex   -0.262866   0.809017   -0.425325
+vertex   0.262866   -0.809017   0.425325
+vertex   0.262866   0.809017   0.425325
+vertex   -1.37638   0.   1.80171
+vertex   1.37638   0.   -1.80171
+
+tri   4   2   30
+tri   4   30   8
+tri   4   8   2
+tri   31   2   8
+tri   31   8   7
+tri   31   7   2
+tri   3   2   7
+tri   3   7   29
+tri   3   29   2
+tri   19   2   29
+tri   19   29   16
+tri   19   16   2
+tri   20   2   16
+tri   20   16   30
+tri   20   30   2
+tri   5   11   27
+tri   5   27   1
+tri   5   1   11
+tri   32   12   11
+tri   32   11   1
+tri   32   1   12
+tri   6   28   12
+tri   6   12   1
+tri   6   1   28
+tri   18   15   28
+tri   18   28   1
+tri   18   1   15
+tri   17   27   15
+tri   17   15   1
+tri   17   1   27
+tri   10   30   28
+tri   10   28   8
+tri   10   8   30
+tri   25   8   15
+tri   25   15   7
+tri   25   7   8
+tri   9   7   27
+tri   9   27   29
+tri   9   29   7
+tri   23   29   11
+tri   23   11   16
+tri   23   16   29
+tri   24   16   12
+tri   24   12   30
+tri   24   30   16
+tri   13   11   29
+tri   13   29   27
+tri   13   27   11
+tri   26   12   16
+tri   26   16   11
+tri   26   11   12
+tri   14   28   30
+tri   14   30   12
+tri   14   12   28
+tri   22   15   8
+tri   22   8   28
+tri   22   28   15
+tri   21   27   7
+tri   21   7   15
+tri   21   15   27
+
+#START BACK
+ambient .1 .1 .1
+diffuse .3 .3 .3
+specular .3 .3 .3
+shininess 20
+vertex -1 0 -1
+vertex +1 0 -1
+vertex +1 0 +1
+vertex -1 0 +1
+
+pushTransform
+translate 0 0 -10
+rotate 1 0 0 90
+scale 100 1 100
+tri 33 34 35
+tri 33 35 36
+popTransform

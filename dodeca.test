@@ -1,0 +1,147 @@
+size 1600 800
+maxdepth 5
+output dodeca.png
+camera 0 1 10 0 0 0 0 1 0 45
+directional 1 1 1 .7 .7 .7
+point -10 4 0 .1 .1 .2
+point 0 1 -11 .5 .5 .2
+
+
+
+# START DODECAHEDRON
+
+diffuse .30 .90 .85
+specular .1 .1 .1
+shininess 20
+
+vertex 0 0 0
+vertex  -0.57735  -0.57735  0.57735
+vertex  0.934172  0.356822  0
+vertex  0.934172  -0.356822  0
+vertex  -0.934172  0.356822  0
+vertex  -0.934172  -0.356822  0
+vertex  0  0.934172  0.356822
+vertex  0  0.934172  -0.356822
+vertex  0.356822  0  -0.934172
+vertex  -0.356822  0  -0.934172
+vertex  0  -0.934172  -0.356822
+vertex  0  -0.934172  0.356822
+vertex  0.356822  0  0.934172
+vertex  -0.356822  0  0.934172
+vertex  0.57735  0.57735  -0.57735
+vertex  0.57735  0.57735  0.57735
+vertex  -0.57735  0.57735  -0.57735
+vertex  -0.57735  0.57735  0.57735
+vertex  0.57735  -0.57735  -0.57735
+vertex  0.57735  -0.57735  0.57735
+vertex  -0.57735  -0.57735  -0.57735
+pushTransform
+translate -1 0 0
+tri  19  3  2
+tri  12  19  2
+tri  15  12  2
+tri  8  14  2
+tri  18  8  2
+tri  3  18  2
+tri  20  5  4
+tri  9  20  4
+tri  16  9  4
+tri  13  17  4
+tri  1  13  4
+tri  5  1  4
+tri  7  16  4
+tri  6  7  4
+tri  17  6  4
+tri  6  15  2
+tri  7  6  2
+tri  14  7  2
+tri  10  18  3
+tri  11  10  3
+tri  19  11  3
+tri  11  1  5
+tri  10  11  5
+tri  20  10  5
+tri  20  9  8
+tri  10  20  8
+tri  18  10  8
+tri  9  16  7
+tri  8  9  7
+tri  14  8  7
+tri  12  15  6
+tri  13  12  6
+tri  17  13  6
+tri  13  1  11
+tri  12  13  11
+tri  19  12  11
+popTransform
+
+#START ICOSAHEDRON
+vertex  0  -0.525731  0.850651
+vertex  0.850651  0  0.525731
+vertex  0.850651  0  -0.525731
+vertex  -0.850651  0  -0.525731
+vertex  -0.850651  0  0.525731
+vertex  -0.525731  0.850651  0
+vertex  0.525731  0.850651  0
+vertex  0.525731  -0.850651  0
+vertex  -0.525731  -0.850651  0
+vertex  0  -0.525731  -0.850651
+vertex  0  0.525731  -0.850651
+vertex  0  0.525731  0.850651
+
+pushTransform
+scale 2 2 2
+translate 1 0.25 0
+diffuse .90 .26 .66
+specular .1 .1 .1
+shininess 20
+
+tri  22  23  27
+tri  22  28  23
+tri  24  25  26
+tri  25  24  29
+tri  27  26  32
+tri  26  27  31
+tri  30  31  23
+tri  31  30  24
+tri  28  29  30
+tri  29  28  21
+tri  32  21  22
+tri  21  32  25
+tri  27  23  31
+tri  22  27  32
+tri  24  26  31
+tri  26  25  32
+tri  23  28  30
+tri  28  22  21
+tri  24  30  29
+tri  25  29  21
+popTransform
+
+#START FLOOR
+ambient .1 .1 .1
+diffuse .3 .3 .3
+specular .5 .5 .5
+shininess 20
+vertex -1 0 -1
+vertex +1 0 -1
+vertex +1 0 +1
+vertex -1 0 +1
+
+pushTransform
+translate 0 -1 0
+scale 100 1 100
+tri 33 34 35
+tri 33 35 36
+popTransform
+
+#START BACK WALL
+ambient .1 .1 .1
+diffuse 1 1 1
+pushTransform
+translate 0 0 -99
+rotate 1 0 0 90
+scale 100 1 100
+tri 33 34 35
+tri 33 35 36
+popTransform
