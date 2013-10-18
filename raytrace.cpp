@@ -999,7 +999,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     }
     else {		
         Vector dir = Vector(x, y, z);
-        dir = dir.mult(-1);
+        //dir = dir.mult(-1);
         Point origin = local.pos;
         *lray = Ray(origin, dir);
         *lcolor = rgb;
@@ -1017,7 +1017,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     }
     else {		
         Vector dir = Vector(x, y, z);
-        dir = dir.mult(-1);
+        //dir = dir.mult(-1);
         Point origin = local.pos;
         *lray = Ray(origin, dir, EPSILON);
         *lcolor = rgb;
