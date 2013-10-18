@@ -124,6 +124,7 @@ public:
     Ray(Point, Point);
     Ray(Point, Vector);
     Ray(Point, Vector, float);
+	Ray(Point, Vector, float, float);
     Point getPoint(float); //Get's the value of the ray at the input time t (pos + t * dir)
     Ray transform(Transformation); //Returns the transformed ray
 };
@@ -507,6 +508,14 @@ Ray::Ray(Point a, Vector v, float t) {
     t_min = t;
     t_max = 99999999;
 }
+
+Ray::Ray(Point a, Vector v, float t, float max) {
+    pos = Point(a.point);
+    dir = Vector(v.vector);
+    t_min = t;
+    t_max = max;
+}
+
 Ray::Ray() {
     pos = Point();
     dir = Vector();
@@ -993,7 +1002,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
         Point origin = Point(x, y, z);
         Vector dir = Vector(local.pos, origin);
-        *lray = Ray(local.pos, dir);
+        *lray = Ray(local.pos, dir, 1);
         *lcolor = rgb;
         return;
     }
@@ -1011,7 +1020,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
         Point origin = Point(x, y, z);
         Vector dir = Vector(local.pos, origin);
-        *lray = Ray(local.pos, dir, EPSILON);
+        *lray = Ray(local.pos, dir, EPSILON, 1);
         *lcolor = rgb;
         return;
     }
