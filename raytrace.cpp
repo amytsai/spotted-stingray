@@ -1386,7 +1386,7 @@ void trace(Ray& ray, int depth, Color* color) {
 			if(!currLight->isPL) {
 				isShadow = false;
 			}
-            if(!isShadow) {
+            if(true) {
 				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
 				if(currLight->isPL) { //Attenuation
 					Vector3f attenVec = Vector3f(currLight->constAtten, currLight->linAtten, currLight->quadAtten);
