@@ -1454,7 +1454,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                 Color tempColor = Color();
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
 				printf("Refraction vector 1: (%f, %f, %f)\n", final(0), final(1), final(2));
-				printf("Refraction vector 1: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
+				printf("Refraction vector 2: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
                 trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
