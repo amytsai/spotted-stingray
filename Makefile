@@ -12,9 +12,9 @@ endif
 RM = /bin/rm -f 
 all: main 
 main: raytrace.o
-	$(CC) $(CFLAGS) -o raytrace raytrace.o $(LDFLAGS)
+	$(CC) -O3 $(CFLAGS) -o raytrace raytrace.o $(LDFLAGS)
 raytrace.o: raytrace.cpp
-	$(CC) $(CFLAGS) -c raytrace.cpp -o raytrace.o
+	$(CC) -O3 $(CFLAGS) -c raytrace.cpp -o raytrace.o
 clean: 
 	$(RM) *.o as1
  
