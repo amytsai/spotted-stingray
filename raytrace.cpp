@@ -1437,14 +1437,14 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
             
             Normal N = Normal(minIntersect.localGeo.n.normal);
             Normal normRay = Normal(ray.dir);
-			Vector3f d = Vector3f(normRay.normal(0),normRay.normal(1), normRay.normal(2));
-			Vector3f m = Vector3f(N.normal(0), N.normal(1), N.normal(2));
+			//Vector3f d = Vector3f(normRay.normal(0),normRay.normal(1), normRay.normal(2));
+			//Vector3f m = Vector3f(N.normal(0), N.normal(1), N.normal(2));
 			float det = 1 - n * n * (1 - pow(d.dot(m), 2));
             float cosI = (-1)* N.dot(normRay);
             float cosT2 = 1.0f - n * n * (1.0f - cosI * cosI);
             if (cosT2 > 0.0f)
             {
-				Vector3f final = n * (d - m * (d.dot(m))) - m * sqrt(det);
+				//Vector3f final = n * (d - m * (d.dot(m))) - m * sqrt(det);
                 Vector T = Vector(normRay.normal);
                 //T.normalize();
                 T = T.mult(n);
@@ -1453,8 +1453,8 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                 T = T.add(temp);
                 Color tempColor = Color();
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
-				printf("Refraction vector 1: (%f, %f, %f)\n", final(0), final(1), final(2));
-				printf("Refraction vector 2: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
+				//printf("Refraction vector 1: (%f, %f, %f)\n", final(0), final(1), final(2));
+				//printf("Refraction vector 2: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
                 trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
