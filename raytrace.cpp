@@ -1002,7 +1002,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
         Point origin = Point(x, y, z);
         Vector dir = Vector(local.pos, origin);
-        *lray = Ray(local.pos, dir, EPSILON, 1);
+        *lray = Ray(local.pos, dir, EPSILON, 1.0f);
         *lcolor = rgb;
         return;
     }
@@ -1020,7 +1020,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
         Point origin = Point(x, y, z);
         Vector dir = Vector(local.pos, origin);
-        *lray = Ray(local.pos, dir, EPSILON, 1);
+        *lray = Ray(local.pos, dir, EPSILON, 1.0f);
         *lcolor = rgb;
         return;
     }
@@ -1384,7 +1384,7 @@ void trace(Ray& ray, int depth, Color* color) {
             currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
             bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			if(isShadow && currLight->isPL) {
-				printf("Time and position of hit: %f and (%f, %f, %f)\n", lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
+				//printf("Time and position of hit: %f and (%f, %f, %f)\n", lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}
             if(!isShadow) {
 				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
