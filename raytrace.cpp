@@ -314,6 +314,7 @@ public:
 //****************************************************
 class MTS {
 public:
+    bool isNull;
     stack<Transformation> tStack;
     MTS();
     MTS(Transformation);
@@ -698,9 +699,11 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     z.normalize();
 
     Vector x = up.cross(z);
+    //Vector x = z.cross(up);
     x.normalize();
 
     Vector y = z.cross(x);
+    //Vector y = x.cross(z);
     y.normalize();
     y = y.mult(tan(fov/2));
     float w = (float) width;
@@ -1205,20 +1208,26 @@ void GeometricPrimitive::getBRDF(LocalGeo& local, BRDF* brdf) {
 
 //***************** MTS METHODS  *****************//
 MTS::MTS() {
+    isNull = true;
     MatrixGenerator m = MatrixGenerator();
     tStack.push(m.generateIdentity());
 }
 
 MTS::MTS(Transformation t) {
+    isNull = false;
     tStack.push(t);
 }
 
 void MTS::push(Transformation t) {
+    isNull = false;
     tStack.push(t);
 }
 
 void MTS::pop() {
     tStack.pop();
+    if(tStack.empty()) {
+        isNull = true;
+    }
 }
 
 Transformation MTS::top() {
@@ -1533,6 +1542,9 @@ void loadScene(std::string file) {
         tBuffer.push(m.generateIdentity());
         vector<Point> points;
         BRDF * curBRDF = new BRDF();
+        float constant = 1;
+        float linear = 0;
+        float quadratic  = 0;
 
         while(inpfile.good()) {
             vector<string> splitline;
@@ -1733,8 +1745,8 @@ void loadScene(std::string file) {
                 Transformation buffer = tBuffer.evaluateStack();
                 tBuffer = MTS();
                 tStack.push(buffer.multOnRightSide(tStack.top()));
-                //printf("TOP OF TRANSFORMATION STACK: \n");
-                //cout << transformationStack.back()->top().matrix << endl;
+                printf("TOP OF TRANSFORMATION STACK: \n");
+                cout << tStack.top().matrix << endl;
             }
 
             //popTransform
@@ -1744,10 +1756,15 @@ void loadScene(std::string file) {
             //  (assuming the initial camera transformation is on the stack as 
             //  discussed above).
             else if(!splitline[0].compare("popTransform")) {
+                Transformation buffer = tBuffer.evaluateStack();
+                Transformation top = tStack.top();
+                if(tBuffer.isNull) {
+                    tStack.pop();
+                }
+                printf("TOP OF TRANSFORMATION STACK BEFORE POP: \n");
+                cout << buffer.multOnRightSide(top).matrix << endl;
                 tBuffer = MTS();
-                tStack.pop();
-                //printf("TOP OF TRANSFORMATION STACK: \n");
-                //cout << transformationStack->back()->top().matrix << endl;
+                //ktStack.pop();
             }
 
             //directional x y z r g b
@@ -1759,7 +1776,7 @@ void loadScene(std::string file) {
                 float r = atof(splitline[4].c_str());
                 float g = atof(splitline[5].c_str());
                 float b = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(x, y, z, Color(r, g, b), false));
+                lightsList->push_back(new Light(x, y, z, Color(r, g, b), false, constant, linear, quadratic));
             }
             //point x y z r g b
             //  The location of a point source and the color, as in OpenGL.
@@ -1770,16 +1787,16 @@ void loadScene(std::string file) {
                 float r = atof(splitline[4].c_str());
                 float g = atof(splitline[5].c_str());
                 float b = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(x, y, z, Color(r, g, b), true));
+                lightsList->push_back(new Light(x, y, z, Color(r, g, b), true, constant, linear, quadratic));
             } 
 
             //attenuation const linear quadratic
             //  Sets the constant, linear and quadratic attenuations 
             //  (default 1,0,0) as in OpenGL.
             else if(!splitline[0].compare("attenuation")) {
-                // const: atof(splitline[1].c_str())
-                // linear: atof(splitline[2].c_str())
-                // quadratic: atof(splitline[3].c_str())
+              constant = atof(splitline[1].c_str());
+              linear = atof(splitline[2].c_str());
+              quadratic = atof(splitline[3].c_str());
             }
 
             //ambient r g b
