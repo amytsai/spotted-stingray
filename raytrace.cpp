@@ -1437,8 +1437,8 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
             
             Normal N = Normal(minIntersect.localGeo.n.normal);
             Normal normRay = Normal(ray.dir);
-			Vector3f d = normRay.normal;
-			Vector3f m = N.normal;
+			Vector3f d = Vector3f(normRay.normal(0),normRay.normal(1), normRay.normal(2));
+			Vector3f m = Vector3f(N.normal(0), N.normal(1), N.normal(2));
 			float det = 1 - n * n * (1 - pow(d.dot(m), 2));
             float cosI = (-1)* N.dot(normRay);
             float cosT2 = 1.0f - n * n * (1.0f - cosI * cosI);
