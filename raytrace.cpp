@@ -1383,10 +1383,10 @@ void trace(Ray& ray, int depth, Color* color) {
             currLight->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
             currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
             bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
-			if(!currLight->isPL) {
+			if(currLight->isPL) {
 				isShadow = false;
 			}
-            if(true) {
+            if(!isShadow) {
 				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
 				if(currLight->isPL) { //Attenuation
 					Vector3f attenVec = Vector3f(currLight->constAtten, currLight->linAtten, currLight->quadAtten);
