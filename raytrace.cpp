@@ -533,7 +533,7 @@ Point Ray::getPoint(float time) {
 Ray Ray::transform(Transformation trans) {
     Point newPoint = pos.transform(trans);
     Vector newDir = dir.transform(trans);
-    return Ray(newPoint, newDir);
+    return Ray(newPoint, newDir, t_min, t_max);
 }
 
 //***************** TRANSFORMATION METHODS*****************//
