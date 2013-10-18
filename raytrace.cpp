@@ -711,7 +711,7 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     x = x.mult((w/h) * y.len);
     printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
     printf("x <%f, %f, %f> \n", x.vector(0), x.vector(1), x.vector(2));
-    printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
+    printf("y <%f, %f, %f> \n", y.vector(0), y.vector(1), y.vector(2));
     printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
     Vector zminusx = z.sub(x);
     Vector zplusx = z.add(x);
