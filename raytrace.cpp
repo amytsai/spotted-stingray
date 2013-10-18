@@ -1385,9 +1385,9 @@ void trace(Ray& ray, int depth, Color* color) {
             bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 			if(isShadow && currLight->isPL) {
 				if(lminTime > 1.0f) {
-					isShadow = false;
+					//isShadow = false;
 				}
-				//printf("Time and position of hit: %f and (%f, %f, %f)\n", lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
+				printf("Max t, Time and position of hit: %f, %f and (%f, %f, %f)\n", shadowRay.t_max, lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}
             if(!isShadow) {
 				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
