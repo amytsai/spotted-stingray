@@ -583,9 +583,9 @@ Transformation MatrixGenerator::generateRotationx(float angle) {
 Transformation MatrixGenerator::generateRotationy(float angle) {
     float rad = angle * PI/180;
     Matrix4f temp;
-    temp << cos(rad), 0, -sin(rad), 0,
+    temp << cos(rad), 0, sin(rad), 0,
         0, 1, 0, 0,
-        sin(rad), 0, cos(rad), 0,
+        -sin(rad), 0, cos(rad), 0,
         0, 0, 0, 1;
     return temp;
 }
