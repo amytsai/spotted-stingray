@@ -702,17 +702,17 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     //Vector x = z.cross(up);
     x.normalize();
 
-    Vector y = z.cross(x);
-    //Vector y = x.cross(z);
+    //Vector y = z.cross(x);
+    Vector y = x.cross(z);
     y.normalize();
     y = y.mult(tan(fov/2));
     float w = (float) width;
     float h = (float) height;
     x = x.mult((w/h) * y.len);
-    /*printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
+    printf("x = %f, y = %f, z = %f\n", x.len, y.len, z.len);
     printf("x <%f, %f, %f> \n", x.vector(0), x.vector(1), x.vector(2));
     printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
-    printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));*/
+    printf("z <%f, %f, %f> \n", z.vector(0), z.vector(1), z.vector(2));
     Vector zminusx = z.sub(x);
     Vector zplusx = z.add(x);
 
@@ -1042,8 +1042,8 @@ void Camera::generateRay(Sample s, Ray* ray) {
     float imagePlaneH = (UL.sub(LL)).len;
     float imgToScreen = imagePlaneW/width;
     float u = (s.x - (((float) width) / 2))*imgToScreen + imagePlaneW/2;
-    float v = -((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
-    //printf("value of v and u: %f, %f \n", v, u);
+    float v = ((s.y - (((float) height) / 2))*imgToScreen) + imagePlaneH/2;
+    printf("value of v and u: %f, %f \n", v, u);
     v = v/imagePlaneH;
     u = u/imagePlaneW;
     Vector t1 = LL.mult(v).add(UL.mult(1-v));
