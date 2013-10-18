@@ -1409,7 +1409,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 				printf("Max t, Time and position of hit: %f, %f and (%f, %f, %f)\n", shadowRay.t_max, lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}
             if(!isShadow) {
-				Color DSColor = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
+				Color DSColor = shading(lminIntersect.localGeo, brdf, lray, ray, lcolor);
 				if(currLight->isPL) { //Attenuation
 					float lightDist = Vector(minIntersect.localGeo.pos, Point(currLight->x, currLight->y, currLight->z)).len;
 					Vector3f attenVec = Vector3f(currLight->constAtten, currLight->linAtten, currLight->quadAtten);
