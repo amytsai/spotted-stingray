@@ -1864,14 +1864,14 @@ void loadScene(std::string file) {
                 float shininess = atof(splitline[1].c_str());
                 curBRDF->kr = Color(shininess, shininess, shininess);
             }
-			//shininess s
-            //  speciï¬es the shininess of the surface.
+			// refraction r
+            //  specifies if there will be refraction. 0 = no refraction, above 0 = yes refraction
             else if(!splitline[0].compare("refraction")) {
                 float refraction = atof(splitline[1].c_str());
 				curBRDF->refr = refraction;
             }
-			//shininess s
-            //  speciï¬es the shininess of the surface.
+			// refractionIndex n
+            //  specified index of refraction of a material
             else if(!splitline[0].compare("refractionIndex")) {
                 float refractionIndex = atof(splitline[1].c_str());
 				curBRDF->refrIndex = refractionIndex;
