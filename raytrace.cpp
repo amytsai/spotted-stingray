@@ -698,8 +698,8 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     Vector z = Vector(from, at);
     z.normalize();
 
-    Vector x = up.cross(z);
-    //Vector x = z.cross(up);
+    //Vector x = up.cross(z);
+    Vector x = z.cross(up);
     x.normalize();
 
     //Vector y = z.cross(x);
