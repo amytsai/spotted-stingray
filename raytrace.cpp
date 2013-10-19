@@ -1965,9 +1965,12 @@ void loadScene(std::string file) {
                 float p4x = atof(splitline[10].c_str());
                 float p4y = atof(splitline[11].c_str());
                 float p4z = atof(splitline[12].c_str());
-                float hor = atof(splitline[13].c_str());
-                float vert = atof(splitline[14].c_str());
-                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), hor, vert));
+				float r = atof(splitline[13].c_str());
+				float g = atof(splitline[14].c_str());
+				float b = atof(splitline[15].c_str());
+                float hor = atof(splitline[16].c_str());
+                float vert = atof(splitline[17].c_str());
+                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), Color(r, g, b), hor, vert));
             } 
 
             //point UL UR LL LR hor vert, use the vertex numbers for this
@@ -1977,9 +1980,12 @@ void loadScene(std::string file) {
                 int v2 = atoi(splitline[2].c_str());
                 int v3 = atoi(splitline[3].c_str());
                 int v4 = atoi(splitline[4].c_str());
-                float hor = atof(splitline[5].c_str());
-                float vert = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], hor, vert));
+				float r = atof(splitline[5].c_str());
+				float g = atof(splitline[6].c_str());
+				float b = atof(splitline[7].c_str());
+                float hor = atof(splitline[8].c_str());
+                float vert = atof(splitline[9].c_str());
+                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], Color(r, g, b), hor, vert));
             }
 
 			//attenuation const linear quadratic
