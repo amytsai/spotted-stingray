@@ -1038,6 +1038,8 @@ Light::Light(Point a, Point b, Point c, Point d, Color color, float hor, float v
     vertCount = vert;
     widthVector = Vector(UL, UR);
     heightVector = Vector(UL, LL);
+	printf("widthVector <%f, %f, %f> \n", widthVector.vector(0), widthVector.vector(1), widthVector.vector(2));
+	printf("heightVector <%f, %f, %f> \n", heightVector.vector(0), heightVector.vector(1), heightVector.vector(2));
     width = widthVector.len;
     height = heightVector.len;
 	printf("width and height: %f, %f \n", width, height);
@@ -1093,7 +1095,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor, float h
     Point origin = UL.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
-	printf("Shadow ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
+	//printf("Shadow ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
     *lray = Ray(local.pos, dir, EPSILON, 1.0f);
     *lcolor = rgb;
     return;
@@ -1520,6 +1522,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
                         if(!isShadow) {
                             DSColor = DSColor.add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));	
+							printf("DSColor <%f, %f, %f> \n", DSColor.r, DSColor.g, DSColor.b;
                             //no attenuation
                         }
                     }
