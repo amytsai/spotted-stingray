@@ -1,0 +1,29 @@
+size 1600 800
+camera 0 0 0 0 0 -2.5 0 1 0 45
+output elipsoid.png
+
+directional -.57735 0.57735 0.57735 1 1 1
+#directional -.57735 -.57735 -.57735 0 0 1
+
+ambient 0.1 0.1 0.1
+diffuse 1 0 0
+#specular .9 .9 .9
+#shininess 30
+
+pushTransform
+rotate 0 0 1 45
+scale 1 1.5 1
+sphere 0 0 -17 1.5
+popTransform
+
+diffuse 0 1 0
+sphere 0 4 -17 1.5
+
+diffuse 0 0 1
+sphere 0 -4 -17 1.5
+
+diffuse 1 1 0
+sphere 4 0 -17 1.5
+
+diffuse 0 1 1
+sphere -4 0 -17 1.5

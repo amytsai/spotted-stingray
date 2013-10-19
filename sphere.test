@@ -1,0 +1,18 @@
+#size 1600 800
+size 800 400
+maxdepth 5
+output sphere.png
+camera 0 1 10 0 0 0 0 1 0 45
+#directional 1 1 1 .7 .7 .7
+#point -5 4 1 1 1 1
+#point 5 -4 2 1 1 1
+
+point 0 3 0 1 1 1
+point 0 -3 0 1 1 1
+
+# START DODECAHEDRON
+
+diffuse .30 .90 .85
+#specular .1 .1 .1
+#shininess 20
+sphere 0 0 0 1
