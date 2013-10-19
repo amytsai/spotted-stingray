@@ -1,0 +1,93 @@
+# Test Scene 3
+# Intended to show transforms
+# I know it's not the most exciting of scenes...
+
+size 600 600
+maxdepth 5
+output test.png
+
+camera 0 1 10 0 0 0 0 1 0 45
+
+ambient .1 .1 .1
+point -10 4 0 .1 .1 .2
+point 0 1 -11 .5 .5 .2
+directional -1 -1 -1 1 1 1
+ambient .1 .1 .1
+diffuse .2 .2 .2
+specular .5 .5 .5
+shininess 20
+
+
+maxverts 8
+
+vertex -1 -1 -1
+vertex +1 -1 -1 
+vertex +1 +1 -1 
+vertex -1 +1 -1 
+vertex -1 -1 +1
+vertex +1 -1 +1 
+vertex +1 +1 +1
+vertex -1 +1 +1
+
+
+pushTransform 
+# This idiom restores the camera transform and pushes it back on the stack
+# Now, I draw the 4 legs of the table.
+# Note that like OpenGL, commands right-multiply
+
+emission .7 .7 .4
+
+translate =.25 0 -2
+scale 0.15 0.15 4.0 
+rotate 0 0 1 -30
+tri 0 1 5 
+tri 0 5 4 
+tri 3 7 6
+tri 3 6 2
+tri 1 2 6
+tri 1 6 5 
+tri 0 7 3 
+tri 0 4 7 
+tri 0 3 2 
+tri 0 2 1
+tri 4 5 6 
+tri 4 6 7 
+
+# Now specify the geometry 
+# Again, for initial testing, maybe you want to implement a dummy 
+# ray-plane intersection routine, instead of reading this fully.
+# Though it's probably simpler you just implement this, for later 
+# parts of the assignment.
+maxverts 4
+
+vertex -1 0 -1
+vertex +1 0 -1
+vertex +1 0 +1
+vertex -1 0 +1
+
+pushTransform
+
+scale 100 1 100
+tri 0 1 2
+tri 0 2 3
+popTransform
+
+pushTransform
+ambient .3 .3 .3
+diffuse .4 .4 .4
+translate 0 0 -99
+rotate 1 0 0 90
+scale 100 1 100
+tri 0 1 2
+tri 0 2 3
+popTransform
+
+
+ambient .1 .1 .1
+diffuse .2 .2 .4
+specular .4 .4 .8
+
+pushTransform
+#translate 0 1 0
+sphere 0 0 0 1
+popTransform
