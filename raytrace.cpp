@@ -1073,7 +1073,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor, float ho
     return;
 }
 
-/asdfasdf
+/*asdfasdf
 
 void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
