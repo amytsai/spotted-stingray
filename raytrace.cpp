@@ -267,7 +267,7 @@ public:
     Light(float, float, float, Color, bool); //Point light constructor
     Light(float, float, float, Color, bool, Vector); //Directional light constructor
     Light(float, float, float, Color, bool, float, float, float); //Attentuation constructor
-    Light(Point, Point, Point, Point, float, float); //Constructor for area lights, might have some float errors, order is UL, UR, LL, LR, horizontal point count, vertical point count
+    Light(Point, Point, Point, Point, Color, float, float); //Constructor for area lights, might have some float errors, order is UL, UR, LL, LR, horizontal point count, vertical point count
     void generateLightRay(LocalGeo&, Ray*, Color*); 
     void generateLightRay(LocalGeo&, Ray*, Color*, float, float);
     void generateShadowRay(LocalGeo&, Ray*, Color*); 
@@ -1009,11 +1009,12 @@ Light::Light(float a, float b, float c, Color color, bool PL, float con, float l
     quadAtten = quad;
 }
 
-Light::Light(Point a, Point b, Point c, Point d, float hor, float vert) {
+Light::Light(Point a, Point b, Point c, Point d, Color color, float hor, float vert) {
     UL = a;
     UR = b;
     LL = c;
     LR = d;
+	rgb = color;
     horCount = hor;
     vertCount = vert;
     widthVector = Vector(UL, UR);
@@ -1886,7 +1887,7 @@ void loadScene(std::string file) {
                 lightsList->push_back(new Light(x, y, z, Color(r, g, b), true, constant, linear, quadratic));
             } 
 
-            //point p1x p1y p1z p2x p2y p2z p3x p3y p3z p4x p4y p4z hor vert
+            //point p1x p1y p1z p2x p2y p2z p3x p3y p3z p4x p4y p4z r g b hor vert
             //Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
             else if(!splitline[0].compare("areaP")) {
                 float p1x = atof(splitline[1].c_str());
@@ -1901,21 +1902,27 @@ void loadScene(std::string file) {
                 float p4x = atof(splitline[10].c_str());
                 float p4y = atof(splitline[11].c_str());
                 float p4z = atof(splitline[12].c_str());
-                float hor = atof(splitline[13].c_str());
-                float vert = atof(splitline[14].c_str());
-                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), hor, vert));
+				float r = atof(splitline[13].c_str());
+                float g = atof(splitline[14].c_str());
+                float b = atof(splitline[15].c_str());
+                float hor = atof(splitline[16].c_str());
+                float vert = atof(splitline[17].c_str());
+                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), Color(r, g, b), hor, vert));
             } 
 
-            //point UL UR LL LR hor vert, use the vertex numbers for this
+            //point UL UR LL LR r g b hor vert, use the vertex numbers for this
             //Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
             else if(!splitline[0].compare("areaV")) {
                 int v1 = atoi(splitline[1].c_str());
                 int v2 = atoi(splitline[2].c_str());
                 int v3 = atoi(splitline[3].c_str());
                 int v4 = atoi(splitline[4].c_str());
-                float hor = atof(splitline[5].c_str());
-                float vert = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], hor, vert));
+				float r = atof(splitline[5].c_str());
+                float g = atof(splitline[6].c_str());
+                float b = atof(splitline[7].c_str());
+                float hor = atof(splitline[8].c_str());
+                float vert = atof(splitline[9].c_str());
+                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], Color(r, g, b), hor, vert));
             }
 
             //attenuation const linear quadratic
