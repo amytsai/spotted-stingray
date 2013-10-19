@@ -283,11 +283,21 @@ public:
 	Sample();
 };
 
+//***************** PIXEL *****************//
+class Pixel {
+    public:
+        float x, y;
+        float numSamples;
+        vector<Sample> samples;
+        Pixel(float, float);
+        Pixel(float, float, float);
+}
+
 //***************** SAMPLER *****************//
 class Sampler {
 public:
-	int i, j;
-	bool getSample(Sample *);
+    bool antiAlias;
+    bool getPixel(Pixel *);
 	Sampler();
 };
 
@@ -1110,17 +1120,23 @@ void Camera::generateRay(Sample s, Ray* ray) {
 //***************** SAMPLER METHODS *****************//
 
 Sampler::Sampler() {
+    bool antiAlias = false;
 	i, j = 0;
 }
 
-bool Sampler::getSample(Sample *s) {
-	//printf("getSample i = %d, j = %d \n", i , j);
+Sampler::Sampler(bool AA) {
+    bool antiAlias = AA;
+    i, j = 0;
+}
+bool Sampler::getPixel(Pixel *p) {
+    float numS = 1;
+    if(antiAlias) {
+        numS = 3;
+    }
 	if(i < width) {
 		if (j < height) {
-			Sample news = Sample();
-			news.x = i + 0.5;
-			news.y = j + 0.5;
-			*s = news;
+			Pixel newPix = Pixel(i, j,numS);
+            *p = newPix;
 			i++;
 			//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
 			return true;
@@ -1130,11 +1146,11 @@ bool Sampler::getSample(Sample *s) {
 	} else if(j <  height-1){
 		i = 0;
 		j++;
-		Sample news = Sample();
-		news.x = i + 0.5;
-		news.y = j + 0.5;
-		*s = news;
-		i++;
+        Pixel newPix = Pixel(i, j, numS);
+        newPix.x = i;
+        newPix.y = j;
+        *p = newPix;
+        i++;
 		//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
 		return true;
 	} else {
@@ -1142,6 +1158,32 @@ bool Sampler::getSample(Sample *s) {
 	}
 
 }
+
+//***************** PIXEL METHODS *****************//
+Pixel::Pixel(float a, float b) {
+    x = a;
+    y = b;
+    numSamples = 1;
+    step = 0.5;
+    for(float i = step; i < 1; i += step) {
+        for(float j = step; j < 1; j += step) {
+            samples.push_back(Sample(x+i,y+j);
+        }
+    }
+}
+
+Pixel::Pixel(float a, float b, float n) {
+    x = a;
+    y = b;
+    numSamples = n;
+    step = 1 / (n+ 1);
+    for(float i = step; i < 1; i += step) {
+        for(float j = step; j < 1; j += step) {
+        samples.push_back(Sample(x+i,y+j);
+      }
+    }
+}
+
 //****************************************************
 // More Global Variables
 //****************************************************
@@ -1531,25 +1573,31 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 //****************************************************
 
 void render() {
-	Sample s = Sample();
+    Pixel p = Pixel();
 	Sampler mySampler = Sampler();
 	float total = (float) width * height;
 	int step = (int) total/100;
 	int cur = 0;
-	while(mySampler.getSample(&s)) {
+	while(mySampler.getPixel(&p)) {
 		cur += 1;
+        Color c = Color();
+        Sample s = Sample();
 		//printf("sample generated at: %f, %f \n", s.x, s.y);
-		Ray r;
-		eye.generateRay(s, &r);
+        for(int i = 0; i < p.samples.size(); i++) {
+          Ray r;
+          s = p.samples[i];
+          eye.generateRay(s, &r);
 		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-		Color c = Color();
-		trace(r, 0, &c, airRefractIndex);
-		//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
-		setPixel(s.x, s.y, c);
-		if(cur % step == 0) {
-			printf("%d %% done\n", cur / step);
-		}
-	}
+          Color tempc = Color();
+          trace(r, 0, &tempc, airRefractIndex);
+          c = c.add(tempc);
+          }
+	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+    }
+    setPixel(s.x, s.y, c);
+    if(cur % step == 0) {
+      printf("%d %% done\n", cur / step);
+    }
 }
 
 //****************************************************
