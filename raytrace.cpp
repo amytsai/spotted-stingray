@@ -1386,9 +1386,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
         Ray shadowRay = Ray();
         Color lcolor = Color();
         Color shadowColor = Color();
-        bool lisHit = false;
-        float lminTime = 99999999;
-        Intersection lminIntersect = Intersection();
+        
 
         //We do ambient and emissive shading here
         Color ka = brdf.ka;
@@ -1398,6 +1396,9 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 
         //We do diffuse, specular, and shadows here
         for (int i = 0; i < lightsList->size(); i++) {
+			bool lisHit = false;
+			float lminTime = 99999999;
+			Intersection lminIntersect = Intersection();
 			Light* currLight = (*lightsList)[i];
             currLight->generateLightRay(minIntersect.localGeo, &lray, &lcolor);
             currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor);
