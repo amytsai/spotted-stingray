@@ -1073,6 +1073,8 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor, float ho
     return;
 }
 
+/asdfasdf
+
 void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     if(isPL) {
         Point origin = Point(x, y, z);
