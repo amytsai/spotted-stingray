@@ -63,6 +63,7 @@ class MTS; //Matrix Transformation Stack
 //****************************************************
 int width, height;
 int maxdepth = 5;
+bool AA = false;
 
 //***************** POINT *****************//
 class Point {
@@ -281,6 +282,7 @@ public:
 	//holds screen coordinates;
 	float x, y;
 	Sample();
+    Sample(float, float);
 };
 
 //***************** PIXEL *****************//
@@ -289,16 +291,19 @@ class Pixel {
         float x, y;
         float numSamples;
         vector<Sample> samples;
+        Pixel();
         Pixel(float, float);
         Pixel(float, float, float);
-}
+};
 
 //***************** SAMPLER *****************//
 class Sampler {
 public:
+    float i , j;
     bool antiAlias;
     bool getPixel(Pixel *);
 	Sampler();
+    Sampler(bool);
 };
 
 //****************************************************
@@ -1098,6 +1103,11 @@ Sample::Sample() {
 	x, y = 0.0;
 }
 
+Sample::Sample(float a, float b) {
+     x = a;
+     y = b;
+}
+
 void Camera::generateRay(Sample s, Ray* ray) {
 	float imagePlaneW = (UL.sub(UR)).len;
 	float imagePlaneH = (UL.sub(LL)).len;
@@ -1120,23 +1130,26 @@ void Camera::generateRay(Sample s, Ray* ray) {
 //***************** SAMPLER METHODS *****************//
 
 Sampler::Sampler() {
-    bool antiAlias = false;
-	i, j = 0;
+    antiAlias = false;
+    i = 0;
+    j = 0;
 }
 
 Sampler::Sampler(bool AA) {
-    bool antiAlias = AA;
-    i, j = 0;
+    antiAlias = AA;
+    i = 0;
+    j = 0;
 }
+
 bool Sampler::getPixel(Pixel *p) {
     float numS = 1;
     if(antiAlias) {
+        printf("AA is true\n");
         numS = 3;
     }
 	if(i < width) {
 		if (j < height) {
-			Pixel newPix = Pixel(i, j,numS);
-            *p = newPix;
+            *p = Pixel(i, j, numS);
 			i++;
 			//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
 			return true;
@@ -1160,14 +1173,18 @@ bool Sampler::getPixel(Pixel *p) {
 }
 
 //***************** PIXEL METHODS *****************//
+Pixel::Pixel() {
+    x, y = 0.0;
+}
+
 Pixel::Pixel(float a, float b) {
     x = a;
     y = b;
     numSamples = 1;
-    step = 0.5;
+    float step = 0.5;
     for(float i = step; i < 1; i += step) {
         for(float j = step; j < 1; j += step) {
-            samples.push_back(Sample(x+i,y+j);
+            samples.push_back(Sample(x+i,y+j));
         }
     }
 }
@@ -1176,10 +1193,10 @@ Pixel::Pixel(float a, float b, float n) {
     x = a;
     y = b;
     numSamples = n;
-    step = 1 / (n+ 1);
+    float step = 1 / (n+ 1);
     for(float i = step; i < 1; i += step) {
         for(float j = step; j < 1; j += step) {
-        samples.push_back(Sample(x+i,y+j);
+        samples.push_back(Sample(x+i,y+j));
       }
     }
 }
@@ -1574,27 +1591,29 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 
 void render() {
     Pixel p = Pixel();
-	Sampler mySampler = Sampler();
+	Sampler mySampler = Sampler(AA);
 	float total = (float) width * height;
 	int step = (int) total/100;
 	int cur = 0;
 	while(mySampler.getPixel(&p)) {
+      printf("pixel at: %f, %f \n", p.x, p.y);
 		cur += 1;
         Color c = Color();
         Sample s = Sample();
-		//printf("sample generated at: %f, %f \n", s.x, s.y);
         for(int i = 0; i < p.samples.size(); i++) {
           Ray r;
           s = p.samples[i];
+          printf("sample generated at: %f, %f \n", s.x, s.y);
           eye.generateRay(s, &r);
 		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
           Color tempc = Color();
           trace(r, 0, &tempc, airRefractIndex);
           c = c.add(tempc);
-          }
+          c = c.div(p.samples.size());
+        }
 	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+    setPixel(p.x, p.y, c);
     }
-    setPixel(s.x, s.y, c);
     if(cur % step == 0) {
       printf("%d %% done\n", cur / step);
     }
@@ -1727,7 +1746,10 @@ void loadScene(std::string file) {
 				filename = splitline[1];
 				printf("Writing to file: %s\n", filename.c_str());
 			}
-
+            //antialias
+            else if(!splitline[0].compare("antialias")) {
+                AA = true;
+            }
 			//camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
 			else if(!splitline[0].compare("camera")) {
 				// lookfrom:
