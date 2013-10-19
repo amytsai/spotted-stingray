@@ -258,7 +258,7 @@ class Light {
 public:
     float x, y, z;
     float constAtten, linAtten, quadAtten;
-    Point UL, UR, LL, LR;
+    Point upperLeft, upperRight, lowerLeft, lowerRight;
     Vector widthVector, heightVector;
     float horCount, vertCount, width, height;
     Vector direction;
@@ -1025,19 +1025,19 @@ Light::Light(float a, float b, float c, Color color, bool PL, float con, float l
 }
 
 Light::Light(Point a, Point b, Point c, Point d, Color color, float hor, float vert) {
-    UL = a;
-    UR = b;
-    LL = c;
-    LR = d;
-	printf("UL <%f, %f, %f> \n", UL.point(0), UL.point(1), UL.point(2));
-	printf("UR <%f, %f, %f> \n", UR.point(0), UR.point(1), UR.point(2));
-	printf("LL <%f, %f, %f> \n", LL.point(0), LL.point(1), LL.point(2));
-	printf("LR <%f, %f, %f> \n", LR.point(0), LR.point(1), LR.point(2));
+	upperLeft = a;
+    upperRight = b;
+    lowerLeft = c;
+    lowerRight = d;
+	//printf("UL <%f, %f, %f> \n", UL.point(0), UL.point(1), UL.point(2));
+	//printf("UR <%f, %f, %f> \n", UR.point(0), UR.point(1), UR.point(2));
+	//printf("LL <%f, %f, %f> \n", LL.point(0), LL.point(1), LL.point(2));
+	//printf("LR <%f, %f, %f> \n", LR.point(0), LR.point(1), LR.point(2));
 	rgb = color;
     horCount = hor;
     vertCount = vert;
-    widthVector = Vector(UL, UR);
-    heightVector = Vector(UL, LL);
+    widthVector = Vector(upperLeft, upperRight);
+    heightVector = Vector(upperLeft, lowerLeft);
 	printf("widthVector <%f, %f, %f> \n", widthVector.vector(0), widthVector.vector(1), widthVector.vector(2));
 	printf("heightVector <%f, %f, %f> \n", heightVector.vector(0), heightVector.vector(1), heightVector.vector(2));
     width = widthVector.len;
@@ -1064,10 +1064,10 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
     }
 }
 void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor, float horizontal, float vertical) {
-    Point origin = UL.add(widthVector.mult(horizontal/horCount));
+    Point origin = upperLeft.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
-	printf("Light ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
+	//printf("Light ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
     *lray = Ray(local.pos, dir, EPSILON, 1.0f);
     *lcolor = rgb;
     return;
@@ -1092,7 +1092,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor) {
 }
 
 void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor, float horizontal, float vertical) {
-    Point origin = UL.add(widthVector.mult(horizontal/horCount));
+    Point origin = upperLeft.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
 	//printf("Shadow ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
@@ -1521,6 +1521,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor, x, y);
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
                         if(!isShadow) {
+							Color temp = Color();
 							Color temp = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
 							//printf("LightRay Position <%f, %f, %f> \n", lray.pos.point(0), lray.pos.point(1), lray.pos.point(2));
 							//printf("LightRay End <%f, %f, %f> \n", lray.dir.vector(0), lray.dir.vector(1), lray.dir.vector(2));
