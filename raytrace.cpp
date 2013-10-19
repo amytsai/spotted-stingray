@@ -283,12 +283,28 @@ public:
     Sample();
 };
 
+//***************** PIXEL *****************//
+class Pixel {
+    public:
+        float x, y;
+        float numSamples;
+        vector<Sample> samples;
+        Pixel(float, float);
+        Pixel(float, float, float);
+}
+
 //***************** SAMPLER *****************//
 class Sampler {
 public:
+<<<<<<< HEAD
     int i, j;
     bool getSample(Sample *);
     Sampler();
+=======
+    bool antiAlias;
+    bool getPixel(Pixel *);
+	Sampler();
+>>>>>>> origin/antiAlias
 };
 
 //****************************************************
@@ -1111,6 +1127,7 @@ void Camera::generateRay(Sample s, Ray* ray) {
 //***************** SAMPLER METHODS *****************//
 
 Sampler::Sampler() {
+<<<<<<< HEAD
     i, j = 0;
 }
 
@@ -1141,8 +1158,72 @@ bool Sampler::getSample(Sample *s) {
     } else {
         return false;
     }
+=======
+    bool antiAlias = false;
+	i, j = 0;
+}
+
+Sampler::Sampler(bool AA) {
+    bool antiAlias = AA;
+    i, j = 0;
+}
+bool Sampler::getPixel(Pixel *p) {
+    float numS = 1;
+    if(antiAlias) {
+        numS = 3;
+    }
+	if(i < width) {
+		if (j < height) {
+			Pixel newPix = Pixel(i, j,numS);
+            *p = newPix;
+			i++;
+			//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+			return true;
+		} else {
+			return false;
+		}
+	} else if(j <  height-1){
+		i = 0;
+		j++;
+        Pixel newPix = Pixel(i, j, numS);
+        newPix.x = i;
+        newPix.y = j;
+        *p = newPix;
+        i++;
+		//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
+		return true;
+	} else {
+		return false;
+	}
+>>>>>>> origin/antiAlias
 
 }
+
+//***************** PIXEL METHODS *****************//
+Pixel::Pixel(float a, float b) {
+    x = a;
+    y = b;
+    numSamples = 1;
+    step = 0.5;
+    for(float i = step; i < 1; i += step) {
+        for(float j = step; j < 1; j += step) {
+            samples.push_back(Sample(x+i,y+j);
+        }
+    }
+}
+
+Pixel::Pixel(float a, float b, float n) {
+    x = a;
+    y = b;
+    numSamples = n;
+    step = 1 / (n+ 1);
+    for(float i = step; i < 1; i += step) {
+        for(float j = step; j < 1; j += step) {
+        samples.push_back(Sample(x+i,y+j);
+      }
+    }
+}
+
 //****************************************************
 // More Global Variables
 //****************************************************
@@ -1495,29 +1576,21 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 
             Normal N = Normal(minIntersect.localGeo.n.normal);
             Normal normRay = Normal(ray.dir);
-            //Vector3f d = Vector3f(normRay.normal(0),normRay.normal(1), normRay.normal(2));
-            //Vector3f m = Vector3f(N.normal(0), N.normal(1), N.normal(2));
-            //float det = 1 - n * n * (1 - pow(d.dot(m), 2));
             float cosI = (-1)* N.dot(normRay);
             float cosT2 = 1.0f - n * n * (1.0f - cosI * cosI);
             if (cosT2 > 0.0f)
             {
-                //Vector3f final = n * (d - m * (d.dot(m))) - m * sqrt(det);
                 Vector T = Vector(normRay.normal);
-                //T.normalize();
                 T = T.mult(n);
                 Vector temp = Vector(N.normal);
                 temp = temp.mult((n * cosI - sqrtf( cosT2 )));
                 T = T.add(temp);
                 Color tempColor = Color();
                 Ray refractRay = Ray(minIntersect.localGeo.pos, T, EPSILON);
-                //printf("Refraction vector 1: (%f, %f, %f)\n", final(0), final(1), final(2));
-                //printf("Refraction vector 2: (%f, %f, %f)\n", refractRay.dir.vector(0), refractRay.dir.vector(1), refractRay.dir.vector(2));
                 trace(refractRay, depth+1, &tempColor, nextIndex);
                 //Need the color of the material, not sure what it is, distance = distance traveled through object
                 Color absorbance = brdf.ke.mult(0.15f).mult(-dist);
                 Color transparency = Color( expf( absorbance.r ), expf( absorbance.g ), expf( absorbance.b ));
-                //multiply by transparency like everything else
                 //*color = (*color).add(tempColor.mult(transparency));
                 *color = (*color).add(tempColor);
             }
@@ -1532,6 +1605,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 //****************************************************
 
 void render() {
+<<<<<<< HEAD
     Sample s = Sample();
     Sampler mySampler = Sampler();
     float total = (float) width * height;
@@ -1550,6 +1624,32 @@ void render() {
         if(cur % step == 0) {
             printf("%d %% done\n", cur / step);
         }
+=======
+    Pixel p = Pixel();
+	Sampler mySampler = Sampler();
+	float total = (float) width * height;
+	int step = (int) total/100;
+	int cur = 0;
+	while(mySampler.getPixel(&p)) {
+		cur += 1;
+        Color c = Color();
+        Sample s = Sample();
+		//printf("sample generated at: %f, %f \n", s.x, s.y);
+        for(int i = 0; i < p.samples.size(); i++) {
+          Ray r;
+          s = p.samples[i];
+          eye.generateRay(s, &r);
+		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
+          Color tempc = Color();
+          trace(r, 0, &tempc, airRefractIndex);
+          c = c.add(tempc);
+          }
+	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+    }
+    setPixel(s.x, s.y, c);
+    if(cur % step == 0) {
+      printf("%d %% done\n", cur / step);
+>>>>>>> origin/antiAlias
     }
 }
 
@@ -2003,3 +2103,5 @@ int main(int argc, char *argv[]) {
     printf("image sucessfully saved to %s\n", filename.c_str());
     FreeImage_DeInitialise();
 }
+
+//asdf
