@@ -1410,7 +1410,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 				printf("Max t, Time and position of hit: %f, %f and (%f, %f, %f)\n", shadowRay.t_max, lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}*/
             if(!isShadow) {
-				printf("i = : %d\n", i);
+				//printf("i = : %d\n", i);
 				Vector newNormal = Vector(minIntersect.localGeo.n.normal);
 				/*if(newNormal.dot(lray.dir) < 0) {
 					newNormal = newNormal.mult(-1);
