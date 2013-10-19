@@ -1029,6 +1029,10 @@ Light::Light(Point a, Point b, Point c, Point d, Color color, float hor, float v
     UR = b;
     LL = c;
     LR = d;
+	printf("UL <%f, %f, %f> \n", UL.point(0), UL.point(1), UL.point(2));
+	printf("UR <%f, %f, %f> \n", UR.point(0), UR.point(1), UR.point(2));
+	printf("LL <%f, %f, %f> \n", LL.point(0), LL.point(1), LL.point(2));
+	printf("LR <%f, %f, %f> \n", LR.point(0), LR.point(1), LR.point(2));
 	rgb = color;
     horCount = hor;
     vertCount = vert;
@@ -1036,6 +1040,7 @@ Light::Light(Point a, Point b, Point c, Point d, Color color, float hor, float v
     heightVector = Vector(UL, LL);
     width = widthVector.len;
     height = heightVector.len;
+	printf("width and height: %f, %f \n", width, height);
     isAreaLight = true;
 }
 
@@ -1060,6 +1065,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor, float ho
     Point origin = UL.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
+	printf("Light ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
     *lray = Ray(local.pos, dir, EPSILON, 1.0f);
     *lcolor = rgb;
     return;
@@ -1087,6 +1093,7 @@ void Light::generateShadowRay(LocalGeo& local, Ray* lray, Color* lcolor, float h
     Point origin = UL.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
+	printf("Shadow ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
     *lray = Ray(local.pos, dir, EPSILON, 1.0f);
     *lcolor = rgb;
     return;
