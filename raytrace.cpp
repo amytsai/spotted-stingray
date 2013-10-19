@@ -1517,6 +1517,12 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                 Color DSColor = Color();
                 for(float x = 0.0f; x < horizontalMax; x++) {
                     for(float y = 0.0f; y < verticalMax; y++) {
+						lray = Ray();
+						shadowRay = Ray();
+						lcolor = Color();
+						shadowColor = Color();
+						lisHit = false;
+						lminTime = 99999999;
                         currLight->generateLightRay(minIntersect.localGeo, &lray, &lcolor, x, y);
                         currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor, x, y);
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
