@@ -1451,14 +1451,8 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 						currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor, x, y);
 						bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
 						if(!isShadow) {
-							DSColor = DSColor.add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));
-							/*if(currLight->isPL) { //Attenuation
-								float lightDist = Vector(minIntersect.localGeo.pos, Point(currLight->x, currLight->y, currLight->z)).len;
-								Vector3f attenVec = Vector3f(currLight->constAtten, currLight->linAtten, currLight->quadAtten);
-								Vector3f distVec = Vector3f(1, lightDist, lightDist * lightDist);
-								DSColor = DSColor.div(distVec.dot(attenVec));
-							}*/
-							
+							DSColor = DSColor.add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));	
+							//no attenuation
 						}
 					}
 				}
