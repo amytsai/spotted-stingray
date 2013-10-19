@@ -1522,7 +1522,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
                         if(!isShadow) {
 							Color temp = Color();
-							Color temp = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
+							temp = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
 							//printf("LightRay Position <%f, %f, %f> \n", lray.pos.point(0), lray.pos.point(1), lray.pos.point(2));
 							//printf("LightRay End <%f, %f, %f> \n", lray.dir.vector(0), lray.dir.vector(1), lray.dir.vector(2));
                             DSColor = DSColor.add(temp);	
