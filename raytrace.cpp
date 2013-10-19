@@ -1463,7 +1463,7 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
     Normal h = v.add(l);
 
     returnColor = returnColor.add(specular);
-    //returnColor.clamp();
+    returnColor.clamp();
     return returnColor;
 }
 
@@ -1531,8 +1531,8 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                     }
                 }
                 DSColor = DSColor.div(horizontalMax * verticalMax);
-				Color temp = Color(1, 1, 1);
-				DSColor = temp.sub(DSColor);
+				//Color temp = Color(1, 1, 1);
+				//DSColor = temp.sub(DSColor);
                 *color = (*color).add(DSColor);
             }
             else {
