@@ -1409,11 +1409,11 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 				printf("Max t, Time and position of hit: %f, %f and (%f, %f, %f)\n", shadowRay.t_max, lminTime, lminIntersect.localGeo.pos.point(0), lminIntersect.localGeo.pos.point(1), lminIntersect.localGeo.pos.point(2));
 			}
             if(!isShadow) {
-				Vector temp = Vector(minIntersect.localGeo.n.normal);
-				if(temp.dot(lray.dir) < 0) {
-					temp = temp.mult(-1);
+				Vector newNormal = Vector(minIntersect.localGeo.n.normal);
+				if(newNormal.dot(lray.dir) < 0) {
+					newNormal = newNormal.mult(-1);
 				}
-				LocalGeo newLocal = LocalGeo(minIntersect.localGeo.pos, temp);
+				LocalGeo newLocal = LocalGeo(minIntersect.localGeo.pos, Normal(newNormal));
 				Color DSColor = shading(newLocal, brdf, lray, ray, lcolor);
 				if(currLight->isPL) { //Attenuation
 					float lightDist = Vector(minIntersect.localGeo.pos, Point(currLight->x, currLight->y, currLight->z)).len;
