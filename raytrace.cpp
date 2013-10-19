@@ -1454,7 +1454,7 @@ Color shading(LocalGeo& localGeo, BRDF& brdf, Ray& lray, Ray& ray, Color& lcolor
     Normal h = v.add(l);
 
     returnColor = returnColor.add(specular);
-    returnColor.clamp();
+    //returnColor.clamp();
     return returnColor;
 }
 

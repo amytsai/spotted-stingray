@@ -19,7 +19,7 @@ camera 0 0 5 0 0 0 0 1 0 45
 # you may want to use dummy (constant) shading, ignoring these lines
 
 #directional 0 0 1 .5 .5 .5 
-#point 4 0 0 1 1 1
+point 4 0 0 1 1 1
 #point -4 0 0 1 1 1
 #point -10 4 0 .1 .1 .2
 #point 0 1 -11 .5 .5 .2
