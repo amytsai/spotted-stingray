@@ -1522,7 +1522,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
                         if(!isShadow) {
                             DSColor = DSColor.add(shading(minIntersect.localGeo, brdf, lray, ray, lcolor));	
-							printf("DSColor <%f, %f, %f> \n", DSColor.r, DSColor.g, DSColor.b;
+							printf("DSColor <%f, %f, %f> \n", DSColor.r, DSColor.g, DSColor.b);
                             //no attenuation
                         }
                     }
