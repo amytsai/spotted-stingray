@@ -38,7 +38,8 @@ pushTransform
 emission .7 .7 .4
 
 translate =.25 0 -2
-scale 0.15 0.15 2.0 
+scale 0.15 0.15 4.0 
+rotate 0 0 1 -30
 tri 0 1 5 
 tri 0 5 4 
 tri 3 7 6
