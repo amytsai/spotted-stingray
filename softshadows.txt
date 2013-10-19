@@ -23,8 +23,8 @@ camera 0 0 10 0 0 0 0 1 0 45
 #point -4 0 0 1 1 1
 #point -10 4 0 .1 .1 .2
 #point 0 1 -11 .5 .5 .2
-#directional 1 1 1 1 1 1
-areaP 1 4 -1 -1 4 -1 1 4 -3 -1 4 -3 1 1 1 2 2
+directional 1 1 1 1 1 1
+area 1 4 -1 -1 4 -1 1 4 -3 -1 4 -3 1 1 1 2 2
 ambient .1 .1 .1
 diffuse .2 .2 .2
 specular .5 .5 .5
@@ -65,7 +65,7 @@ specular .4 .4 .8
 
 pushTransform
 translate 0 2 0
-sphere -2 0 -2 .75
+#sphere -2 0 -2 .75
 sphere 0 0 -2 .75
-sphere 2 0 -2 .75
+#sphere 2 0 -2 .75
 popTransform
