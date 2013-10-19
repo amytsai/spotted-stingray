@@ -1529,10 +1529,11 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         if(!isShadow) {
 							Color temp = Color();
 							temp = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
+							printf("DSColor <%f, %f, %f> \n", temp.r, temp.g, temp.b);
 							//printf("LightRay Position <%f, %f, %f> \n", lray.pos.point(0), lray.pos.point(1), lray.pos.point(2));
 							//printf("LightRay End <%f, %f, %f> \n", lray.dir.vector(0), lray.dir.vector(1), lray.dir.vector(2));
                             DSColor = DSColor.add(temp);	
-							//printf("DSColor <%f, %f, %f> \n", DSColor.r, DSColor.g, DSColor.b);
+							printf("DSColor <%f, %f, %f> \n", DSColor.r, DSColor.g, DSColor.b);
                             //no attenuation
                         }
                     }
