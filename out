@@ -1,5 +1,5 @@
 loading Scene .. 
-Outputting image of size: 800 x 400
+Outputting image of size: 1600 x 800
 Raytracing with maxdepth = 5
 Writing to file: dodeca.png
 x = 0.828427, y = 0.414214, z = 1.000000
