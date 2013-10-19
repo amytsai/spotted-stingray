@@ -1520,7 +1520,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         currLight->generateLightRay(minIntersect.localGeo, &lray, &lcolor, x, y);
                         currLight->generateShadowRay(minIntersect.localGeo, &shadowRay, &shadowColor, x, y);
                         bool isShadow = isShadowIntersection(shadowRay, &lminTime, &lminIntersect, &lisHit);
-                        if(isShadow) {
+                        if(!isShadow) {
 							Color temp = shading(minIntersect.localGeo, brdf, lray, ray, lcolor);
 							//printf("LightRay Position <%f, %f, %f> \n", lray.pos.point(0), lray.pos.point(1), lray.pos.point(2));
 							//printf("LightRay End <%f, %f, %f> \n", lray.dir.vector(0), lray.dir.vector(1), lray.dir.vector(2));
@@ -1530,7 +1530,7 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         }
                     }
                 }
-                DSColor = DSColor.div(horizontalMax * verticalMax);
+                //DSColor = DSColor.div(horizontalMax * verticalMax);
                 *color = (*color).add(DSColor);
             }
             else {
