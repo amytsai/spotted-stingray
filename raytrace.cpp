@@ -1892,6 +1892,38 @@ void loadScene(std::string file) {
 				lightsList->push_back(new Light(x, y, z, Color(r, g, b), true, constant, linear, quadratic));
 			} 
 
+			//point p1x p1y p1z p2x p2y p2z p3x p3y p3z p4x p4y p4z hor vert
+			//Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
+			else if(!splitline[0].compare("areaP")) {
+				float p1x = atof(splitline[1].c_str());
+				float p1y = atof(splitline[2].c_str());
+				float p1z = atof(splitline[3].c_str());
+				float p2x = atof(splitline[4].c_str());
+				float p2y = atof(splitline[5].c_str());
+				float p2z = atof(splitline[6].c_str());
+				float p3x = atof(splitline[7].c_str());
+				float p3y = atof(splitline[8].c_str());
+				float p3z = atof(splitline[9].c_str());
+				float p4x = atof(splitline[10].c_str());
+				float p4y = atof(splitline[11].c_str());
+				float p4z = atof(splitline[12].c_str());
+				float hor = atof(splitline[13].c_str());
+				float vert = atof(splitline[14].c_str());
+				lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), hor, vert));
+			} 
+
+			//point UL UR LL LR hor vert, use the vertex numbers for this
+			//Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
+			else if(!splitline[0].compare("areaV")) {
+				int v1 = atoi(splitline[1].c_str());
+				int v2 = atoi(splitline[2].c_str());
+				int v3 = atoi(splitline[3].c_str());
+				int v4 = atoi(splitline[4].c_str());
+				float hor = atof(splitline[5].c_str());
+				float vert = atof(splitline[6].c_str());
+				lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], hor, vert));
+			}
+
 			//attenuation const linear quadratic
 			//  Sets the constant, linear and quadratic attenuations 
 			//  (default 1,0,0) as in OpenGL.
