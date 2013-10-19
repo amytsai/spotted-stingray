@@ -1146,7 +1146,7 @@ Sampler::Sampler(bool AA) {
 bool Sampler::getPixel(Pixel *p) {
     float numS = 1;
     if(antiAlias) {
-        printf("AA is true\n");
+        //printf("AA is true\n");
         numS = 3;
     }
 	if(i < width) {
@@ -1586,8 +1586,8 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 void render() {
     Pixel p = Pixel();
 	Sampler mySampler = Sampler(AA);
-	float total = (float) width * height;
-	int step = (int) total/100;
+	int total =  width * height;
+	int step =  total/100;
 	int cur = 0;
 	while(mySampler.getPixel(&p)) {
       //printf("pixel at: %f, %f \n", p.x, p.y);
@@ -1607,9 +1607,9 @@ void render() {
           c = c.div(p.samples.size());
 	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
     setPixel(p.x, p.y, c);
-    }
     if(cur % step == 0) {
       printf("%d %% done\n", cur / step);
+    }
     }
 }
 

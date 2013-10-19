@@ -1,11 +1,10 @@
 # Test Scene 1 
 # A simple quad viewed from different camera positions
 
-size 800 800
+size 400 400
 maxdepth 5
-output test.png
+output gridnoAA.png
 #output test2.png
-
 # Now specify the camera.  This is what you should implement.
 # This file has 4 camera positions.  Render your scene for all 4.
 
