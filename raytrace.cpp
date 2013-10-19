@@ -1609,8 +1609,8 @@ void render() {
           Color tempc = Color();
           trace(r, 0, &tempc, airRefractIndex);
           c = c.add(tempc);
-          c = c.div(p.samples.size());
         }
+          c = c.div(p.samples.size());
 	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
     setPixel(p.x, p.y, c);
     }
