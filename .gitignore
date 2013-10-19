@@ -1,2 +1,4 @@
 *.png
 out
+raytrace.o
+raytrace
