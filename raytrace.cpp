@@ -1067,7 +1067,7 @@ void Light::generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor, float ho
     Point origin = UL.add(widthVector.mult(horizontal/horCount));
     origin = origin.add(heightVector.mult(vertical/vertCount));
     Vector dir = Vector(local.pos, origin);
-	printf("Light ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
+	//printf("Light ray point <%f, %f, %f> \n", origin.point(0), origin.point(1), origin.point(2));
     *lray = Ray(local.pos, dir, EPSILON, 1.0f);
     *lcolor = rgb;
     return;
