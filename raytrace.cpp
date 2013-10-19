@@ -1530,7 +1530,9 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
                         }
                     }
                 }
-                //DSColor = DSColor.div(horizontalMax * verticalMax);
+                DSColor = DSColor.div(horizontalMax * verticalMax);
+				Color temp = Color(1, 1, 1);
+				DSColor = temp.sub(DSColor);
                 *color = (*color).add(DSColor);
             }
             else {
