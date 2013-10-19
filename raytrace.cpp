@@ -1596,14 +1596,14 @@ void render() {
 	int step = (int) total/100;
 	int cur = 0;
 	while(mySampler.getPixel(&p)) {
-      printf("pixel at: %f, %f \n", p.x, p.y);
+      //printf("pixel at: %f, %f \n", p.x, p.y);
 		cur += 1;
         Color c = Color();
         Sample s = Sample();
         for(int i = 0; i < p.samples.size(); i++) {
           Ray r;
           s = p.samples[i];
-          printf("sample generated at: %f, %f \n", s.x, s.y);
+          //printf("sample generated at: %f, %f \n", s.x, s.y);
           eye.generateRay(s, &r);
 		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
           Color tempc = Color();
