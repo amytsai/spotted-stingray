@@ -63,6 +63,7 @@ class MTS; //Matrix Transformation Stack
 //****************************************************
 int width, height;
 int maxdepth = 5;
+bool AA = false;
 
 //***************** POINT *****************//
 class Point {
@@ -278,9 +279,10 @@ public:
 //***************** SAMPLE *****************//
 class Sample {
 public:
-    //holds screen coordinates;
-    float x, y;
-    Sample();
+	//holds screen coordinates;
+	float x, y;
+	Sample();
+    Sample(float, float);
 };
 
 //***************** PIXEL *****************//
@@ -289,22 +291,19 @@ class Pixel {
         float x, y;
         float numSamples;
         vector<Sample> samples;
+        Pixel();
         Pixel(float, float);
         Pixel(float, float, float);
-}
+};
 
 //***************** SAMPLER *****************//
 class Sampler {
 public:
-<<<<<<< HEAD
-    int i, j;
-    bool getSample(Sample *);
-    Sampler();
-=======
+    float i , j;
     bool antiAlias;
     bool getPixel(Pixel *);
 	Sampler();
->>>>>>> origin/antiAlias
+    Sampler(bool);
 };
 
 //****************************************************
@@ -1105,6 +1104,11 @@ Sample::Sample() {
     x, y = 0.0;
 }
 
+Sample::Sample(float a, float b) {
+     x = a;
+     y = b;
+}
+
 void Camera::generateRay(Sample s, Ray* ray) {
     float imagePlaneW = (UL.sub(UR)).len;
     float imagePlaneH = (UL.sub(LL)).len;
@@ -1127,55 +1131,27 @@ void Camera::generateRay(Sample s, Ray* ray) {
 //***************** SAMPLER METHODS *****************//
 
 Sampler::Sampler() {
-<<<<<<< HEAD
-    i, j = 0;
-}
 
-bool Sampler::getSample(Sample *s) {
-    //printf("getSample i = %d, j = %d \n", i , j);
-    if(i < width) {
-        if (j < height) {
-            Sample news = Sample();
-            news.x = i + 0.5;
-            news.y = j + 0.5;
-            *s = news;
-            i++;
-            //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
-            return true;
-        } else {
-            return false;
-        }
-    } else if(j <  height-1){
-        i = 0;
-        j++;
-        Sample news = Sample();
-        news.x = i + 0.5;
-        news.y = j + 0.5;
-        *s = news;
-        i++;
-        //printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
-        return true;
-    } else {
-        return false;
-    }
-=======
-    bool antiAlias = false;
-	i, j = 0;
+    antiAlias = false;
+    i = 0;
+    j = 0;
 }
 
 Sampler::Sampler(bool AA) {
-    bool antiAlias = AA;
-    i, j = 0;
+    antiAlias = AA;
+    i = 0;
+    j = 0;
 }
+
 bool Sampler::getPixel(Pixel *p) {
     float numS = 1;
     if(antiAlias) {
+        printf("AA is true\n");
         numS = 3;
     }
 	if(i < width) {
 		if (j < height) {
-			Pixel newPix = Pixel(i, j,numS);
-            *p = newPix;
+            *p = Pixel(i, j, numS);
 			i++;
 			//printf("getSample news.x = %f, news.y = %f \n", news.x , news.y);
 			return true;
@@ -1195,19 +1171,22 @@ bool Sampler::getPixel(Pixel *p) {
 	} else {
 		return false;
 	}
->>>>>>> origin/antiAlias
 
 }
 
 //***************** PIXEL METHODS *****************//
+Pixel::Pixel() {
+    x, y = 0.0;
+}
+
 Pixel::Pixel(float a, float b) {
     x = a;
     y = b;
     numSamples = 1;
-    step = 0.5;
+    float step = 0.5;
     for(float i = step; i < 1; i += step) {
         for(float j = step; j < 1; j += step) {
-            samples.push_back(Sample(x+i,y+j);
+            samples.push_back(Sample(x+i,y+j));
         }
     }
 }
@@ -1216,10 +1195,10 @@ Pixel::Pixel(float a, float b, float n) {
     x = a;
     y = b;
     numSamples = n;
-    step = 1 / (n+ 1);
+    float step = 1 / (n+ 1);
     for(float i = step; i < 1; i += step) {
         for(float j = step; j < 1; j += step) {
-        samples.push_back(Sample(x+i,y+j);
+        samples.push_back(Sample(x+i,y+j));
       }
     }
 }
@@ -1605,51 +1584,32 @@ void trace(Ray& ray, int depth, Color* color, float currentIndex) {
 //****************************************************
 
 void render() {
-<<<<<<< HEAD
-    Sample s = Sample();
-    Sampler mySampler = Sampler();
-    float total = (float) width * height;
-    int step = (int) total/100;
-    int cur = 0;
-    while(mySampler.getSample(&s)) {
-        cur += 1;
-        //printf("sample generated at: %f, %f \n", s.x, s.y);
-        Ray r;
-        eye.generateRay(s, &r);
-        //printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-        Color c = Color();
-        trace(r, 0, &c, airRefractIndex);
-        //printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
-        setPixel(s.x, s.y, c);
-        if(cur % step == 0) {
-            printf("%d %% done\n", cur / step);
-        }
-=======
     Pixel p = Pixel();
-	Sampler mySampler = Sampler();
+	Sampler mySampler = Sampler(AA);
 	float total = (float) width * height;
 	int step = (int) total/100;
 	int cur = 0;
 	while(mySampler.getPixel(&p)) {
+      //printf("pixel at: %f, %f \n", p.x, p.y);
 		cur += 1;
         Color c = Color();
         Sample s = Sample();
-		//printf("sample generated at: %f, %f \n", s.x, s.y);
         for(int i = 0; i < p.samples.size(); i++) {
           Ray r;
           s = p.samples[i];
+          //printf("sample generated at: %f, %f \n", s.x, s.y);
           eye.generateRay(s, &r);
 		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
           Color tempc = Color();
           trace(r, 0, &tempc, airRefractIndex);
           c = c.add(tempc);
-          }
+        }
+          c = c.div(p.samples.size());
 	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
+    setPixel(p.x, p.y, c);
     }
-    setPixel(s.x, s.y, c);
     if(cur % step == 0) {
       printf("%d %% done\n", cur / step);
->>>>>>> origin/antiAlias
     }
 }
 
@@ -1727,267 +1687,270 @@ bool testNormal(string* error) {
 //****************************************************
 
 void loadScene(std::string file) {
-    cout << "loading Scene .. "<< endl;
-    ifstream inpfile(file.c_str());
-    if(!inpfile.is_open()) {
-        std::cout << "Unable to open file" << std::endl;
-    } else {
-        std::string line;
-        MTS tStack;
-        MTS tBuffer;
-        MatrixGenerator m = MatrixGenerator();
-        tBuffer.push(m.generateIdentity());
-        vector<Point> points;
-        BRDF * curBRDF = new BRDF();
-        float constant = 1;
-        float linear = 0;
-        float quadratic  = 0;
+	cout << "loading Scene .. "<< endl;
+	ifstream inpfile(file.c_str());
+	if(!inpfile.is_open()) {
+		std::cout << "Unable to open file" << std::endl;
+	} else {
+		std::string line;
+		MTS tStack;
+		MTS tBuffer;
+		MatrixGenerator m = MatrixGenerator();
+		tBuffer.push(m.generateIdentity());
+		vector<Point> points;
+		BRDF * curBRDF = new BRDF();
+		float constant = 1;
+		float linear = 0;
+		float quadratic  = 0;
 
-        while(inpfile.good()) {
-            vector<string> splitline;
-            string buf;
+		while(inpfile.good()) {
+			vector<string> splitline;
+			string buf;
 
-            getline(inpfile,line);
-            stringstream ss(line);
+			getline(inpfile,line);
+			stringstream ss(line);
 
-            while (ss >> buf) {
-                splitline.push_back(buf);
+			while (ss >> buf) {
+				splitline.push_back(buf);
+			}
+			//Ignore blank lines
+			if(splitline.size() == 0) {
+				continue;
+			}
+
+			//Ignore comments
+			if(splitline[0][0] == '#') {
+				continue;
+			}
+
+			//size width height
+			else if(!splitline[0].compare("size")) {
+				width = atoi(splitline[1].c_str());
+				height = atoi(splitline[2].c_str());
+				bitmap = FreeImage_Allocate(width, height, 24);
+				printf("Outputting image of size: %d x %d\n", width, height);
+			}
+			//maxdepth depth
+			else if(!splitline[0].compare("maxdepth")) {
+				maxdepth = atoi(splitline[1].c_str());
+				printf("Raytracing with maxdepth = %d\n", maxdepth);
+			}
+			//output filename
+			else if(!splitline[0].compare("output")) {
+				filename = splitline[1];
+				printf("Writing to file: %s\n", filename.c_str());
+			}
+            //antialias
+            else if(!splitline[0].compare("antialias")) {
+                AA = true;
             }
-            //Ignore blank lines
-            if(splitline.size() == 0) {
-                continue;
-            }
+			//camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
+			else if(!splitline[0].compare("camera")) {
+				// lookfrom:
+				float lfx  = atof(splitline[1].c_str());
+				float lfy  = atof(splitline[2].c_str());
+				float lfz  = atof(splitline[3].c_str());
+				// lookat:
+				float lax  = atof(splitline[4].c_str());
+				float lay  = atof(splitline[5].c_str());
+				float laz  = atof(splitline[6].c_str());
+				// up:
+				float upx  = atof(splitline[7].c_str());
+				float upy  = atof(splitline[8].c_str());
+				float upz  = atof(splitline[9].c_str());
+				//fov:
+				float fov = (PI/180)*atof(splitline[10].c_str()); // convert to radians
 
-            //Ignore comments
-            if(splitline[0][0] == '#') {
-                continue;
-            }
+				Point lookfrom = Point(lfx, lfy, lfz);
+				Point lookat = Point(lax, lay, laz);
+				Vector up = Vector(upx, upy, upz);
+				if(up.len == 0) {
+					printf("invalid up vector for camera\n");
+					exit(EXIT_FAILURE);
+				}
+				eye = Camera(lookfrom, lookat, up, fov);
+				tStack = MTS(); // push identity matrix
+			}
 
-            //size width height
-            else if(!splitline[0].compare("size")) {
-                width = atoi(splitline[1].c_str());
-                height = atoi(splitline[2].c_str());
-                bitmap = FreeImage_Allocate(width, height, 24);
-                printf("Outputting image of size: %d x %d\n", width, height);
-            }
-            //maxdepth depth
-            else if(!splitline[0].compare("maxdepth")) {
-                maxdepth = atoi(splitline[1].c_str());
-                printf("Raytracing with maxdepth = %d\n", maxdepth);
-            }
-            //output filename
-            else if(!splitline[0].compare("output")) {
-                filename = splitline[1];
-                printf("Writing to file: %s\n", filename.c_str());
-            }
+			//sphere x y z radius
+			else if(!splitline[0].compare("sphere")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				float r = atof(splitline[4].c_str());
+				// Create new sphere:
+				Transformation *curTransform;
+				Transformation buffer = tBuffer.evaluateStack();
+				curTransform = new Transformation (buffer.multOnRightSide(tStack.top()));
+				Shape* sphere;
+				sphere = new Sphere(Point(x, y, z), r);
+				l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
+			}
 
-            //camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
-            else if(!splitline[0].compare("camera")) {
-                // lookfrom:
-                float lfx  = atof(splitline[1].c_str());
-                float lfy  = atof(splitline[2].c_str());
-                float lfz  = atof(splitline[3].c_str());
-                // lookat:
-                float lax  = atof(splitline[4].c_str());
-                float lay  = atof(splitline[5].c_str());
-                float laz  = atof(splitline[6].c_str());
-                // up:
-                float upx  = atof(splitline[7].c_str());
-                float upy  = atof(splitline[8].c_str());
-                float upz  = atof(splitline[9].c_str());
-                //fov:
-                float fov = (PI/180)*atof(splitline[10].c_str()); // convert to radians
+			//maxverts number
+			else if(!splitline[0].compare("maxverts")) {
+				// Care if you want
+				// Or you can just use a STL vector, in which case you can ignore this
+			}
 
-                Point lookfrom = Point(lfx, lfy, lfz);
-                Point lookat = Point(lax, lay, laz);
-                Vector up = Vector(upx, upy, upz);
-                if(up.len == 0) {
-                    printf("invalid up vector for camera\n");
-                    exit(EXIT_FAILURE);
-                }
-                eye = Camera(lookfrom, lookat, up, fov);
-                tStack = MTS(); // push identity matrix
-            }
+			//maxvertnorms number
+			else if(!splitline[0].compare("maxvertnorms")) {
+				// Care if you want
+			}
 
-            //sphere x y z radius
-            else if(!splitline[0].compare("sphere")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                float r = atof(splitline[4].c_str());
-                // Create new sphere:
-                Transformation *curTransform;
-                Transformation buffer = tBuffer.evaluateStack();
-                curTransform = new Transformation (buffer.multOnRightSide(tStack.top()));
-                Shape* sphere;
-                sphere = new Sphere(Point(x, y, z), r);
-                l->push_back(new GeometricPrimitive(sphere, new Material(*curBRDF), *curTransform));
-            }
+			//vertex x y z
+			//  The vertex is put into a pile, starting to be numbered at 0.
+			else if(!splitline[0].compare("vertex")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				Point vert = Point(x, y, z);
+				points.push_back(vert);
+			}
 
-            //maxverts number
-            else if(!splitline[0].compare("maxverts")) {
-                // Care if you want
-                // Or you can just use a STL vector, in which case you can ignore this
-            }
+			//vertexnormal x y z nx ny nz
+			//  Similar to the above, but define a surface normal with each vertex.
+			//  The vertex and vertexnormal set of vertices are completely independent
+			//  (as are maxverts and maxvertnorms).
+			else if(!splitline[0].compare("vertexnormal")) {
+				// x: atof(splitline[1].c_str()),
+				// y: atof(splitline[2].c_str()),
+				// z: atof(splitline[3].c_str()));
+				// nx: atof(splitline[4].c_str()),
+				// ny: atof(splitline[5].c_str()),
+				// nz: atof(splitline[6].c_str()));
+				// Create a new vertex+normal with these 6 values, store in some array
+			}
 
-            //maxvertnorms number
-            else if(!splitline[0].compare("maxvertnorms")) {
-                // Care if you want
-            }
+			//tri v1 v2 v3
+			else if(!splitline[0].compare("tri")) {
+				int v1 = atoi(splitline[1].c_str());
+				int v2 = atoi(splitline[2].c_str());
+				int v3 = atoi(splitline[3].c_str());
+				Shape* triangle;
+				triangle = new Triangle(points[v1], points[v2], points[v3]);
+				Transformation* trans;
+				Transformation buffer = tBuffer.evaluateStack();
+				trans = new Transformation(buffer.multOnRightSide(tStack.top()));
+				l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
+			}
 
-            //vertex x y z
-            //  The vertex is put into a pile, starting to be numbered at 0.
-            else if(!splitline[0].compare("vertex")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                Point vert = Point(x, y, z);
-                points.push_back(vert);
-            }
+			//trinormal v1 v2 v3
+			//  same as above but for vertices specified with normals.
+			//  in this case, each vertex has an associated normal, 
+			//  and when doing shading, you should interpolate the normals 
+			//  for intermediate points on the triangle.
+			else if(!splitline[0].compare("trinormal")) {
+				// v1: atof(splitline[1].c_str())
+				// v2: atof(splitline[2].c_str())
+				// v3: atof(splitline[3].c_str())
+				// create new triangle:
+				//   store pointer to array of vertices (different array than above)
+				//   store 3 integers to index into array
+				//   store current property values
+				//   store current top of matrix stack
+			}
 
-            //vertexnormal x y z nx ny nz
-            //  Similar to the above, but define a surface normal with each vertex.
-            //  The vertex and vertexnormal set of vertices are completely independent
-            //  (as are maxverts and maxvertnorms).
-            else if(!splitline[0].compare("vertexnormal")) {
-                // x: atof(splitline[1].c_str()),
-                // y: atof(splitline[2].c_str()),
-                // z: atof(splitline[3].c_str()));
-                // nx: atof(splitline[4].c_str()),
-                // ny: atof(splitline[5].c_str()),
-                // nz: atof(splitline[6].c_str()));
-                // Create a new vertex+normal with these 6 values, store in some array
-            }
+			//translate x y z
+			//  A translation 3-vector
+			else if(!splitline[0].compare("translate")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				Transformation trans = m.generateTranslation(x, y, z);
+				tBuffer.push(trans);
+				//printf("TOP OF TRANSFORMATION STACK: \n");
+				//cout << transformationStack->back()->top().matrix << endl;
+			}
 
-            //tri v1 v2 v3
-            else if(!splitline[0].compare("tri")) {
-                int v1 = atoi(splitline[1].c_str());
-                int v2 = atoi(splitline[2].c_str());
-                int v3 = atoi(splitline[3].c_str());
-                Shape* triangle;
-                triangle = new Triangle(points[v1], points[v2], points[v3]);
-                Transformation* trans;
-                Transformation buffer = tBuffer.evaluateStack();
-                trans = new Transformation(buffer.multOnRightSide(tStack.top()));
-                l->push_back(new GeometricPrimitive(triangle, new Material(*curBRDF), *trans));
-            }
+			//rotate x y z angle
+			//  Rotate by angle (in degrees) about the given axis as in OpenGL.
+			else if(!splitline[0].compare("rotate")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				float angle = atof(splitline[4].c_str());
+				Transformation trans = m.generateIdentity();
+				if(x == 1.0f) {
+					trans = m.generateRotationx(angle);
+				} else if (y == 1.0f) {
+					trans = m.generateRotationy(angle);
+				} else if (z == 1.0f) {
+					trans = m.generateRotationz(angle);
+				}
+				tBuffer.push(trans);
+				//printf("TOP OF TRANSFORMATION STACK: \n");
+				//cout << transformationStack->back()->top().matrix << endl;
+			}
 
-            //trinormal v1 v2 v3
-            //  same as above but for vertices specified with normals.
-            //  in this case, each vertex has an associated normal, 
-            //  and when doing shading, you should interpolate the normals 
-            //  for intermediate points on the triangle.
-            else if(!splitline[0].compare("trinormal")) {
-                // v1: atof(splitline[1].c_str())
-                // v2: atof(splitline[2].c_str())
-                // v3: atof(splitline[3].c_str())
-                // create new triangle:
-                //   store pointer to array of vertices (different array than above)
-                //   store 3 integers to index into array
-                //   store current property values
-                //   store current top of matrix stack
-            }
+			//scale x y z
+			//  Scale by the corresponding amount in each axis (a non-uniform scaling).
+			else if(!splitline[0].compare("scale")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				if(x == 0.0 || y == 0.0 || z == 0.0) {
+					printf("invalid scaling argument\n");
+					exit(EXIT_FAILURE);
+				}
+				Transformation trans = m.generateScale(x, y, z);
+				tBuffer.push(trans);
+				//printf("TOP OF TRANSFORMATION STACK: \n");
+				//cout << transformationStack.top().top().matrix << endl;
+			}
 
-            //translate x y z
-            //  A translation 3-vector
-            else if(!splitline[0].compare("translate")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                Transformation trans = m.generateTranslation(x, y, z);
-                tBuffer.push(trans);
-                //printf("TOP OF TRANSFORMATION STACK: \n");
-                //cout << transformationStack->back()->top().matrix << endl;
-            }
+			//pushTransform
+			//  Push the current modeling transform on the stack as in OpenGL. 
+			else if(!splitline[0].compare("pushTransform")) {
+				Transformation buffer = tBuffer.evaluateStack();
+				tBuffer = MTS();
+				tStack.push(buffer.multOnRightSide(tStack.top()));
+				printf("TOP OF TRANSFORMATION STACK: \n");
+				cout << tStack.top().matrix << endl;
+			}
 
-            //rotate x y z angle
-            //  Rotate by angle (in degrees) about the given axis as in OpenGL.
-            else if(!splitline[0].compare("rotate")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                float angle = atof(splitline[4].c_str());
-                Transformation trans = m.generateIdentity();
-                if(x == 1.0f) {
-                    trans = m.generateRotationx(angle);
-                } else if (y == 1.0f) {
-                    trans = m.generateRotationy(angle);
-                } else if (z == 1.0f) {
-                    trans = m.generateRotationz(angle);
-                }
-                tBuffer.push(trans);
-                //printf("TOP OF TRANSFORMATION STACK: \n");
-                //cout << transformationStack->back()->top().matrix << endl;
-            }
+			//popTransform
+			//  Pop the current transform from the stack as in OpenGL. 
+			//  The sequence of popTransform and pushTransform can be used if 
+			//  desired before every primitive to reset the transformation 
+			//  (assuming the initial camera transformation is on the stack as 
+			//  discussed above).
+			else if(!splitline[0].compare("popTransform")) {
+				Transformation buffer = tBuffer.evaluateStack();
+				Transformation top = tStack.top();
+				if(tBuffer.isNull) {
+					tStack.pop();
+				}
+				printf("TOP OF TRANSFORMATION STACK BEFORE POP: \n");
+				cout << buffer.multOnRightSide(top).matrix << endl;
+				tBuffer = MTS();
+				//ktStack.pop();
+			}
 
-            //scale x y z
-            //  Scale by the corresponding amount in each axis (a non-uniform scaling).
-            else if(!splitline[0].compare("scale")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                if(x == 0.0 || y == 0.0 || z == 0.0) {
-                    printf("invalid scaling argument\n");
-                    exit(EXIT_FAILURE);
-                }
-                Transformation trans = m.generateScale(x, y, z);
-                tBuffer.push(trans);
-                //printf("TOP OF TRANSFORMATION STACK: \n");
-                //cout << transformationStack.top().top().matrix << endl;
-            }
+			//directional x y z r g b
+			//  The direction to the light source, and the color, as in OpenGL.
+			else if(!splitline[0].compare("directional")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				float r = atof(splitline[4].c_str());
+				float g = atof(splitline[5].c_str());
+				float b = atof(splitline[6].c_str());
+				lightsList->push_back(new Light(x, y, z, Color(r, g, b), false, constant, linear, quadratic));
+			}
+			//point x y z r g b
+			//  The location of a point source and the color, as in OpenGL.
+			else if(!splitline[0].compare("point")) {
+				float x = atof(splitline[1].c_str());
+				float y = atof(splitline[2].c_str());
+				float z = atof(splitline[3].c_str());
+				float r = atof(splitline[4].c_str());
+				float g = atof(splitline[5].c_str());
+				float b = atof(splitline[6].c_str());
+				lightsList->push_back(new Light(x, y, z, Color(r, g, b), true, constant, linear, quadratic));
+			} 
 
-            //pushTransform
-            //  Push the current modeling transform on the stack as in OpenGL. 
-            else if(!splitline[0].compare("pushTransform")) {
-                Transformation buffer = tBuffer.evaluateStack();
-                tBuffer = MTS();
-                tStack.push(buffer.multOnRightSide(tStack.top()));
-                printf("TOP OF TRANSFORMATION STACK: \n");
-                cout << tStack.top().matrix << endl;
-            }
-
-            //popTransform
-            //  Pop the current transform from the stack as in OpenGL. 
-            //  The sequence of popTransform and pushTransform can be used if 
-            //  desired before every primitive to reset the transformation 
-            //  (assuming the initial camera transformation is on the stack as 
-            //  discussed above).
-            else if(!splitline[0].compare("popTransform")) {
-                Transformation buffer = tBuffer.evaluateStack();
-                Transformation top = tStack.top();
-                if(tBuffer.isNull) {
-                    tStack.pop();
-                }
-                printf("TOP OF TRANSFORMATION STACK BEFORE POP: \n");
-                cout << buffer.multOnRightSide(top).matrix << endl;
-                tBuffer = MTS();
-                //ktStack.pop();
-            }
-
-            //directional x y z r g b
-            //  The direction to the light source, and the color, as in OpenGL.
-            else if(!splitline[0].compare("directional")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                float r = atof(splitline[4].c_str());
-                float g = atof(splitline[5].c_str());
-                float b = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(x, y, z, Color(r, g, b), false, constant, linear, quadratic));
-            }
-            //point x y z r g b
-            //  The location of a point source and the color, as in OpenGL.
-            else if(!splitline[0].compare("point")) {
-                float x = atof(splitline[1].c_str());
-                float y = atof(splitline[2].c_str());
-                float z = atof(splitline[3].c_str());
-                float r = atof(splitline[4].c_str());
-                float g = atof(splitline[5].c_str());
-                float b = atof(splitline[6].c_str());
-                lightsList->push_back(new Light(x, y, z, Color(r, g, b), true, constant, linear, quadratic));
-            } 
-
-            //point p1x p1y p1z p2x p2y p2z p3x p3y p3z p4x p4y p4z r g b hor vert
+            //point p1x p1y p1z p2x p2y p2z p3x p3y p3z p4x p4y p4z hor vert
             //Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
             else if(!splitline[0].compare("areaP")) {
                 float p1x = atof(splitline[1].c_str());
@@ -2002,95 +1965,90 @@ void loadScene(std::string file) {
                 float p4x = atof(splitline[10].c_str());
                 float p4y = atof(splitline[11].c_str());
                 float p4z = atof(splitline[12].c_str());
-				float r = atof(splitline[13].c_str());
-                float g = atof(splitline[14].c_str());
-                float b = atof(splitline[15].c_str());
-                float hor = atof(splitline[16].c_str());
-                float vert = atof(splitline[17].c_str());
-                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), Color(r, g, b), hor, vert));
+                float hor = atof(splitline[13].c_str());
+                float vert = atof(splitline[14].c_str());
+                lightsList->push_back(new Light(Point(p1x, p1y, p1z), Point(p2x, p2y, p2z), Point(p3x, p3y, p3z), Point(p4x, p4y, p4z), hor, vert));
             } 
 
-            //point UL UR LL LR r g b hor vert, use the vertex numbers for this
+            //point UL UR LL LR hor vert, use the vertex numbers for this
             //Order for 4 points is UL UR LL LR, and then samples in the horizontal direction, and samples in the vertical direction
             else if(!splitline[0].compare("areaV")) {
                 int v1 = atoi(splitline[1].c_str());
                 int v2 = atoi(splitline[2].c_str());
                 int v3 = atoi(splitline[3].c_str());
                 int v4 = atoi(splitline[4].c_str());
-				float r = atof(splitline[5].c_str());
-                float g = atof(splitline[6].c_str());
-                float b = atof(splitline[7].c_str());
-                float hor = atof(splitline[8].c_str());
-                float vert = atof(splitline[9].c_str());
-                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], Color(r, g, b), hor, vert));
+                float hor = atof(splitline[5].c_str());
+                float vert = atof(splitline[6].c_str());
+                lightsList->push_back(new Light(points[v1], points[v2], points[v3], points[v4], hor, vert));
             }
 
-            //attenuation const linear quadratic
-            //  Sets the constant, linear and quadratic attenuations 
-            //  (default 1,0,0) as in OpenGL.
-            else if(!splitline[0].compare("attenuation")) {
-                constant = atof(splitline[1].c_str());
-                linear = atof(splitline[2].c_str());
-                quadratic = atof(splitline[3].c_str());
-            }
+			//attenuation const linear quadratic
+			//  Sets the constant, linear and quadratic attenuations 
+			//  (default 1,0,0) as in OpenGL.
+			else if(!splitline[0].compare("attenuation")) {
+				constant = atof(splitline[1].c_str());
+				linear = atof(splitline[2].c_str());
+				quadratic = atof(splitline[3].c_str());
+			}
 
-            //ambient r g b
-            //  The global ambient color to be added for each object 
-            //  (default is .2,.2,.2)
-            else if(!splitline[0].compare("ambient")) {
-                float r = atof(splitline[1].c_str());
-                float g = atof(splitline[2].c_str());
-                float b = atof(splitline[3].c_str());
-                curBRDF->ka = Color(r, g, b);
-            }
+			//ambient r g b
+			//  The global ambient color to be added for each object 
+			//  (default is .2,.2,.2)
+			else if(!splitline[0].compare("ambient")) {
+				float r = atof(splitline[1].c_str());
+				float g = atof(splitline[2].c_str());
+				float b = atof(splitline[3].c_str());
+				curBRDF->ka = Color(r, g, b);
+			}
 
-            //diï¬€use r g b
-            //  speciï¬es the diï¬€use color of the surface.
-            else if(!splitline[0].compare("diffuse")) {
-                float r = atof(splitline[1].c_str());
-                float g = atof(splitline[2].c_str());
-                float b = atof(splitline[3].c_str());
-                curBRDF->kd = Color(r, g, b);
-            }
-            //specular r g b 
-            //  speciï¬es the specular color of the surface.
-            else if(!splitline[0].compare("specular")) {
-                float r = atof(splitline[1].c_str());
-                float g = atof(splitline[2].c_str());
-                float b = atof(splitline[3].c_str());
-                curBRDF->ks = Color(r, g, b);
-            }
-            //shininess s
-            //  speciï¬es the shininess of the surface.
-            else if(!splitline[0].compare("shininess")) {
-                float shininess = atof(splitline[1].c_str());
-                curBRDF->kr = Color(shininess, shininess, shininess);
-            }
-            // refraction r
-            //  specifies if there will be refraction. 0 = no refraction, above 0 = yes refraction
-            else if(!splitline[0].compare("refraction")) {
-                float refraction = atof(splitline[1].c_str());
-                curBRDF->refr = refraction;
-            }
-            // refractionIndex n
-            //  specified index of refraction of a material
-            else if(!splitline[0].compare("refractionIndex")) {
-                float refractionIndex = atof(splitline[1].c_str());
-                curBRDF->refrIndex = refractionIndex;
-            }
-            //emission r g b
-            //  gives the emissive color of the surface.
-            else if(!splitline[0].compare("emission")) {
-                float r = atof(splitline[1].c_str());
-                float g = atof(splitline[2].c_str());
-                float b = atof(splitline[3].c_str());
-                curBRDF->ke = Color(r, g, b);
-                // Update current properties
-            } else {
-                std::cerr << "Unknown command: " << splitline[0] << std::endl;
-            }
-        }
-    }
+			//diï¬€use r g b
+			//  speciï¬es the diï¬€use color of the surface.
+			else if(!splitline[0].compare("diffuse")) {
+				float r = atof(splitline[1].c_str());
+				float g = atof(splitline[2].c_str());
+				float b = atof(splitline[3].c_str());
+				curBRDF->kd = Color(r, g, b);
+			}
+			//specular r g b 
+			//  speciï¬es the specular color of the surface.
+			else if(!splitline[0].compare("specular")) {
+				float r = atof(splitline[1].c_str());
+				float g = atof(splitline[2].c_str());
+				float b = atof(splitline[3].c_str());
+				curBRDF->ks = Color(r, g, b);
+			}
+			//shininess s
+			//  speciï¬es the shininess of the surface.
+			else if(!splitline[0].compare("shininess")) {
+				float shininess = atof(splitline[1].c_str());
+				curBRDF->kr = Color(shininess, shininess, shininess);
+			}
+			// refraction r
+			//  specifies if there will be refraction. 0 = no refraction, above 0 = yes refraction
+			else if(!splitline[0].compare("refraction")) {
+				float refraction = atof(splitline[1].c_str());
+				curBRDF->refr = refraction;
+			}
+			// refractionIndex n
+			//  specified index of refraction of a material
+			else if(!splitline[0].compare("refractionIndex")) {
+				float refractionIndex = atof(splitline[1].c_str());
+				curBRDF->refrIndex = refractionIndex;
+			}
+			//emission r g b
+			//  gives the emissive color of the surface.
+			else if(!splitline[0].compare("emission")) {
+				float r = atof(splitline[1].c_str());
+				float g = atof(splitline[2].c_str());
+				float b = atof(splitline[3].c_str());
+				curBRDF->ke = Color(r, g, b);
+				// Update current properties
+			} else {
+				std::cerr << "Unknown command: " << splitline[0] << std::endl;
+			}
+		}
+	}
+
 }
 //****************************************************
 // the usual stuff, nothing exciting here

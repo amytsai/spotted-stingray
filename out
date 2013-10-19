@@ -1,153 +1,1114 @@
 loading Scene .. 
-Outputting image of size: 1600 x 800
-Raytracing with maxdepth = 5
-Writing to file: dodeca.png
-x = 0.828427, y = 0.414214, z = 1.000000
-x <0.828427, -0.000000, 0.000000> 
-y <0.000000, 0.412158, -0.041216> 
-z <0.000000, -0.099504, -0.995037> 
-UL <-0.828427, 1.312654, 8.963747> 
-LL <-0.828427, 0.488338, 9.046179> 
-UR <0.828427, 1.312654, 8.963747> 
-LR <0.828427, 0.488338, 9.046179> 
-TOP OF TRANSFORMATION STACK: 
-1 0 0 0
-0 1 0 0
-0 0 1 0
-0 0 0 1
-TOP OF TRANSFORMATION STACK BEFORE POP: 
- 1  0  0 -1
- 0  1  0  0
- 0  0  1  0
- 0  0  0  1
-TOP OF TRANSFORMATION STACK: 
-1 0 0 0
-0 1 0 0
-0 0 1 0
-0 0 0 1
-TOP OF TRANSFORMATION STACK BEFORE POP: 
-  2   0   0   2
-  0   2   0 0.5
-  0   0   2   0
-  0   0   0   1
-TOP OF TRANSFORMATION STACK: 
-1 0 0 0
-0 1 0 0
-0 0 1 0
-0 0 0 1
-TOP OF TRANSFORMATION STACK BEFORE POP: 
-100   0   0   0
-  0   1   0  -1
-  0   0 100   0
-  0   0   0   1
-TOP OF TRANSFORMATION STACK: 
-1 0 0 0
-0 1 0 0
-0 0 1 0
-0 0 0 1
-TOP OF TRANSFORMATION STACK BEFORE POP: 
-         100            0            0            0
-           0 -4.37114e-08         -100            0
-           0            1 -4.37114e-06          -99
-           0            0            0            1
-1 % done
-2 % done
-3 % done
-4 % done
-5 % done
-6 % done
-7 % done
-8 % done
-9 % done
-10 % done
-11 % done
-12 % done
-13 % done
-14 % done
-15 % done
-16 % done
-17 % done
-18 % done
-19 % done
-20 % done
-21 % done
-22 % done
-23 % done
-24 % done
-25 % done
-26 % done
-27 % done
-28 % done
-29 % done
-30 % done
-31 % done
-32 % done
-33 % done
-34 % done
-35 % done
-36 % done
-37 % done
-38 % done
-39 % done
-40 % done
-41 % done
-42 % done
-43 % done
-44 % done
-45 % done
-46 % done
-47 % done
-48 % done
-49 % done
-50 % done
-51 % done
-52 % done
-53 % done
-54 % done
-55 % done
-56 % done
-57 % done
-58 % done
-59 % done
-60 % done
-61 % done
-62 % done
-63 % done
-64 % done
-65 % done
-66 % done
-67 % done
-68 % done
-69 % done
-70 % done
-71 % done
-72 % done
-73 % done
-74 % done
-75 % done
-76 % done
-77 % done
-78 % done
-79 % done
-80 % done
-81 % done
-82 % done
-83 % done
-84 % done
-85 % done
-86 % done
-87 % done
-88 % done
-89 % done
-90 % done
-91 % done
-92 % done
-93 % done
-94 % done
-95 % done
-96 % done
-97 % done
-98 % done
-99 % done
+Outputting image of size: 10 x 10
+Writing to file: scene1.png
+x = 0.267949, y = 0.267949, z = 1.000000
+x <0.167387, -0.000000, 0.209233> 
+y <-0.110854, 0.227252, 0.088684> 
+z <0.662266, 0.529813, -0.529813> 
+UL <-3.615975, -3.242935, 3.349638> 
+LL <-3.394266, -3.697439, 3.172270> 
+UR <-3.281202, -3.242935, 3.768104> 
+LR <-3.059493, -3.697439, 3.590737> 
+AA is true
+pixel at: 0.000000, 0.000000 
+sample generated at: 0.250000, 0.250000 
+sample generated at: 0.250000, 0.500000 
+sample generated at: 0.250000, 0.750000 
+sample generated at: 0.500000, 0.250000 
+sample generated at: 0.500000, 0.500000 
+sample generated at: 0.500000, 0.750000 
+sample generated at: 0.750000, 0.250000 
+sample generated at: 0.750000, 0.500000 
+sample generated at: 0.750000, 0.750000 
+AA is true
+pixel at: 1.000000, 0.000000 
+sample generated at: 1.250000, 0.250000 
+sample generated at: 1.250000, 0.500000 
+sample generated at: 1.250000, 0.750000 
+sample generated at: 1.500000, 0.250000 
+sample generated at: 1.500000, 0.500000 
+sample generated at: 1.500000, 0.750000 
+sample generated at: 1.750000, 0.250000 
+sample generated at: 1.750000, 0.500000 
+sample generated at: 1.750000, 0.750000 
+AA is true
+pixel at: 2.000000, 0.000000 
+sample generated at: 2.250000, 0.250000 
+sample generated at: 2.250000, 0.500000 
+sample generated at: 2.250000, 0.750000 
+sample generated at: 2.500000, 0.250000 
+sample generated at: 2.500000, 0.500000 
+sample generated at: 2.500000, 0.750000 
+sample generated at: 2.750000, 0.250000 
+sample generated at: 2.750000, 0.500000 
+sample generated at: 2.750000, 0.750000 
+AA is true
+pixel at: 3.000000, 0.000000 
+sample generated at: 3.250000, 0.250000 
+sample generated at: 3.250000, 0.500000 
+sample generated at: 3.250000, 0.750000 
+sample generated at: 3.500000, 0.250000 
+sample generated at: 3.500000, 0.500000 
+sample generated at: 3.500000, 0.750000 
+sample generated at: 3.750000, 0.250000 
+sample generated at: 3.750000, 0.500000 
+sample generated at: 3.750000, 0.750000 
+AA is true
+pixel at: 4.000000, 0.000000 
+sample generated at: 4.250000, 0.250000 
+sample generated at: 4.250000, 0.500000 
+sample generated at: 4.250000, 0.750000 
+sample generated at: 4.500000, 0.250000 
+sample generated at: 4.500000, 0.500000 
+sample generated at: 4.500000, 0.750000 
+sample generated at: 4.750000, 0.250000 
+sample generated at: 4.750000, 0.500000 
+sample generated at: 4.750000, 0.750000 
+AA is true
+pixel at: 5.000000, 0.000000 
+sample generated at: 5.250000, 0.250000 
+sample generated at: 5.250000, 0.500000 
+sample generated at: 5.250000, 0.750000 
+sample generated at: 5.500000, 0.250000 
+sample generated at: 5.500000, 0.500000 
+sample generated at: 5.500000, 0.750000 
+sample generated at: 5.750000, 0.250000 
+sample generated at: 5.750000, 0.500000 
+sample generated at: 5.750000, 0.750000 
+AA is true
+pixel at: 6.000000, 0.000000 
+sample generated at: 6.250000, 0.250000 
+sample generated at: 6.250000, 0.500000 
+sample generated at: 6.250000, 0.750000 
+sample generated at: 6.500000, 0.250000 
+sample generated at: 6.500000, 0.500000 
+sample generated at: 6.500000, 0.750000 
+sample generated at: 6.750000, 0.250000 
+sample generated at: 6.750000, 0.500000 
+sample generated at: 6.750000, 0.750000 
+AA is true
+pixel at: 7.000000, 0.000000 
+sample generated at: 7.250000, 0.250000 
+sample generated at: 7.250000, 0.500000 
+sample generated at: 7.250000, 0.750000 
+sample generated at: 7.500000, 0.250000 
+sample generated at: 7.500000, 0.500000 
+sample generated at: 7.500000, 0.750000 
+sample generated at: 7.750000, 0.250000 
+sample generated at: 7.750000, 0.500000 
+sample generated at: 7.750000, 0.750000 
+AA is true
+pixel at: 8.000000, 0.000000 
+sample generated at: 8.250000, 0.250000 
+sample generated at: 8.250000, 0.500000 
+sample generated at: 8.250000, 0.750000 
+sample generated at: 8.500000, 0.250000 
+sample generated at: 8.500000, 0.500000 
+sample generated at: 8.500000, 0.750000 
+sample generated at: 8.750000, 0.250000 
+sample generated at: 8.750000, 0.500000 
+sample generated at: 8.750000, 0.750000 
+AA is true
+pixel at: 9.000000, 0.000000 
+sample generated at: 9.250000, 0.250000 
+sample generated at: 9.250000, 0.500000 
+sample generated at: 9.250000, 0.750000 
+sample generated at: 9.500000, 0.250000 
+sample generated at: 9.500000, 0.500000 
+sample generated at: 9.500000, 0.750000 
+sample generated at: 9.750000, 0.250000 
+sample generated at: 9.750000, 0.500000 
+sample generated at: 9.750000, 0.750000 
+AA is true
+pixel at: 0.000000, 1.000000 
+sample generated at: 0.250000, 1.250000 
+sample generated at: 0.250000, 1.500000 
+sample generated at: 0.250000, 1.750000 
+sample generated at: 0.500000, 1.250000 
+sample generated at: 0.500000, 1.500000 
+sample generated at: 0.500000, 1.750000 
+sample generated at: 0.750000, 1.250000 
+sample generated at: 0.750000, 1.500000 
+sample generated at: 0.750000, 1.750000 
+AA is true
+pixel at: 1.000000, 1.000000 
+sample generated at: 1.250000, 1.250000 
+sample generated at: 1.250000, 1.500000 
+sample generated at: 1.250000, 1.750000 
+sample generated at: 1.500000, 1.250000 
+sample generated at: 1.500000, 1.500000 
+sample generated at: 1.500000, 1.750000 
+sample generated at: 1.750000, 1.250000 
+sample generated at: 1.750000, 1.500000 
+sample generated at: 1.750000, 1.750000 
+AA is true
+pixel at: 2.000000, 1.000000 
+sample generated at: 2.250000, 1.250000 
+sample generated at: 2.250000, 1.500000 
+sample generated at: 2.250000, 1.750000 
+sample generated at: 2.500000, 1.250000 
+sample generated at: 2.500000, 1.500000 
+sample generated at: 2.500000, 1.750000 
+sample generated at: 2.750000, 1.250000 
+sample generated at: 2.750000, 1.500000 
+sample generated at: 2.750000, 1.750000 
+AA is true
+pixel at: 3.000000, 1.000000 
+sample generated at: 3.250000, 1.250000 
+sample generated at: 3.250000, 1.500000 
+sample generated at: 3.250000, 1.750000 
+sample generated at: 3.500000, 1.250000 
+sample generated at: 3.500000, 1.500000 
+sample generated at: 3.500000, 1.750000 
+sample generated at: 3.750000, 1.250000 
+sample generated at: 3.750000, 1.500000 
+sample generated at: 3.750000, 1.750000 
+AA is true
+pixel at: 4.000000, 1.000000 
+sample generated at: 4.250000, 1.250000 
+sample generated at: 4.250000, 1.500000 
+sample generated at: 4.250000, 1.750000 
+sample generated at: 4.500000, 1.250000 
+sample generated at: 4.500000, 1.500000 
+sample generated at: 4.500000, 1.750000 
+sample generated at: 4.750000, 1.250000 
+sample generated at: 4.750000, 1.500000 
+sample generated at: 4.750000, 1.750000 
+AA is true
+pixel at: 5.000000, 1.000000 
+sample generated at: 5.250000, 1.250000 
+sample generated at: 5.250000, 1.500000 
+sample generated at: 5.250000, 1.750000 
+sample generated at: 5.500000, 1.250000 
+sample generated at: 5.500000, 1.500000 
+sample generated at: 5.500000, 1.750000 
+sample generated at: 5.750000, 1.250000 
+sample generated at: 5.750000, 1.500000 
+sample generated at: 5.750000, 1.750000 
+AA is true
+pixel at: 6.000000, 1.000000 
+sample generated at: 6.250000, 1.250000 
+sample generated at: 6.250000, 1.500000 
+sample generated at: 6.250000, 1.750000 
+sample generated at: 6.500000, 1.250000 
+sample generated at: 6.500000, 1.500000 
+sample generated at: 6.500000, 1.750000 
+sample generated at: 6.750000, 1.250000 
+sample generated at: 6.750000, 1.500000 
+sample generated at: 6.750000, 1.750000 
+AA is true
+pixel at: 7.000000, 1.000000 
+sample generated at: 7.250000, 1.250000 
+sample generated at: 7.250000, 1.500000 
+sample generated at: 7.250000, 1.750000 
+sample generated at: 7.500000, 1.250000 
+sample generated at: 7.500000, 1.500000 
+sample generated at: 7.500000, 1.750000 
+sample generated at: 7.750000, 1.250000 
+sample generated at: 7.750000, 1.500000 
+sample generated at: 7.750000, 1.750000 
+AA is true
+pixel at: 8.000000, 1.000000 
+sample generated at: 8.250000, 1.250000 
+sample generated at: 8.250000, 1.500000 
+sample generated at: 8.250000, 1.750000 
+sample generated at: 8.500000, 1.250000 
+sample generated at: 8.500000, 1.500000 
+sample generated at: 8.500000, 1.750000 
+sample generated at: 8.750000, 1.250000 
+sample generated at: 8.750000, 1.500000 
+sample generated at: 8.750000, 1.750000 
+AA is true
+pixel at: 9.000000, 1.000000 
+sample generated at: 9.250000, 1.250000 
+sample generated at: 9.250000, 1.500000 
+sample generated at: 9.250000, 1.750000 
+sample generated at: 9.500000, 1.250000 
+sample generated at: 9.500000, 1.500000 
+sample generated at: 9.500000, 1.750000 
+sample generated at: 9.750000, 1.250000 
+sample generated at: 9.750000, 1.500000 
+sample generated at: 9.750000, 1.750000 
+AA is true
+pixel at: 0.000000, 2.000000 
+sample generated at: 0.250000, 2.250000 
+sample generated at: 0.250000, 2.500000 
+sample generated at: 0.250000, 2.750000 
+sample generated at: 0.500000, 2.250000 
+sample generated at: 0.500000, 2.500000 
+sample generated at: 0.500000, 2.750000 
+sample generated at: 0.750000, 2.250000 
+sample generated at: 0.750000, 2.500000 
+sample generated at: 0.750000, 2.750000 
+AA is true
+pixel at: 1.000000, 2.000000 
+sample generated at: 1.250000, 2.250000 
+sample generated at: 1.250000, 2.500000 
+sample generated at: 1.250000, 2.750000 
+sample generated at: 1.500000, 2.250000 
+sample generated at: 1.500000, 2.500000 
+sample generated at: 1.500000, 2.750000 
+sample generated at: 1.750000, 2.250000 
+sample generated at: 1.750000, 2.500000 
+sample generated at: 1.750000, 2.750000 
+AA is true
+pixel at: 2.000000, 2.000000 
+sample generated at: 2.250000, 2.250000 
+sample generated at: 2.250000, 2.500000 
+sample generated at: 2.250000, 2.750000 
+sample generated at: 2.500000, 2.250000 
+sample generated at: 2.500000, 2.500000 
+sample generated at: 2.500000, 2.750000 
+sample generated at: 2.750000, 2.250000 
+sample generated at: 2.750000, 2.500000 
+sample generated at: 2.750000, 2.750000 
+AA is true
+pixel at: 3.000000, 2.000000 
+sample generated at: 3.250000, 2.250000 
+sample generated at: 3.250000, 2.500000 
+sample generated at: 3.250000, 2.750000 
+sample generated at: 3.500000, 2.250000 
+sample generated at: 3.500000, 2.500000 
+sample generated at: 3.500000, 2.750000 
+sample generated at: 3.750000, 2.250000 
+sample generated at: 3.750000, 2.500000 
+sample generated at: 3.750000, 2.750000 
+AA is true
+pixel at: 4.000000, 2.000000 
+sample generated at: 4.250000, 2.250000 
+sample generated at: 4.250000, 2.500000 
+sample generated at: 4.250000, 2.750000 
+sample generated at: 4.500000, 2.250000 
+sample generated at: 4.500000, 2.500000 
+sample generated at: 4.500000, 2.750000 
+sample generated at: 4.750000, 2.250000 
+sample generated at: 4.750000, 2.500000 
+sample generated at: 4.750000, 2.750000 
+AA is true
+pixel at: 5.000000, 2.000000 
+sample generated at: 5.250000, 2.250000 
+sample generated at: 5.250000, 2.500000 
+sample generated at: 5.250000, 2.750000 
+sample generated at: 5.500000, 2.250000 
+sample generated at: 5.500000, 2.500000 
+sample generated at: 5.500000, 2.750000 
+sample generated at: 5.750000, 2.250000 
+sample generated at: 5.750000, 2.500000 
+sample generated at: 5.750000, 2.750000 
+AA is true
+pixel at: 6.000000, 2.000000 
+sample generated at: 6.250000, 2.250000 
+sample generated at: 6.250000, 2.500000 
+sample generated at: 6.250000, 2.750000 
+sample generated at: 6.500000, 2.250000 
+sample generated at: 6.500000, 2.500000 
+sample generated at: 6.500000, 2.750000 
+sample generated at: 6.750000, 2.250000 
+sample generated at: 6.750000, 2.500000 
+sample generated at: 6.750000, 2.750000 
+AA is true
+pixel at: 7.000000, 2.000000 
+sample generated at: 7.250000, 2.250000 
+sample generated at: 7.250000, 2.500000 
+sample generated at: 7.250000, 2.750000 
+sample generated at: 7.500000, 2.250000 
+sample generated at: 7.500000, 2.500000 
+sample generated at: 7.500000, 2.750000 
+sample generated at: 7.750000, 2.250000 
+sample generated at: 7.750000, 2.500000 
+sample generated at: 7.750000, 2.750000 
+AA is true
+pixel at: 8.000000, 2.000000 
+sample generated at: 8.250000, 2.250000 
+sample generated at: 8.250000, 2.500000 
+sample generated at: 8.250000, 2.750000 
+sample generated at: 8.500000, 2.250000 
+sample generated at: 8.500000, 2.500000 
+sample generated at: 8.500000, 2.750000 
+sample generated at: 8.750000, 2.250000 
+sample generated at: 8.750000, 2.500000 
+sample generated at: 8.750000, 2.750000 
+AA is true
+pixel at: 9.000000, 2.000000 
+sample generated at: 9.250000, 2.250000 
+sample generated at: 9.250000, 2.500000 
+sample generated at: 9.250000, 2.750000 
+sample generated at: 9.500000, 2.250000 
+sample generated at: 9.500000, 2.500000 
+sample generated at: 9.500000, 2.750000 
+sample generated at: 9.750000, 2.250000 
+sample generated at: 9.750000, 2.500000 
+sample generated at: 9.750000, 2.750000 
+AA is true
+pixel at: 0.000000, 3.000000 
+sample generated at: 0.250000, 3.250000 
+sample generated at: 0.250000, 3.500000 
+sample generated at: 0.250000, 3.750000 
+sample generated at: 0.500000, 3.250000 
+sample generated at: 0.500000, 3.500000 
+sample generated at: 0.500000, 3.750000 
+sample generated at: 0.750000, 3.250000 
+sample generated at: 0.750000, 3.500000 
+sample generated at: 0.750000, 3.750000 
+AA is true
+pixel at: 1.000000, 3.000000 
+sample generated at: 1.250000, 3.250000 
+sample generated at: 1.250000, 3.500000 
+sample generated at: 1.250000, 3.750000 
+sample generated at: 1.500000, 3.250000 
+sample generated at: 1.500000, 3.500000 
+sample generated at: 1.500000, 3.750000 
+sample generated at: 1.750000, 3.250000 
+sample generated at: 1.750000, 3.500000 
+sample generated at: 1.750000, 3.750000 
+AA is true
+pixel at: 2.000000, 3.000000 
+sample generated at: 2.250000, 3.250000 
+sample generated at: 2.250000, 3.500000 
+sample generated at: 2.250000, 3.750000 
+sample generated at: 2.500000, 3.250000 
+sample generated at: 2.500000, 3.500000 
+sample generated at: 2.500000, 3.750000 
+sample generated at: 2.750000, 3.250000 
+sample generated at: 2.750000, 3.500000 
+sample generated at: 2.750000, 3.750000 
+AA is true
+pixel at: 3.000000, 3.000000 
+sample generated at: 3.250000, 3.250000 
+sample generated at: 3.250000, 3.500000 
+sample generated at: 3.250000, 3.750000 
+sample generated at: 3.500000, 3.250000 
+sample generated at: 3.500000, 3.500000 
+sample generated at: 3.500000, 3.750000 
+sample generated at: 3.750000, 3.250000 
+sample generated at: 3.750000, 3.500000 
+sample generated at: 3.750000, 3.750000 
+AA is true
+pixel at: 4.000000, 3.000000 
+sample generated at: 4.250000, 3.250000 
+sample generated at: 4.250000, 3.500000 
+sample generated at: 4.250000, 3.750000 
+sample generated at: 4.500000, 3.250000 
+sample generated at: 4.500000, 3.500000 
+sample generated at: 4.500000, 3.750000 
+sample generated at: 4.750000, 3.250000 
+sample generated at: 4.750000, 3.500000 
+sample generated at: 4.750000, 3.750000 
+AA is true
+pixel at: 5.000000, 3.000000 
+sample generated at: 5.250000, 3.250000 
+sample generated at: 5.250000, 3.500000 
+sample generated at: 5.250000, 3.750000 
+sample generated at: 5.500000, 3.250000 
+sample generated at: 5.500000, 3.500000 
+sample generated at: 5.500000, 3.750000 
+sample generated at: 5.750000, 3.250000 
+sample generated at: 5.750000, 3.500000 
+sample generated at: 5.750000, 3.750000 
+AA is true
+pixel at: 6.000000, 3.000000 
+sample generated at: 6.250000, 3.250000 
+sample generated at: 6.250000, 3.500000 
+sample generated at: 6.250000, 3.750000 
+sample generated at: 6.500000, 3.250000 
+sample generated at: 6.500000, 3.500000 
+sample generated at: 6.500000, 3.750000 
+sample generated at: 6.750000, 3.250000 
+sample generated at: 6.750000, 3.500000 
+sample generated at: 6.750000, 3.750000 
+AA is true
+pixel at: 7.000000, 3.000000 
+sample generated at: 7.250000, 3.250000 
+sample generated at: 7.250000, 3.500000 
+sample generated at: 7.250000, 3.750000 
+sample generated at: 7.500000, 3.250000 
+sample generated at: 7.500000, 3.500000 
+sample generated at: 7.500000, 3.750000 
+sample generated at: 7.750000, 3.250000 
+sample generated at: 7.750000, 3.500000 
+sample generated at: 7.750000, 3.750000 
+AA is true
+pixel at: 8.000000, 3.000000 
+sample generated at: 8.250000, 3.250000 
+sample generated at: 8.250000, 3.500000 
+sample generated at: 8.250000, 3.750000 
+sample generated at: 8.500000, 3.250000 
+sample generated at: 8.500000, 3.500000 
+sample generated at: 8.500000, 3.750000 
+sample generated at: 8.750000, 3.250000 
+sample generated at: 8.750000, 3.500000 
+sample generated at: 8.750000, 3.750000 
+AA is true
+pixel at: 9.000000, 3.000000 
+sample generated at: 9.250000, 3.250000 
+sample generated at: 9.250000, 3.500000 
+sample generated at: 9.250000, 3.750000 
+sample generated at: 9.500000, 3.250000 
+sample generated at: 9.500000, 3.500000 
+sample generated at: 9.500000, 3.750000 
+sample generated at: 9.750000, 3.250000 
+sample generated at: 9.750000, 3.500000 
+sample generated at: 9.750000, 3.750000 
+AA is true
+pixel at: 0.000000, 4.000000 
+sample generated at: 0.250000, 4.250000 
+sample generated at: 0.250000, 4.500000 
+sample generated at: 0.250000, 4.750000 
+sample generated at: 0.500000, 4.250000 
+sample generated at: 0.500000, 4.500000 
+sample generated at: 0.500000, 4.750000 
+sample generated at: 0.750000, 4.250000 
+sample generated at: 0.750000, 4.500000 
+sample generated at: 0.750000, 4.750000 
+AA is true
+pixel at: 1.000000, 4.000000 
+sample generated at: 1.250000, 4.250000 
+sample generated at: 1.250000, 4.500000 
+sample generated at: 1.250000, 4.750000 
+sample generated at: 1.500000, 4.250000 
+sample generated at: 1.500000, 4.500000 
+sample generated at: 1.500000, 4.750000 
+sample generated at: 1.750000, 4.250000 
+sample generated at: 1.750000, 4.500000 
+sample generated at: 1.750000, 4.750000 
+AA is true
+pixel at: 2.000000, 4.000000 
+sample generated at: 2.250000, 4.250000 
+sample generated at: 2.250000, 4.500000 
+sample generated at: 2.250000, 4.750000 
+sample generated at: 2.500000, 4.250000 
+sample generated at: 2.500000, 4.500000 
+sample generated at: 2.500000, 4.750000 
+sample generated at: 2.750000, 4.250000 
+sample generated at: 2.750000, 4.500000 
+sample generated at: 2.750000, 4.750000 
+AA is true
+pixel at: 3.000000, 4.000000 
+sample generated at: 3.250000, 4.250000 
+sample generated at: 3.250000, 4.500000 
+sample generated at: 3.250000, 4.750000 
+sample generated at: 3.500000, 4.250000 
+sample generated at: 3.500000, 4.500000 
+sample generated at: 3.500000, 4.750000 
+sample generated at: 3.750000, 4.250000 
+sample generated at: 3.750000, 4.500000 
+sample generated at: 3.750000, 4.750000 
+AA is true
+pixel at: 4.000000, 4.000000 
+sample generated at: 4.250000, 4.250000 
+sample generated at: 4.250000, 4.500000 
+sample generated at: 4.250000, 4.750000 
+sample generated at: 4.500000, 4.250000 
+sample generated at: 4.500000, 4.500000 
+sample generated at: 4.500000, 4.750000 
+sample generated at: 4.750000, 4.250000 
+sample generated at: 4.750000, 4.500000 
+sample generated at: 4.750000, 4.750000 
+AA is true
+pixel at: 5.000000, 4.000000 
+sample generated at: 5.250000, 4.250000 
+sample generated at: 5.250000, 4.500000 
+sample generated at: 5.250000, 4.750000 
+sample generated at: 5.500000, 4.250000 
+sample generated at: 5.500000, 4.500000 
+sample generated at: 5.500000, 4.750000 
+sample generated at: 5.750000, 4.250000 
+sample generated at: 5.750000, 4.500000 
+sample generated at: 5.750000, 4.750000 
+AA is true
+pixel at: 6.000000, 4.000000 
+sample generated at: 6.250000, 4.250000 
+sample generated at: 6.250000, 4.500000 
+sample generated at: 6.250000, 4.750000 
+sample generated at: 6.500000, 4.250000 
+sample generated at: 6.500000, 4.500000 
+sample generated at: 6.500000, 4.750000 
+sample generated at: 6.750000, 4.250000 
+sample generated at: 6.750000, 4.500000 
+sample generated at: 6.750000, 4.750000 
+AA is true
+pixel at: 7.000000, 4.000000 
+sample generated at: 7.250000, 4.250000 
+sample generated at: 7.250000, 4.500000 
+sample generated at: 7.250000, 4.750000 
+sample generated at: 7.500000, 4.250000 
+sample generated at: 7.500000, 4.500000 
+sample generated at: 7.500000, 4.750000 
+sample generated at: 7.750000, 4.250000 
+sample generated at: 7.750000, 4.500000 
+sample generated at: 7.750000, 4.750000 
+AA is true
+pixel at: 8.000000, 4.000000 
+sample generated at: 8.250000, 4.250000 
+sample generated at: 8.250000, 4.500000 
+sample generated at: 8.250000, 4.750000 
+sample generated at: 8.500000, 4.250000 
+sample generated at: 8.500000, 4.500000 
+sample generated at: 8.500000, 4.750000 
+sample generated at: 8.750000, 4.250000 
+sample generated at: 8.750000, 4.500000 
+sample generated at: 8.750000, 4.750000 
+AA is true
+pixel at: 9.000000, 4.000000 
+sample generated at: 9.250000, 4.250000 
+sample generated at: 9.250000, 4.500000 
+sample generated at: 9.250000, 4.750000 
+sample generated at: 9.500000, 4.250000 
+sample generated at: 9.500000, 4.500000 
+sample generated at: 9.500000, 4.750000 
+sample generated at: 9.750000, 4.250000 
+sample generated at: 9.750000, 4.500000 
+sample generated at: 9.750000, 4.750000 
+AA is true
+pixel at: 0.000000, 5.000000 
+sample generated at: 0.250000, 5.250000 
+sample generated at: 0.250000, 5.500000 
+sample generated at: 0.250000, 5.750000 
+sample generated at: 0.500000, 5.250000 
+sample generated at: 0.500000, 5.500000 
+sample generated at: 0.500000, 5.750000 
+sample generated at: 0.750000, 5.250000 
+sample generated at: 0.750000, 5.500000 
+sample generated at: 0.750000, 5.750000 
+AA is true
+pixel at: 1.000000, 5.000000 
+sample generated at: 1.250000, 5.250000 
+sample generated at: 1.250000, 5.500000 
+sample generated at: 1.250000, 5.750000 
+sample generated at: 1.500000, 5.250000 
+sample generated at: 1.500000, 5.500000 
+sample generated at: 1.500000, 5.750000 
+sample generated at: 1.750000, 5.250000 
+sample generated at: 1.750000, 5.500000 
+sample generated at: 1.750000, 5.750000 
+AA is true
+pixel at: 2.000000, 5.000000 
+sample generated at: 2.250000, 5.250000 
+sample generated at: 2.250000, 5.500000 
+sample generated at: 2.250000, 5.750000 
+sample generated at: 2.500000, 5.250000 
+sample generated at: 2.500000, 5.500000 
+sample generated at: 2.500000, 5.750000 
+sample generated at: 2.750000, 5.250000 
+sample generated at: 2.750000, 5.500000 
+sample generated at: 2.750000, 5.750000 
+AA is true
+pixel at: 3.000000, 5.000000 
+sample generated at: 3.250000, 5.250000 
+sample generated at: 3.250000, 5.500000 
+sample generated at: 3.250000, 5.750000 
+sample generated at: 3.500000, 5.250000 
+sample generated at: 3.500000, 5.500000 
+sample generated at: 3.500000, 5.750000 
+sample generated at: 3.750000, 5.250000 
+sample generated at: 3.750000, 5.500000 
+sample generated at: 3.750000, 5.750000 
+AA is true
+pixel at: 4.000000, 5.000000 
+sample generated at: 4.250000, 5.250000 
+sample generated at: 4.250000, 5.500000 
+sample generated at: 4.250000, 5.750000 
+sample generated at: 4.500000, 5.250000 
+sample generated at: 4.500000, 5.500000 
+sample generated at: 4.500000, 5.750000 
+sample generated at: 4.750000, 5.250000 
+sample generated at: 4.750000, 5.500000 
+sample generated at: 4.750000, 5.750000 
+AA is true
+pixel at: 5.000000, 5.000000 
+sample generated at: 5.250000, 5.250000 
+sample generated at: 5.250000, 5.500000 
+sample generated at: 5.250000, 5.750000 
+sample generated at: 5.500000, 5.250000 
+sample generated at: 5.500000, 5.500000 
+sample generated at: 5.500000, 5.750000 
+sample generated at: 5.750000, 5.250000 
+sample generated at: 5.750000, 5.500000 
+sample generated at: 5.750000, 5.750000 
+AA is true
+pixel at: 6.000000, 5.000000 
+sample generated at: 6.250000, 5.250000 
+sample generated at: 6.250000, 5.500000 
+sample generated at: 6.250000, 5.750000 
+sample generated at: 6.500000, 5.250000 
+sample generated at: 6.500000, 5.500000 
+sample generated at: 6.500000, 5.750000 
+sample generated at: 6.750000, 5.250000 
+sample generated at: 6.750000, 5.500000 
+sample generated at: 6.750000, 5.750000 
+AA is true
+pixel at: 7.000000, 5.000000 
+sample generated at: 7.250000, 5.250000 
+sample generated at: 7.250000, 5.500000 
+sample generated at: 7.250000, 5.750000 
+sample generated at: 7.500000, 5.250000 
+sample generated at: 7.500000, 5.500000 
+sample generated at: 7.500000, 5.750000 
+sample generated at: 7.750000, 5.250000 
+sample generated at: 7.750000, 5.500000 
+sample generated at: 7.750000, 5.750000 
+AA is true
+pixel at: 8.000000, 5.000000 
+sample generated at: 8.250000, 5.250000 
+sample generated at: 8.250000, 5.500000 
+sample generated at: 8.250000, 5.750000 
+sample generated at: 8.500000, 5.250000 
+sample generated at: 8.500000, 5.500000 
+sample generated at: 8.500000, 5.750000 
+sample generated at: 8.750000, 5.250000 
+sample generated at: 8.750000, 5.500000 
+sample generated at: 8.750000, 5.750000 
+AA is true
+pixel at: 9.000000, 5.000000 
+sample generated at: 9.250000, 5.250000 
+sample generated at: 9.250000, 5.500000 
+sample generated at: 9.250000, 5.750000 
+sample generated at: 9.500000, 5.250000 
+sample generated at: 9.500000, 5.500000 
+sample generated at: 9.500000, 5.750000 
+sample generated at: 9.750000, 5.250000 
+sample generated at: 9.750000, 5.500000 
+sample generated at: 9.750000, 5.750000 
+AA is true
+pixel at: 0.000000, 6.000000 
+sample generated at: 0.250000, 6.250000 
+sample generated at: 0.250000, 6.500000 
+sample generated at: 0.250000, 6.750000 
+sample generated at: 0.500000, 6.250000 
+sample generated at: 0.500000, 6.500000 
+sample generated at: 0.500000, 6.750000 
+sample generated at: 0.750000, 6.250000 
+sample generated at: 0.750000, 6.500000 
+sample generated at: 0.750000, 6.750000 
+AA is true
+pixel at: 1.000000, 6.000000 
+sample generated at: 1.250000, 6.250000 
+sample generated at: 1.250000, 6.500000 
+sample generated at: 1.250000, 6.750000 
+sample generated at: 1.500000, 6.250000 
+sample generated at: 1.500000, 6.500000 
+sample generated at: 1.500000, 6.750000 
+sample generated at: 1.750000, 6.250000 
+sample generated at: 1.750000, 6.500000 
+sample generated at: 1.750000, 6.750000 
+AA is true
+pixel at: 2.000000, 6.000000 
+sample generated at: 2.250000, 6.250000 
+sample generated at: 2.250000, 6.500000 
+sample generated at: 2.250000, 6.750000 
+sample generated at: 2.500000, 6.250000 
+sample generated at: 2.500000, 6.500000 
+sample generated at: 2.500000, 6.750000 
+sample generated at: 2.750000, 6.250000 
+sample generated at: 2.750000, 6.500000 
+sample generated at: 2.750000, 6.750000 
+AA is true
+pixel at: 3.000000, 6.000000 
+sample generated at: 3.250000, 6.250000 
+sample generated at: 3.250000, 6.500000 
+sample generated at: 3.250000, 6.750000 
+sample generated at: 3.500000, 6.250000 
+sample generated at: 3.500000, 6.500000 
+sample generated at: 3.500000, 6.750000 
+sample generated at: 3.750000, 6.250000 
+sample generated at: 3.750000, 6.500000 
+sample generated at: 3.750000, 6.750000 
+AA is true
+pixel at: 4.000000, 6.000000 
+sample generated at: 4.250000, 6.250000 
+sample generated at: 4.250000, 6.500000 
+sample generated at: 4.250000, 6.750000 
+sample generated at: 4.500000, 6.250000 
+sample generated at: 4.500000, 6.500000 
+sample generated at: 4.500000, 6.750000 
+sample generated at: 4.750000, 6.250000 
+sample generated at: 4.750000, 6.500000 
+sample generated at: 4.750000, 6.750000 
+AA is true
+pixel at: 5.000000, 6.000000 
+sample generated at: 5.250000, 6.250000 
+sample generated at: 5.250000, 6.500000 
+sample generated at: 5.250000, 6.750000 
+sample generated at: 5.500000, 6.250000 
+sample generated at: 5.500000, 6.500000 
+sample generated at: 5.500000, 6.750000 
+sample generated at: 5.750000, 6.250000 
+sample generated at: 5.750000, 6.500000 
+sample generated at: 5.750000, 6.750000 
+AA is true
+pixel at: 6.000000, 6.000000 
+sample generated at: 6.250000, 6.250000 
+sample generated at: 6.250000, 6.500000 
+sample generated at: 6.250000, 6.750000 
+sample generated at: 6.500000, 6.250000 
+sample generated at: 6.500000, 6.500000 
+sample generated at: 6.500000, 6.750000 
+sample generated at: 6.750000, 6.250000 
+sample generated at: 6.750000, 6.500000 
+sample generated at: 6.750000, 6.750000 
+AA is true
+pixel at: 7.000000, 6.000000 
+sample generated at: 7.250000, 6.250000 
+sample generated at: 7.250000, 6.500000 
+sample generated at: 7.250000, 6.750000 
+sample generated at: 7.500000, 6.250000 
+sample generated at: 7.500000, 6.500000 
+sample generated at: 7.500000, 6.750000 
+sample generated at: 7.750000, 6.250000 
+sample generated at: 7.750000, 6.500000 
+sample generated at: 7.750000, 6.750000 
+AA is true
+pixel at: 8.000000, 6.000000 
+sample generated at: 8.250000, 6.250000 
+sample generated at: 8.250000, 6.500000 
+sample generated at: 8.250000, 6.750000 
+sample generated at: 8.500000, 6.250000 
+sample generated at: 8.500000, 6.500000 
+sample generated at: 8.500000, 6.750000 
+sample generated at: 8.750000, 6.250000 
+sample generated at: 8.750000, 6.500000 
+sample generated at: 8.750000, 6.750000 
+AA is true
+pixel at: 9.000000, 6.000000 
+sample generated at: 9.250000, 6.250000 
+sample generated at: 9.250000, 6.500000 
+sample generated at: 9.250000, 6.750000 
+sample generated at: 9.500000, 6.250000 
+sample generated at: 9.500000, 6.500000 
+sample generated at: 9.500000, 6.750000 
+sample generated at: 9.750000, 6.250000 
+sample generated at: 9.750000, 6.500000 
+sample generated at: 9.750000, 6.750000 
+AA is true
+pixel at: 0.000000, 7.000000 
+sample generated at: 0.250000, 7.250000 
+sample generated at: 0.250000, 7.500000 
+sample generated at: 0.250000, 7.750000 
+sample generated at: 0.500000, 7.250000 
+sample generated at: 0.500000, 7.500000 
+sample generated at: 0.500000, 7.750000 
+sample generated at: 0.750000, 7.250000 
+sample generated at: 0.750000, 7.500000 
+sample generated at: 0.750000, 7.750000 
+AA is true
+pixel at: 1.000000, 7.000000 
+sample generated at: 1.250000, 7.250000 
+sample generated at: 1.250000, 7.500000 
+sample generated at: 1.250000, 7.750000 
+sample generated at: 1.500000, 7.250000 
+sample generated at: 1.500000, 7.500000 
+sample generated at: 1.500000, 7.750000 
+sample generated at: 1.750000, 7.250000 
+sample generated at: 1.750000, 7.500000 
+sample generated at: 1.750000, 7.750000 
+AA is true
+pixel at: 2.000000, 7.000000 
+sample generated at: 2.250000, 7.250000 
+sample generated at: 2.250000, 7.500000 
+sample generated at: 2.250000, 7.750000 
+sample generated at: 2.500000, 7.250000 
+sample generated at: 2.500000, 7.500000 
+sample generated at: 2.500000, 7.750000 
+sample generated at: 2.750000, 7.250000 
+sample generated at: 2.750000, 7.500000 
+sample generated at: 2.750000, 7.750000 
+AA is true
+pixel at: 3.000000, 7.000000 
+sample generated at: 3.250000, 7.250000 
+sample generated at: 3.250000, 7.500000 
+sample generated at: 3.250000, 7.750000 
+sample generated at: 3.500000, 7.250000 
+sample generated at: 3.500000, 7.500000 
+sample generated at: 3.500000, 7.750000 
+sample generated at: 3.750000, 7.250000 
+sample generated at: 3.750000, 7.500000 
+sample generated at: 3.750000, 7.750000 
+AA is true
+pixel at: 4.000000, 7.000000 
+sample generated at: 4.250000, 7.250000 
+sample generated at: 4.250000, 7.500000 
+sample generated at: 4.250000, 7.750000 
+sample generated at: 4.500000, 7.250000 
+sample generated at: 4.500000, 7.500000 
+sample generated at: 4.500000, 7.750000 
+sample generated at: 4.750000, 7.250000 
+sample generated at: 4.750000, 7.500000 
+sample generated at: 4.750000, 7.750000 
+AA is true
+pixel at: 5.000000, 7.000000 
+sample generated at: 5.250000, 7.250000 
+sample generated at: 5.250000, 7.500000 
+sample generated at: 5.250000, 7.750000 
+sample generated at: 5.500000, 7.250000 
+sample generated at: 5.500000, 7.500000 
+sample generated at: 5.500000, 7.750000 
+sample generated at: 5.750000, 7.250000 
+sample generated at: 5.750000, 7.500000 
+sample generated at: 5.750000, 7.750000 
+AA is true
+pixel at: 6.000000, 7.000000 
+sample generated at: 6.250000, 7.250000 
+sample generated at: 6.250000, 7.500000 
+sample generated at: 6.250000, 7.750000 
+sample generated at: 6.500000, 7.250000 
+sample generated at: 6.500000, 7.500000 
+sample generated at: 6.500000, 7.750000 
+sample generated at: 6.750000, 7.250000 
+sample generated at: 6.750000, 7.500000 
+sample generated at: 6.750000, 7.750000 
+AA is true
+pixel at: 7.000000, 7.000000 
+sample generated at: 7.250000, 7.250000 
+sample generated at: 7.250000, 7.500000 
+sample generated at: 7.250000, 7.750000 
+sample generated at: 7.500000, 7.250000 
+sample generated at: 7.500000, 7.500000 
+sample generated at: 7.500000, 7.750000 
+sample generated at: 7.750000, 7.250000 
+sample generated at: 7.750000, 7.500000 
+sample generated at: 7.750000, 7.750000 
+AA is true
+pixel at: 8.000000, 7.000000 
+sample generated at: 8.250000, 7.250000 
+sample generated at: 8.250000, 7.500000 
+sample generated at: 8.250000, 7.750000 
+sample generated at: 8.500000, 7.250000 
+sample generated at: 8.500000, 7.500000 
+sample generated at: 8.500000, 7.750000 
+sample generated at: 8.750000, 7.250000 
+sample generated at: 8.750000, 7.500000 
+sample generated at: 8.750000, 7.750000 
+AA is true
+pixel at: 9.000000, 7.000000 
+sample generated at: 9.250000, 7.250000 
+sample generated at: 9.250000, 7.500000 
+sample generated at: 9.250000, 7.750000 
+sample generated at: 9.500000, 7.250000 
+sample generated at: 9.500000, 7.500000 
+sample generated at: 9.500000, 7.750000 
+sample generated at: 9.750000, 7.250000 
+sample generated at: 9.750000, 7.500000 
+sample generated at: 9.750000, 7.750000 
+AA is true
+pixel at: 0.000000, 8.000000 
+sample generated at: 0.250000, 8.250000 
+sample generated at: 0.250000, 8.500000 
+sample generated at: 0.250000, 8.750000 
+sample generated at: 0.500000, 8.250000 
+sample generated at: 0.500000, 8.500000 
+sample generated at: 0.500000, 8.750000 
+sample generated at: 0.750000, 8.250000 
+sample generated at: 0.750000, 8.500000 
+sample generated at: 0.750000, 8.750000 
+AA is true
+pixel at: 1.000000, 8.000000 
+sample generated at: 1.250000, 8.250000 
+sample generated at: 1.250000, 8.500000 
+sample generated at: 1.250000, 8.750000 
+sample generated at: 1.500000, 8.250000 
+sample generated at: 1.500000, 8.500000 
+sample generated at: 1.500000, 8.750000 
+sample generated at: 1.750000, 8.250000 
+sample generated at: 1.750000, 8.500000 
+sample generated at: 1.750000, 8.750000 
+AA is true
+pixel at: 2.000000, 8.000000 
+sample generated at: 2.250000, 8.250000 
+sample generated at: 2.250000, 8.500000 
+sample generated at: 2.250000, 8.750000 
+sample generated at: 2.500000, 8.250000 
+sample generated at: 2.500000, 8.500000 
+sample generated at: 2.500000, 8.750000 
+sample generated at: 2.750000, 8.250000 
+sample generated at: 2.750000, 8.500000 
+sample generated at: 2.750000, 8.750000 
+AA is true
+pixel at: 3.000000, 8.000000 
+sample generated at: 3.250000, 8.250000 
+sample generated at: 3.250000, 8.500000 
+sample generated at: 3.250000, 8.750000 
+sample generated at: 3.500000, 8.250000 
+sample generated at: 3.500000, 8.500000 
+sample generated at: 3.500000, 8.750000 
+sample generated at: 3.750000, 8.250000 
+sample generated at: 3.750000, 8.500000 
+sample generated at: 3.750000, 8.750000 
+AA is true
+pixel at: 4.000000, 8.000000 
+sample generated at: 4.250000, 8.250000 
+sample generated at: 4.250000, 8.500000 
+sample generated at: 4.250000, 8.750000 
+sample generated at: 4.500000, 8.250000 
+sample generated at: 4.500000, 8.500000 
+sample generated at: 4.500000, 8.750000 
+sample generated at: 4.750000, 8.250000 
+sample generated at: 4.750000, 8.500000 
+sample generated at: 4.750000, 8.750000 
+AA is true
+pixel at: 5.000000, 8.000000 
+sample generated at: 5.250000, 8.250000 
+sample generated at: 5.250000, 8.500000 
+sample generated at: 5.250000, 8.750000 
+sample generated at: 5.500000, 8.250000 
+sample generated at: 5.500000, 8.500000 
+sample generated at: 5.500000, 8.750000 
+sample generated at: 5.750000, 8.250000 
+sample generated at: 5.750000, 8.500000 
+sample generated at: 5.750000, 8.750000 
+AA is true
+pixel at: 6.000000, 8.000000 
+sample generated at: 6.250000, 8.250000 
+sample generated at: 6.250000, 8.500000 
+sample generated at: 6.250000, 8.750000 
+sample generated at: 6.500000, 8.250000 
+sample generated at: 6.500000, 8.500000 
+sample generated at: 6.500000, 8.750000 
+sample generated at: 6.750000, 8.250000 
+sample generated at: 6.750000, 8.500000 
+sample generated at: 6.750000, 8.750000 
+AA is true
+pixel at: 7.000000, 8.000000 
+sample generated at: 7.250000, 8.250000 
+sample generated at: 7.250000, 8.500000 
+sample generated at: 7.250000, 8.750000 
+sample generated at: 7.500000, 8.250000 
+sample generated at: 7.500000, 8.500000 
+sample generated at: 7.500000, 8.750000 
+sample generated at: 7.750000, 8.250000 
+sample generated at: 7.750000, 8.500000 
+sample generated at: 7.750000, 8.750000 
+AA is true
+pixel at: 8.000000, 8.000000 
+sample generated at: 8.250000, 8.250000 
+sample generated at: 8.250000, 8.500000 
+sample generated at: 8.250000, 8.750000 
+sample generated at: 8.500000, 8.250000 
+sample generated at: 8.500000, 8.500000 
+sample generated at: 8.500000, 8.750000 
+sample generated at: 8.750000, 8.250000 
+sample generated at: 8.750000, 8.500000 
+sample generated at: 8.750000, 8.750000 
+AA is true
+pixel at: 9.000000, 8.000000 
+sample generated at: 9.250000, 8.250000 
+sample generated at: 9.250000, 8.500000 
+sample generated at: 9.250000, 8.750000 
+sample generated at: 9.500000, 8.250000 
+sample generated at: 9.500000, 8.500000 
+sample generated at: 9.500000, 8.750000 
+sample generated at: 9.750000, 8.250000 
+sample generated at: 9.750000, 8.500000 
+sample generated at: 9.750000, 8.750000 
+AA is true
+pixel at: 0.000000, 9.000000 
+sample generated at: 0.250000, 9.250000 
+sample generated at: 0.250000, 9.500000 
+sample generated at: 0.250000, 9.750000 
+sample generated at: 0.500000, 9.250000 
+sample generated at: 0.500000, 9.500000 
+sample generated at: 0.500000, 9.750000 
+sample generated at: 0.750000, 9.250000 
+sample generated at: 0.750000, 9.500000 
+sample generated at: 0.750000, 9.750000 
+AA is true
+pixel at: 1.000000, 9.000000 
+sample generated at: 1.250000, 9.250000 
+sample generated at: 1.250000, 9.500000 
+sample generated at: 1.250000, 9.750000 
+sample generated at: 1.500000, 9.250000 
+sample generated at: 1.500000, 9.500000 
+sample generated at: 1.500000, 9.750000 
+sample generated at: 1.750000, 9.250000 
+sample generated at: 1.750000, 9.500000 
+sample generated at: 1.750000, 9.750000 
+AA is true
+pixel at: 2.000000, 9.000000 
+sample generated at: 2.250000, 9.250000 
+sample generated at: 2.250000, 9.500000 
+sample generated at: 2.250000, 9.750000 
+sample generated at: 2.500000, 9.250000 
+sample generated at: 2.500000, 9.500000 
+sample generated at: 2.500000, 9.750000 
+sample generated at: 2.750000, 9.250000 
+sample generated at: 2.750000, 9.500000 
+sample generated at: 2.750000, 9.750000 
+AA is true
+pixel at: 3.000000, 9.000000 
+sample generated at: 3.250000, 9.250000 
+sample generated at: 3.250000, 9.500000 
+sample generated at: 3.250000, 9.750000 
+sample generated at: 3.500000, 9.250000 
+sample generated at: 3.500000, 9.500000 
+sample generated at: 3.500000, 9.750000 
+sample generated at: 3.750000, 9.250000 
+sample generated at: 3.750000, 9.500000 
+sample generated at: 3.750000, 9.750000 
+AA is true
+pixel at: 4.000000, 9.000000 
+sample generated at: 4.250000, 9.250000 
+sample generated at: 4.250000, 9.500000 
+sample generated at: 4.250000, 9.750000 
+sample generated at: 4.500000, 9.250000 
+sample generated at: 4.500000, 9.500000 
+sample generated at: 4.500000, 9.750000 
+sample generated at: 4.750000, 9.250000 
+sample generated at: 4.750000, 9.500000 
+sample generated at: 4.750000, 9.750000 
+AA is true
+pixel at: 5.000000, 9.000000 
+sample generated at: 5.250000, 9.250000 
+sample generated at: 5.250000, 9.500000 
+sample generated at: 5.250000, 9.750000 
+sample generated at: 5.500000, 9.250000 
+sample generated at: 5.500000, 9.500000 
+sample generated at: 5.500000, 9.750000 
+sample generated at: 5.750000, 9.250000 
+sample generated at: 5.750000, 9.500000 
+sample generated at: 5.750000, 9.750000 
+AA is true
+pixel at: 6.000000, 9.000000 
+sample generated at: 6.250000, 9.250000 
+sample generated at: 6.250000, 9.500000 
+sample generated at: 6.250000, 9.750000 
+sample generated at: 6.500000, 9.250000 
+sample generated at: 6.500000, 9.500000 
+sample generated at: 6.500000, 9.750000 
+sample generated at: 6.750000, 9.250000 
+sample generated at: 6.750000, 9.500000 
+sample generated at: 6.750000, 9.750000 
+AA is true
+pixel at: 7.000000, 9.000000 
+sample generated at: 7.250000, 9.250000 
+sample generated at: 7.250000, 9.500000 
+sample generated at: 7.250000, 9.750000 
+sample generated at: 7.500000, 9.250000 
+sample generated at: 7.500000, 9.500000 
+sample generated at: 7.500000, 9.750000 
+sample generated at: 7.750000, 9.250000 
+sample generated at: 7.750000, 9.500000 
+sample generated at: 7.750000, 9.750000 
+AA is true
+pixel at: 8.000000, 9.000000 
+sample generated at: 8.250000, 9.250000 
+sample generated at: 8.250000, 9.500000 
+sample generated at: 8.250000, 9.750000 
+sample generated at: 8.500000, 9.250000 
+sample generated at: 8.500000, 9.500000 
+sample generated at: 8.500000, 9.750000 
+sample generated at: 8.750000, 9.250000 
+sample generated at: 8.750000, 9.500000 
+sample generated at: 8.750000, 9.750000 
+AA is true
+pixel at: 9.000000, 9.000000 
+sample generated at: 9.250000, 9.250000 
+sample generated at: 9.250000, 9.500000 
+sample generated at: 9.250000, 9.750000 
+sample generated at: 9.500000, 9.250000 
+sample generated at: 9.500000, 9.500000 
+sample generated at: 9.500000, 9.750000 
+sample generated at: 9.750000, 9.250000 
+sample generated at: 9.750000, 9.500000 
+sample generated at: 9.750000, 9.750000 
+AA is true
 100 % done
-image sucessfully saved to dodeca.png
+image sucessfully saved to scene1.png
