@@ -64,6 +64,8 @@ class MTS; //Matrix Transformation Stack
 int width, height;
 int maxdepth = 5;
 bool AA = false;
+bool DOF = false;
+float focalLen, aperture;
 
 //***************** POINT *****************//
 class Point {
@@ -179,6 +181,7 @@ public:
     Camera();
     Camera(Point, Point, Vector, float);
     void generateRay(Sample, Ray*);
+    void generateDOFRay(Point, Ray*);
 };
 
 //***************** LOCAL GEO *****************//
@@ -761,6 +764,13 @@ Camera::Camera(Point from, Point at, Vector v, float f) {
     printf("LL <%f, %f, %f> \n", LL.vector(0), LL.vector(1), LL.vector(2));
     printf("UR <%f, %f, %f> \n", UR.vector(0), UR.vector(1), UR.vector(2));
     printf("LR <%f, %f, %f> \n", LR.vector(0), LR.vector(1), LR.vector(2));
+
+}
+
+/* Generates a ray between the camera and a given point on the focal plane. 
+ * Used for DOF */
+void Camera::generateDOFRay(Point p, Ray* r) {
+
 
 }
 
@@ -1619,15 +1629,22 @@ void render() {
 		cur += 1;
         Color c = Color();
         Sample s = Sample();
+        eye.generateRay(s, &r);
         for(int i = 0; i < p.samples.size(); i++) {
           Ray r;
           s = p.samples[i];
-          //printf("sample generated at: %f, %f \n", s.x, s.y);
-          eye.generateRay(s, &r);
-		//printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
-          Color tempc = Color();
-          trace(r, 0, &tempc, airRefractIndex);
-          c = c.add(tempc);
+
+          if(!DOF) {
+            //printf("sample generated at: %f, %f \n", s.x, s.y);
+            //printf("ray generated with pos (%f, %f, %f) and dir <%f, %f, %f>\n", r.pos.point(0), r.pos.point(1), r.pos.point(2), r.dir.vector(0), r.dir.vector(1), r.dir.vector(2));
+            Color tempc = Color();
+            trace(r, 0, &tempc, airRefractIndex);
+            c = c.add(tempc);
+
+          } else {
+            Point focalPoint = r
+
+          }
         }
           c = c.div(p.samples.size());
 	//printf("color returned: %f, %f, %f\n", c.r, c.g, c.b);
@@ -1796,6 +1813,12 @@ void loadScene(std::string file) {
 				eye = Camera(lookfrom, lookat, up, fov);
 				tStack = MTS(); // push identity matrix
 			}
+            //dof focalLength aperture
+            else if(!splitline[0].compare("dof")) {
+                DOF = true;
+                focalLen = atof(splitline[1].c_str());
+                aperture = atof(splitline[2].c_str());
+            }
 
 			//sphere x y z radius
 			else if(!splitline[0].compare("sphere")) {

@@ -26,6 +26,7 @@ vertex -1 -1 +1
 vertex +1 -1 +1 
 vertex +1 +1 +1
 vertex -1 +1 +1
+areaP 1 9 5 -1 9 5 1 9 3 -1 9 3 1 1 1 20 20
 
 pushTransform
 # The basic camera transform to return to for new parts

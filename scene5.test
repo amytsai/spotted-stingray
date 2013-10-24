@@ -3,7 +3,7 @@ size 320 240
 #size 160 120
 camera 0 0 0 0 0 -1 0 1 0 45
 output scene5.png
-antialias
+#antialias
 
 maxdepth 5
 
